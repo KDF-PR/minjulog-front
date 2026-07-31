@@ -1,0 +1,102 @@
+// dashboard.scss — 로그인 후 화면 스타일.
+// .api-result 는 응답을 그대로 출력하는 확인용 블록이다. 화면 확정 시 제거 대상.
+
+@use 'utils' as *;
+
+.dashboard {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  @include flex(column, flex-start, stretch);
+  gap: $spacing-content-gap-md;
+  padding: $spacing-page-y-mobile $spacing-page-x-mobile;
+  color: $color-text;
+
+  .dashboard-header {
+    @include flex(row, space-between, center);
+    gap: $spacing-content-gap-md;
+    margin-bottom: $spacing-content-gap-sm;
+
+    .dashboard-title {
+      @include typo-ds('title', 'lg');
+    }
+  }
+
+  .content {
+    border: 1px solid $color-border-subtle;
+    border-radius: $radius-lg;
+    @include flex(column);
+    gap: $spacing-content-gap-sm;
+    padding: $spacing-card-md;
+    background-color: $color-bg;
+  }
+
+  .content-title {
+    color: $color-text-muted;
+    @include typo-ds('label', 'sm');
+  }
+
+  // 로그인 정보 — 이름 열 폭을 고정해 값이 세로로 정렬되게 한다
+  .info-list {
+    @include flex(column);
+    gap: $space-4;
+
+    .info-item {
+      @include flex(row);
+      gap: $space-8;
+    }
+
+    .info-term {
+      flex-shrink: 0;
+      width: rem(56px);
+      color: $color-text-muted;
+      @include typo-ds('label', 'sm');
+    }
+
+    .info-desc {
+      min-width: 0; // 긴 값이 넘치지 않고 줄바꿈되게
+      color: $color-text;
+      @include typo-ds('body', 'sm');
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .dashboard-actions {
+    @include flex(column);
+    gap: $spacing-content-gap-sm;
+  }
+
+  .btn-primary {
+    @include button('primary', 'lg');
+    width: 100%;
+
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
+  }
+
+  .btn-text {
+    @include button('text', 'sm');
+    padding: 0;
+
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
+
+    &:hover {
+      color: $color-error; // 로그아웃은 되돌리기 어려운 동작이라 hover 로 경고색
+    }
+  }
+
+  .api-result {
+    border-radius: $radius-md;
+    max-height: rem(240px);
+    overflow: auto;
+    padding: $spacing-card-sm;
+    background-color: $color-bg-inverse;
+    color: $color-success;
+    @include typo-ds('body', 'xs');
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}

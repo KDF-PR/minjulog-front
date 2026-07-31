@@ -1,0 +1,30 @@
+// _contents-wrapper.scss — 페이지 최상위 프레임 (CSS 방출, 전역 1회).
+// 모바일은 화면 전체, 태블릿 이상은 480×720 카드로 가운데 정렬한다.
+
+@use '../utils' as *;
+
+// 태블릿 이상에서 프레임이 화면보다 작아 바깥이 드러난다.
+// body 를 같은 캔버스색으로 칠해 프레임 경계 밖이 흰 여백으로 보이지 않게 한다.
+// (페이지 이탈 fade 중 배경까지 사라져도 색이 변하지 않는 이유 — utils/_motion.scss 참고)
+body {
+  background-color: $color-bg-page;
+}
+
+.contents-wrapper {
+  z-index: $z-index-1;
+  width: 100dvw;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+
+  background-color: $color-bg-page;
+
+  @include tablet() {
+    @include absCenter();
+    border: 2px solid $neutral-700;
+    width: $wrapper_width;
+    height: $wrapper_height;
+    max-height: $wrapper_height;
+    margin: 0 auto;
+  }
+}

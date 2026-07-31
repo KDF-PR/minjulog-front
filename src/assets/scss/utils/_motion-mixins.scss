@@ -1,0 +1,18 @@
+// _motion-mixins.scss — motion 클래스 생성 mixin (CSS 미방출 · 어디서든 import 안전)
+// 클래스/keyframes 방출은 _motion.scss(전역, styles.scss에서 1회 import)가 담당하고,
+// 컴포넌트는 utils/mixins(이 파일 포함)만으로 mixin을 쓴다.
+// keyframes `motion-fade-in`은 _motion.scss가 전역으로 방출하므로 여기서 재정의하지 않는다.
+
+$motion-ease-soft: ease-in-out;
+
+// 이름 지정 fade-in 클래스 생성 — .is-ready 부모 아래에서 재생.
+// 사용: @include motion-fade-in('motion-main-title', .5s, .5s);
+@mixin motion-fade-in($class-name, $duration: 0.5s, $delay: 0s, $easing: $motion-ease-soft) {
+  .#{$class-name} {
+    opacity: 0;
+  }
+
+  .is-ready .#{$class-name} {
+    animation: motion-fade-in $duration $delay $easing both;
+  }
+}

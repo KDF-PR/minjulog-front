@@ -1,0 +1,24 @@
+// _functions.scss — px → rem 변환 (CSS 미방출).
+// 이 저장소의 유일한 rem 계산 지점이다. `calculateRem()`(구 _mixins.scss)은
+// 같은 계산을 슬래시 나눗셈으로 중복 구현하고 있어 제거했다.
+//
+// 주석은 `//`(무음)만 쓴다 — `/** */` 블록 주석은 CSS 로 방출돼
+// 이 파일을 가져가는 컴포넌트 스타일마다 남는다.
+
+@use 'sass:math' as math;
+
+$baseSize: 16px; // 기본 폰트 크기
+
+// px 값을 16px 기준 rem 으로 변환한다.
+//   rem(24px)  // → 1.5rem
+@function rem($size) {
+  $remSize: math.div($size, 16px);
+  @return #{$remSize}rem;
+}
+
+// 한 속성에 px 와 rem 을 함께 넣는다. rem 미지원 환경용 폴백이 필요할 때만 쓴다.
+//   @include px_rem(width, 240px);
+@mixin px_rem($property, $size) {
+  #{$property}: #{$size};
+  #{$property}: rem($size);
+}

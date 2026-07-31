@@ -1,0 +1,31 @@
+// styles.scss — 전역 스타일 엔트리 (angular.json 의 styles 항목).
+//
+// **CSS를 방출하는 파일은 전부 여기서만 @use 한다.** 컴포넌트 SCSS 는
+// `@use 'utils' as *` 로 토큰·mixin 만 가져간다(utils/_index.scss 참고).
+// 이 경계를 지키지 않으면 같은 클래스·keyframes 가 컴포넌트마다 중복 방출된다.
+//
+// 컴포넌트에서 쓰는 방법:
+//   @use 'utils' as *;
+//   .login { @include flex(column); gap: $space-16; }
+//
+// 경로가 'utils' 로 짧은 이유는 angular.json 의
+// stylePreprocessorOptions.includePaths 에 src/assets/scss 를 등록해서다.
+
+// 1) 기본 규칙 — reset 이 먼저, 그 위에 타이포
+@use 'base/reset';
+@use 'base/typography';
+
+// 2) 전역 유틸 클래스
+@use 'global/utilities';
+
+// 3) 모션 — 진입/등장 클래스와 keyframes
+@use 'utils/motion';
+@use 'utils/animations';
+
+// 4) 공용 화면 골격
+@use 'templates/contents-wrapper';
+@use 'templates/dialog';
+@use 'templates/step';
+
+// 5) Angular Material — 테마 (CSS 방출, 전역 1회)
+@use 'templates/customMaterialTheme';

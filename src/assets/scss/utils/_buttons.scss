@@ -1,0 +1,98 @@
+// ============================================================
+// Button mixin — 버튼의 모양·크기·상태를 한 곳에서 관리
+// 사용: @include button($variant, $size, $shape)
+//   $variant: 'primary' | 'secondary' | 'text'
+//   $size:    'sm' | 'md' | 'lg'   (height/padding/font-size)
+//   $shape:   'pill' | 'rounded'
+// width / 그룹 레이아웃 / 여백 / 포지셔닝은 각 페이지에서 담당한다.
+//
+// 색상은 _colors.scss의 $btn-* 토큰, 치수는 _variables.scss의
+// $control-*/$radius-*/$spacing-btn-*/$fs* 토큰을 참조한다 (여기서 값 지정 금지).
+// CSS 미방출 — 호출한 선택자 안에서만 규칙을 만든다.
+// ============================================================
+
+@use 'colors' as *;
+@use 'variables' as *;
+@use 'mixins' as *;
+
+@mixin _button-variant($variant) {
+  @if $variant == 'primary' {
+    border: 1px solid $btn-primary-border;
+    background-color: $btn-primary-bg;
+    color: $btn-primary-text;
+
+    &:hover {
+      background-color: $btn-primary-bg-hover;
+    }
+    &:disabled,
+    &.is-disabled {
+      background-color: $btn-primary-bg-disabled;
+      color: $btn-primary-text-disabled;
+    }
+  } @else if $variant == 'secondary' {
+    border: 1px solid $btn-secondary-border;
+    background-color: $btn-secondary-bg;
+    color: $btn-secondary-text;
+
+    &:hover {
+      background-color: $btn-secondary-bg-hover;
+    }
+    &:disabled,
+    &.is-disabled {
+      color: $btn-secondary-text-disabled;
+    }
+  } @else if $variant == 'text' {
+    border: 1px solid $btn-text-border;
+    background-color: $btn-text-bg;
+    color: $btn-text-text;
+
+    &:hover {
+      color: $btn-text-text-hover;
+    }
+    &:disabled,
+    &.is-disabled {
+      color: $btn-text-text-disabled;
+    }
+  } @else {
+    background-color: magenta !important;
+  }
+}
+
+@mixin button($variant: 'primary', $size: 'sm', $shape: 'pill') {
+  // 'rounded' 만 완전 원형 모서리, 그 외('pill' 포함)는 기본 라운드.
+  // Sass 의 if() 함수는 deprecated → @if 로 분기한다.
+  @if $shape == 'rounded' {
+    border-radius: $radius-full;
+  } @else {
+    border-radius: $radius-sm;
+  }
+
+  @if $size == 'lg' {
+    height: $control-lg;
+    padding: 0 $spacing-btn-x-lg;
+  } @else if $size == 'sm' {
+    height: $control-sm;
+    padding: 0 $spacing-btn-x-sm;
+  } @else {
+    height: $control-md;
+    padding: 0 $spacing-btn-x-md;
+  }
+
+  @include flexCenter();
+
+  @if $size == 'lg' {
+    @include font-size($fs16);
+  } @else if $size == 'sm' {
+    @include font-size($fs13);
+  } @else {
+    @include font-size($fs15);
+  }
+  @include font-weight('semiBold');
+
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  @include _button-variant($variant);
+}

@@ -1,0 +1,129 @@
+// _dialog.scss — 기능형 dialog 공통 레이아웃 (CSS 방출, 전역 1회).
+// 카드 프레임/사이즈는 구 .dialog-container 기준, header/body/footer/버튼은 .dialog 기준으로 통합.
+
+@use '../utils' as *;
+
+.dialog {
+  position: relative;
+  @include border-radius($radius-sm);
+  border: 2px solid $color-action;
+
+  width: 100%;
+  max-width: rem(312px);
+  max-height: rem(592px);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  @include flex(column);
+  gap: $space-16;
+
+  margin: 0 auto;
+  padding: $space-24;
+  background-color: $color-bg;
+
+  @include tablet() {
+    max-width: rem(360px);
+    max-height: rem(672px);
+  }
+
+  @include smallWidth-only() {
+    max-width: rem(296px);
+  }
+
+  @include smallHeight-only() {
+    max-height: 90dvh;
+  }
+
+  .dialog-header {
+    text-align: center;
+    @include flex(column);
+    row-gap: $space-8; // 8px
+
+    .dialog-title {
+      @include typo-ds('title', 'md'); // 26px
+      @include font-weight('semiBold');
+    }
+
+    .dialog-subtitle {
+      @include typo-ds('body', 'sm'); // 14px
+      @include font-weight('medium');
+      color: $color-text-sub;
+    }
+  }
+
+  .dialog-body {
+    @include flex(column);
+    gap: $space-8;
+  }
+
+  .dialog-footer {
+    @include flex(row);
+    gap: $space-8;
+
+    .btn {
+      height: 100%;
+    }
+
+    .btn-secondary {
+      @include border-radius($radius-sm);
+      @include flexCenter();
+      gap: $space-12;
+      padding: $spacing-btn-y-lg $spacing-btn-x-lg;
+      background-color: $btn-secondary-bg;
+      border: 1px solid $btn-secondary-border;
+      color: $btn-secondary-text;
+
+      @include typo-ds('label', 'lg');
+      // @include font-weight('semiBold');
+    }
+
+    .btn-primary {
+      @include border-radius($radius-sm);
+      @include flexCenter();
+      flex-grow: 2;
+      gap: $space-12;
+      padding: $spacing-btn-y-lg $spacing-btn-x-lg;
+      background-color: $btn-primary-bg;
+      color: $btn-primary-text;
+      border: 1px solid $btn-primary-border;
+
+      @include typo-ds('label', 'lg');
+
+      &:disabled {
+        background-color: $btn-primary-bg-disabled;
+        color: $btn-primary-text-disabled;
+        border: 1px solid $btn-primary-border-disabled;
+      }
+      // @include font-weight('semiBold');
+    }
+  }
+
+  // 닫기 버튼 (× 텍스트)
+  .btn-close {
+    @include border-radius($radius-full);
+    position: absolute;
+    top: $space-12;
+    right: $space-12;
+
+    width: $control-sm;
+    height: $control-sm;
+
+    @include flexCenter();
+    background-color: transparent;
+    color: $color-text-sub;
+
+    @include font-size($fs24);
+  }
+
+  // footer / 일반 버튼
+  // .btn {
+  //   flex: 1;
+  //   &.btn-primary {
+  //     @include button('primary', 'md');
+  //   }
+  //   &.btn-text {
+  //     @include button('text', 'md');
+  //   }
+  // }
+}

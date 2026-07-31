@@ -1,0 +1,394 @@
+@charset "UTF-8";
+
+// _mixins.scss — 레이아웃·타이포·transform mixin (CSS 미방출).
+// `.is-pointer-events-none` / `.img-container` 클래스는 global/_utilities.scss 로 옮겼다.
+// 컴포넌트가 이 파일을 가져갈 때 클래스가 함께 방출되면 컴포넌트마다 중복되기 때문이다.
+//
+// 버튼 mixin 은 _buttons.scss 가 담당한다. 여기서 @use 하지 않는다 —
+// _buttons.scss 가 이 파일을 @use 하므로 순환 참조가 된다. 허브는 utils/_index.scss.
+
+@use 'sass:math';
+@use 'functions' as *;
+@use 'variables' as *;
+@use 'colors' as *;
+@use 'mediaquery' as *;
+@use 'a11y' as *;
+
+@mixin objectFit($dir: 'horizontal', $fit: contain) {
+  @if $dir == 'horizontal' {
+    width: 100%;
+    max-width: 100%;
+    object-fit: $fit;
+  } @else if $dir == 'vertical' {
+    height: 100%;
+    max-height: 100%;
+    object-fit: $fit;
+  } @else {
+    background-color: magenta !important;
+  }
+}
+
+@mixin flex($dir: row, $justify: flex-start, $align: stretch) {
+  display: flex;
+  flex-direction: $dir;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin flexCenter($dir: row) {
+  display: flex;
+  flex-direction: $dir;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: rem($size);
+}
+
+// font-weight('bold') 처럼 이름으로 굵기를 지정한다.
+// 이전 저장소에는 `font-variation-settings: "wght" N` 이 함께 있었지만
+// 기본 폰트 GabiaNull 은 variable font 가 아니라(fvar 축 없음) 효과가 없어 제거했다.
+// 400 초과 굵기는 브라우저 합성으로 표현된다 — 굵기 대비가 필요하면 크기·색으로 보강한다.
+// 이름을 잘못 넘기면 magenta 로 드러나게 한다(조용히 무시하지 않는다).
+@mixin font-weight($weight) {
+  @if $weight == 'heavy' {
+    font-weight: $weight-heavy;
+  } @else if $weight == 'extraBold' {
+    font-weight: $weight-extraBold;
+  } @else if $weight == 'bold' {
+    font-weight: $weight-bold;
+  } @else if $weight == 'semiBold' {
+    font-weight: $weight-semiBold;
+  } @else if $weight == 'medium' {
+    font-weight: $weight-medium;
+  } @else if $weight == 'regular' {
+    font-weight: $weight-regular;
+  } @else if $weight == 'light' {
+    font-weight: $weight-light;
+  } @else if $weight == 'thin' {
+    font-weight: $weight-thin;
+  } @else {
+    color: magenta !important;
+  }
+}
+
+// ============================================================
+// typo-ds($type, $size) — 디자인 시스템 타이포 (mobile-first)
+// 토큰 변수는 utils/_variables.scss, weight는 font-weight() 사용.
+// 이번 콘텐츠는 모바일 단일 스케일(360×640 → 480×720 확장)이라
+// tablet() 분기(-dt 변수)는 전부 주석 처리해둠 — 필요 시 복원.
+// 컴포넌트 scss 에서 `@use 'utils' as *` 만 하면 사용 가능.
+// ============================================================
+@mixin typo-ds($type: 'body', $size: 'md') {
+  font-family: $font-primary;
+  letter-spacing: $letter-spacing-default;
+  word-break: keep-all;
+
+  @if $type == 'display' {
+    @include font-weight('bold');
+
+    @if $size == 'xl' {
+      font-size: $typo-display-xl;
+      line-height: $lh-display-xl;
+      // @include tablet() {
+      // font-size: $typo-display-xl-dt;
+      // line-height: $lh-display-xl-dt;
+      // }
+    } @else if $size == 'lg' {
+      font-size: $typo-display-lg;
+      line-height: $lh-display-lg;
+      // @include tablet() {
+      // font-size: $typo-display-lg-dt;
+      // line-height: $lh-display-lg-dt;
+      // }
+    } @else if $size == 'md' {
+      font-size: $typo-display-md;
+      line-height: $lh-display-md;
+      // @include tablet() {
+      // font-size: $typo-display-md-dt;
+      // line-height: $lh-display-md-dt;
+      // }
+    } @else if $size == 'sm' {
+      font-size: $typo-display-sm;
+      line-height: $lh-display-sm;
+      // @include tablet() {
+      // font-size: $typo-display-sm-dt;
+      // line-height: $lh-display-sm-dt;
+      // }
+    }
+  } @else if $type == 'title' {
+    @include font-weight('semiBold');
+
+    @if $size == 'xl' {
+      font-size: $typo-title-xl;
+      line-height: $lh-title-xl;
+      // @include tablet() {
+      // font-size: $typo-title-xl-dt;
+      // line-height: $lh-title-xl-dt;
+      // }
+    } @else if $size == 'lg' {
+      font-size: $typo-title-lg;
+      line-height: $lh-title-lg;
+      // @include tablet() {
+      // font-size: $typo-title-lg-dt;
+      // line-height: $lh-title-lg-dt;
+      // }
+    } @else if $size == 'md' {
+      font-size: $typo-title-md;
+      line-height: $lh-title-md;
+      // @include tablet() {
+      // font-size: $typo-title-md-dt;
+      // line-height: $lh-title-md-dt;
+      // }
+    } @else if $size == 'sm' {
+      font-size: $typo-title-sm;
+      line-height: $lh-title-sm;
+      // @include tablet() {
+      // font-size: $typo-title-sm-dt;
+      // line-height: $lh-title-sm-dt;
+      // }
+    }
+  } @else if $type == 'body' {
+    @include font-weight('regular');
+
+    @if $size == 'lg' {
+      font-size: $typo-body-lg;
+      line-height: $lh-body-lg;
+      // @include tablet() {
+      // font-size: $typo-body-lg-dt;
+      // line-height: $lh-body-lg-dt;
+      // }
+    } @else if $size == 'md' {
+      font-size: $typo-body-md;
+      line-height: $lh-body-md;
+      // @include tablet() {
+      // font-size: $typo-body-md-dt;
+      // line-height: $lh-body-md-dt;
+      // }
+    } @else if $size == 'sm' {
+      font-size: $typo-body-sm;
+      line-height: $lh-body-sm;
+      // @include tablet() {
+      // font-size: $typo-body-sm-dt;
+      // line-height: $lh-body-sm-dt;
+      // }
+    } @else if $size == 'xs' {
+      font-size: $typo-body-xs;
+      line-height: $lh-body-xs;
+      // @include tablet() {
+      // font-size: $typo-body-xs-dt;
+      // line-height: $lh-body-xs-dt;
+      // }
+    }
+  } @else if $type == 'label' {
+    @include font-weight('medium');
+
+    @if $size == 'lg' {
+      font-size: $typo-label-lg;
+      line-height: $lh-label-lg;
+      // @include tablet() {
+      // font-size: $typo-label-lg-dt;
+      // line-height: $lh-label-lg-dt;
+      // }
+    } @else if $size == 'md' {
+      font-size: $typo-label-md;
+      line-height: $lh-label-md;
+      // @include tablet() {
+      // font-size: $typo-label-md-dt;
+      // line-height: $lh-label-md-dt;
+      // }
+    } @else if $size == 'sm' {
+      font-size: $typo-label-sm;
+      line-height: $lh-label-sm;
+      // @include tablet() {
+      // font-size: $typo-label-sm-dt;
+      // line-height: $lh-label-sm-dt;
+      // }
+    } @else if $size == 'xs' {
+      font-size: $typo-label-xs;
+      line-height: $lh-label-xs;
+      // @include tablet() {
+      // font-size: $typo-label-xs-dt;
+      // line-height: $lh-label-xs-dt;
+      // }
+    }
+  }
+}
+
+// DPR 기반 mixin 정의
+@mixin dpr($ratio) {
+  @media screen and (min-resolution: $ratio * 96dpi) {
+    @content;
+  }
+}
+
+@mixin absPos($top: 50%, $left: 50%, $translateX: -50%, $translateY: -50%) {
+  position: absolute;
+  top: $top;
+  left: $left;
+  @include translate($translateX, $translateY);
+}
+
+@mixin absCenter($position: absolute, $top: 50%, $left: 50%, $translateX: -50%, $translateY: -50%) {
+  position: $position;
+  top: $top;
+  left: $left;
+  @include translate($translateX, $translateY);
+}
+
+//// General Mixins ////
+@mixin transform($transforms) {
+  -moz-transform: $transforms;
+  -o-transform: $transforms;
+  -ms-transform: $transforms;
+  -webkit-transform: $transforms;
+  transform: $transforms;
+}
+
+@mixin posAndRotate($x, $y, $deg) {
+  @include transform(translate($x, $y) rotate(#{$deg}deg));
+}
+
+@mixin translateAndScale($x, $y, $ratio) {
+  @include transform(translate($x, $y) scale($ratio));
+}
+
+@mixin scaleAndTranslate($ratio, $x, $y) {
+  @include transform(scale($ratio) translate($x, $y));
+}
+
+// rotate
+@mixin rotate($deg) {
+  @include transform(rotate(#{$deg}deg));
+}
+
+// scale
+@mixin scale($scale) {
+  @include transform(scale($scale));
+}
+
+// translate
+@mixin translate($x, $y) {
+  @include transform(translate($x, $y));
+}
+
+// skew
+@mixin skew($x, $y) {
+  @include transform(skew(#{$x}deg, #{$y}deg));
+}
+
+@mixin transform-origin($x-axis, $y-axis, $z-axis) {
+  transform-origin: $x-axis $y-axis $z-axis;
+}
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+
+  background-clip: padding-box;
+  /* stops bg color from leaking outside the border: */
+}
+
+@mixin border-top-radius($radius) {
+  -webkit-border-top-right-radius: $radius;
+  border-top-right-radius: $radius;
+  -webkit-border-top-left-radius: $radius;
+  border-top-left-radius: $radius;
+  background-clip: padding-box;
+}
+
+@mixin border-right-radius($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+  -webkit-border-top-right-radius: $radius;
+  border-top-right-radius: $radius;
+  background-clip: padding-box;
+}
+
+@mixin border-bottom-radius($radius) {
+  -webkit-border-bottom-right-radius: $radius;
+  border-bottom-right-radius: $radius;
+  -webkit-border-bottom-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+  background-clip: padding-box;
+}
+
+@mixin border-left-radius($radius) {
+  -webkit-border-bottom-left-radius: $radius;
+  border-bottom-left-radius: $radius;
+  -webkit-border-top-left-radius: $radius;
+  border-top-left-radius: $radius;
+  background-clip: padding-box;
+}
+
+// 길이에서 단위를 제거한다.
+//   $value: strip-unit(42px);  // → 42
+// `/** */` 대신 `//` 를 쓴다 — 블록 주석은 CSS 로 방출돼 컴포넌트 스타일에 남는다.
+
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    // 슬래시 나눗셈은 Dart Sass 에서 제거 예정 → math.div 사용
+    @return math.div($number, $number * 0 + 1);
+  }
+  @return $number;
+}
+
+// ============================================================
+// Test Mixins — 개발 중 영역 확인용. 커밋 전에 호출부를 지운다.
+// ============================================================
+@mixin testBorder($border-color: #33ffa5, $borderOpacity: 1) {
+  border: 0.5px dashed rgba($border-color, $borderOpacity) !important;
+}
+@mixin testOutline($outline-color: black, $outlineOpacity: 1, $outlineStyle: dashed) {
+  outline: 0.5px $outlineStyle rgba($outline-color, $outlineOpacity) !important;
+}
+
+@mixin testBoxShadow($boxWeight: 1px, $color: black, $opacity: 1) {
+  $shadowCol: rgba($color, $opacity);
+  box-shadow:
+    $boxWeight 0 0 0 $shadowCol,
+    0 $boxWeight 0 0 $shadowCol,
+    $boxWeight $boxWeight 0 0 $shadowCol,
+    $boxWeight 0 0 0 $shadowCol inset,
+    0 $boxWeight 0 0 $shadowCol inset;
+}
+
+// $col: rgb(177, 188, 230);
+// $testBg: rgb(235, 235, 235);
+$testBg: lightgreen;
+@mixin testBg($colorname: $testBg, $testOpacity: 0.8) {
+  background-color: rgba($colorname, $testOpacity) !important;
+}
+
+@mixin testShadow() {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24) !important;
+}
+
+@mixin testTransition() {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+
+  &:hover {
+    box-shadow:
+      0 14px 28px rgba(0, 0, 0, 0.25),
+      0 10px 10px rgba(0, 0, 0, 0.22) !important;
+  }
+}
+
+@mixin testHover($hoverOpacity: 0.8) {
+  cursor: pointer;
+  opacity: 1 !important;
+  transition: opacity 0.25s ease;
+  &:hover {
+    opacity: $hoverOpacity !important;
+  }
+}
+
+// $baseSize 는 _functions.scss 가 단일 정의한다 (이전 저장소의 중복 선언 제거).
+$convertBase: $baseSize;
+
+// 버튼 스타일은 utils/_buttons.scss 의 button() 믹스인으로 관리한다.
+// utils/_index.scss 가 함께 forward 하므로 컴포넌트는 별도 @use 없이 button() 을 쓴다.

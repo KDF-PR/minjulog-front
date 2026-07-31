@@ -1,0 +1,169 @@
+// _mediaquery.scss — breakpoint 변수와 미디어쿼리 mixin (CSS 미방출).
+//
+// 이 파일은 **CSS를 한 줄도 방출하지 않는다.** 컴포넌트가 `@use 'utils' as *` 로
+// 가져가는 파일에 클래스가 섞이면 컴포넌트마다 같은 클래스가 다시 방출돼
+// 스타일 예산(anyComponentStyle 4kB)을 잡아먹는다.
+// `.is-hidden-mobile` 같은 유틸 클래스는 global/_utilities.scss 가 전역 1회 방출한다.
+
+// 1024x768은 4:3 비율이며, 국내에서 사라진 구형 모니터
+// 데스크탑은 1280px 을 기준으로 설정한다.
+
+$smallScreen: 360px;
+$smartphone: 512px;
+$largePhone: 512px;
+$tablet: 768px;
+$desktop: 1280px; // hd (보편적)
+$widescreen: 1536px;
+$fullhd: 1920px;
+
+@mixin mediaQuery($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
+
+// ============================================================
+// 기본 breakpoint
+// ============================================================
+
+@mixin mobile() {
+  @media screen and (max-width: $tablet - 1px) {
+    @content;
+  }
+}
+
+@mixin tablet() {
+  @media screen and (min-width: $tablet), print {
+    @content;
+  }
+}
+
+@mixin tablet-only() {
+  @media screen and (min-width: $tablet) and (max-width: $desktop - 1px) {
+    @content;
+  }
+}
+
+@mixin touch() {
+  @media screen and (max-width: $desktop - 1px) {
+    @content;
+  }
+}
+
+@mixin desktop() {
+  @media screen and (min-width: $desktop) {
+    @content;
+  }
+}
+
+@mixin desktop-only() {
+  @media screen and (min-width: $desktop) and (max-width: $widescreen - 1px) {
+    @content;
+  }
+}
+
+@mixin widescreen() {
+  @media screen and (min-width: $widescreen) {
+    @content;
+  }
+}
+
+@mixin widescreen-only() {
+  @media screen and (min-width: $widescreen) and (max-width: $fullhd - 1px) {
+    @content;
+  }
+}
+
+@mixin fullhd() {
+  @media screen and (min-width: $fullhd) {
+    @content;
+  }
+}
+
+// ============================================================
+// 좁은 화면 대응
+// smallWidth-only / maxWidth 는 같은 조건의 별칭이다 (기존 호출부 유지용).
+// ============================================================
+
+@mixin maxWidth($breakpoint: 340px) {
+  @media screen and (max-width: #{$breakpoint}) {
+    @content;
+  }
+}
+
+@mixin smallWidth-only($breakpoint: 340px) {
+  @media screen and (max-width: #{$breakpoint}) {
+    @content;
+  }
+}
+
+// 세로 길이만 짧은 경우 (모바일 가로 범위 안에서)
+@mixin smallHeight-only($maxHeight: 639px) {
+  @media screen and (max-width: #{$tablet - 1px}) and (max-height: $maxHeight) {
+    @content;
+  }
+}
+
+// = fold-narrow
+@mixin narrow-screen() {
+  @media screen and (max-width: 340px) {
+    @content;
+  }
+}
+
+@mixin fold-wide() {
+  @media screen and (min-width: 450px) and (max-width: $tablet - 1px) {
+    @content;
+  }
+}
+
+// ============================================================
+// 이전 프로젝트 전용 — 현재 호출부 없음. 정리 단계에서 제거 예정.
+// ============================================================
+
+// 이벤트 종료 후 메인페이지 요소 크기 조정용. 696px은 임의값(by yumm).
+@mixin closeBreakpoint() {
+  @media screen and (max-width: #{$tablet - 1px}) and (min-height: 696px) {
+    @content;
+  }
+}
+
+// desktop video 전용 — 1280px ~ 1199px 구간
+@mixin desktop-video() {
+  @media screen and (min-width: $desktop) and (max-width: 1199px) {
+    @content;
+  }
+}
+
+// ============================================================
+// 화면 크기 구간
+//   xsmallScreen : ~359px
+//   smallScreen  : 360px ~ 599px
+//   largeScreen  : 600px ~
+// 이전 저장소에는 smallScreen() 이 두 번 정의돼 뒤 정의가 앞을 덮고 있었다
+// (앞: max-width 359 + max-height 639 / 뒤: 360~599px). 뒤 정의만 남긴다.
+// ============================================================
+
+@mixin xsmallScreen() {
+  @media screen and (max-width: 359px) {
+    @content;
+  }
+}
+
+@mixin smallScreen() {
+  @media screen and (min-width: 360px) and (max-width: 599px) {
+    @content;
+  }
+}
+
+@mixin largeScreen() {
+  @media screen and (min-width: 600px) {
+    @content;
+  }
+}
+
+@mixin largeScreen-only() {
+  @media screen and (min-width: 600px) and (max-width: $desktop - 1px) {
+    @content;
+  }
+}

@@ -1,0 +1,68 @@
+// base/_typography.scss — @font-face 선언과 base element 타이포 (CSS 방출).
+// src/styles.scss 에서만 1회 @use 한다.
+//
+// 토큰·mixin 은 utils 레이어에 있다:
+//   토큰 변수($font-primary, $typo-*, $lh-*, $letter-spacing-*) → utils/_variables.scss
+//   typo-ds() / font-weight() 믹스인                          → utils/_mixins.scss
+
+@use '../utils' as *;
+
+// ============================================================
+// Font Face — GabiaNull (기본 폰트)
+//
+// 정적 단일 weight 폰트다 (usWeightClass 400, variable 축 없음).
+// **font-weight: 400 하나만 선언한다** — `100 900` 으로 범위를 주면 브라우저가
+// 모든 굵기를 이 face 로 처리해 합성 굵기를 만들지 않고, bold 가 regular 와
+// 똑같이 보인다. 400 만 선언하면 600·700 요청 시 브라우저가 합성해 위계가 남는다.
+//
+// woff2 만 참조한다(185KB). 같은 폴더의 otf·ttf 는 원본 보관용이고 웹에서 쓰지 않는다.
+// 경로는 angular.json assets 가 src/assets → /assets 로 복사하는 것을 전제한다.
+// ============================================================
+
+@font-face {
+  font-family: 'GabiaNull';
+  src: url('/assets/fonts/GabiaNull/GabiaNull.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+// ============================================================
+// Base HTML Styles
+// ============================================================
+
+$default-sans: $font-primary;
+$default-serif: 'Noto Serif KR', 'Microsoft YaHei', 'SimSun', 'AppleMyungjo', serif;
+
+html {
+  font-family: $default-sans;
+  font-weight: $weight-regular;
+}
+
+body {
+  font-family: $default-sans;
+  font-weight: $weight-regular;
+  word-break: keep-all;
+  letter-spacing: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+  font-family: $default-sans;
+  word-break: keep-all;
+  letter-spacing: 0;
+}
+
+$letterSpacing0: 0;
+$letterSpacing1: 0.5px;
+
+.link {
+  text-decoration: underline;
+  text-underline-position: under;
+}

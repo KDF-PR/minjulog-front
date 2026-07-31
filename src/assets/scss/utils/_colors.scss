@@ -1,0 +1,157 @@
+@charset "utf-8";
+
+// _colors.scss — 색상 토큰 (변수 전용 · CSS 미방출).
+// 3단 구조: Primitive(원색) → Semantic(역할) → Component(부품).
+// 컴포넌트는 Semantic/Component 토큰만 참조한다. Primitive 직접 참조 금지 —
+// 브랜드 색이 바뀔 때 고쳐야 할 지점이 화면으로 흩어진다.
+
+// ============================================================
+// Primitive — Brand
+// 이전 프로젝트(교보문고)에서 가져온 임시값이다. 민주로드 색 확정 전까지
+// 화면 구분용으로만 쓰고, **확정되면 이 절의 7개 값만 교체**한다.
+// Semantic 이하가 전부 이 변수를 참조하므로 다른 절은 손대지 않는다.
+// ============================================================
+
+$brand-primary: #5e3f30; // 기본 브랜드색 (버튼·강조 테두리)
+$brand-primary-hover: #4b3226;
+$brand-primary-pressed: #3a261d;
+$brand-primary-muted: #a89a91; // disabled 상태
+$brand-secondary: #8a6b5b; // 보조 텍스트
+$brand-accent: #ffff60; // 포인트 배경 (선택 상태·강조)
+$brand-canvas: #f7f4ef; // 페이지 배경
+
+// ============================================================
+// Primitive — Neutral / System
+// 브랜드와 무관한 무채색·상태색. 브랜드 확정 시에도 그대로 둔다.
+// ============================================================
+
+$neutral-0: #ffffff;
+$neutral-50: #fafafa;
+$neutral-100: #f5f5f5;
+$neutral-200: #ededed;
+$neutral-300: #d9d9d9;
+$neutral-500: #8a8a8a; // muted / disabled text
+$neutral-700: #444444; // secondary text
+$neutral-900: #111111; // primary text
+
+$sys-red: #e5474d; // error
+$sys-yellow: #f5a623; // warning
+$sys-green: #2e9d63; // success
+$sys-blue: #2563eb; // focus, link
+
+// ============================================================
+// Semantic — 역할별 토큰
+// ============================================================
+
+// Background (아래 → 위 레이어)
+$color-bg-page: $brand-canvas; // 페이지/캔버스 배경
+$color-bg: $neutral-0; // 기본 surface
+$color-bg-subtle: $neutral-50;
+$color-bg-muted: $neutral-100;
+$color-bg-inverse: $neutral-900;
+
+// Border
+$color-border: $neutral-300;
+$color-border-subtle: $neutral-200;
+$color-border-strong: $neutral-700;
+$color-border-focus: $sys-blue;
+
+// Action
+$color-action: $brand-primary;
+$color-action-hover: $brand-primary-hover;
+$color-action-pressed: $brand-primary-pressed;
+$color-action-disabled: $brand-primary-muted;
+
+// Text
+$color-text: $color-action;
+$color-text-sub: $brand-secondary;
+$color-text-muted: $neutral-500;
+$color-text-disabled: $neutral-500;
+$color-text-inverse: $neutral-0;
+
+// Feedback
+$color-error: $sys-red;
+$color-warning: $sys-yellow;
+$color-success: $sys-green;
+$color-info: $sys-blue;
+
+// Accent — 포인트 색을 "위치"가 아니라 "역할"로 관리한다.
+$accent-highlight: $brand-accent; // 강조 배경 (선택 상태)
+$accent-primary: $color-action; // 브랜드 primary
+$accent-primary-light: $color-action-disabled;
+$accent-primary-dark: $color-action-pressed;
+
+// ============================================================
+// Component — Button
+// variant(primary/secondary/text)별 text / bg / border 색상 (state 포함).
+// _buttons.scss의 button() 믹스인은 이 토큰만 참조한다 (믹스인 내부 색상 하드코딩 금지).
+// ============================================================
+
+// Primary — 브랜드색 채움
+$btn-primary-text: $color-text-inverse;
+$btn-primary-bg: $color-action;
+$btn-primary-border: $color-action;
+
+$btn-primary-bg-hover: $color-action-hover;
+$btn-primary-border-hover: $color-action-hover;
+
+$btn-primary-bg-pressed: $color-action-pressed;
+
+$btn-primary-bg-disabled: $color-action-disabled;
+$btn-primary-border-disabled: $color-action-disabled;
+$btn-primary-text-disabled: $color-text-inverse;
+
+// Secondary — 아웃라인
+$btn-secondary-text: $color-text;
+$btn-secondary-bg: $color-bg;
+$btn-secondary-bg-hover: $color-bg-subtle;
+$btn-secondary-bg-pressed: $color-bg-subtle;
+$btn-secondary-border: $color-border;
+$btn-secondary-text-disabled: $color-text-disabled;
+
+// Text — 배경/보더 없는 텍스트 버튼
+$btn-text-text: $color-text-sub;
+$btn-text-bg: transparent;
+$btn-text-border: transparent;
+$btn-text-text-hover: $color-text;
+$btn-text-text-disabled: $color-text-disabled;
+
+// ============================================================
+// Component — Input
+// ============================================================
+
+$input-bg: $color-bg;
+$input-bg-disabled: $color-bg-muted;
+$input-text: $color-text;
+$input-text-placeholder: $color-text-muted;
+$input-text-disabled: $color-text-disabled;
+$input-border: $color-border;
+$input-border-focus: $color-border-focus;
+$input-border-error: $color-error;
+
+// ============================================================
+// Component — Chip
+// ============================================================
+
+$chip-bg: $neutral-50;
+$chip-bg-hover: $color-bg-subtle;
+$chip-bg-selected: $accent-highlight;
+$chip-bg-disabled: $color-action-disabled;
+
+$chip-text: $color-text-sub;
+$chip-text-selected: $color-text;
+$chip-text-disabled: $color-text-disabled;
+
+$chip-border: $color-text-sub;
+$chip-border-hover: $color-border-strong;
+$chip-border-selected: $color-action;
+
+// ============================================================
+// Legacy Aliases
+// 기존 변수명 유지, 신규 변수로 포인팅.
+// ============================================================
+
+$black: #000000; // 아이콘/레이아웃용 순수 검정 — 텍스트는 $color-text 사용
+$white: $neutral-0;
+$white-ter: $neutral-100;
+$col-link: $sys-blue;

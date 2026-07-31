@@ -1,0 +1,24 @@
+// utils/_index.scss — 컴포넌트가 가져가는 단일 창구 (CSS 미방출).
+//
+// 사용:
+//   @use 'utils' as *;
+//   .login { @include flex(column); gap: $space-16; color: $color-text; }
+//
+// `as *` 로 가져가므로 mixin·변수를 namespace 없이 그대로 쓴다.
+// includePaths 에 src/assets/scss 가 등록돼 있어(angular.json) 경로는 항상 'utils' 다.
+//
+// ── 이 파일이 forward 하지 않는 것 ──────────────────────────
+// CSS를 방출하는 파일은 제외한다. 컴포넌트가 forward 를 통해 가져가면
+// 같은 클래스·keyframes 가 컴포넌트마다 다시 방출돼 스타일 예산을 잡아먹는다.
+//   utils/motion, utils/animations, global/utilities, base/*, templates/*
+// 이들은 src/styles.scss 에서만 1회 @use 한다.
+
+@forward 'functions'; // rem(), px_rem()
+@forward 'variables'; // 치수·타이포 토큰
+@forward 'colors'; // 색상 토큰
+@forward 'z-index'; // z-index 토큰
+@forward 'mediaquery'; // breakpoint mixin
+@forward 'a11y'; // 접근성 mixin
+@forward 'mixins'; // 레이아웃·타이포·transform mixin
+@forward 'buttons'; // button() mixin
+@forward 'motion-mixins'; // 이름 지정 모션 클래스 생성 mixin

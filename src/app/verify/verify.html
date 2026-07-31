@@ -1,0 +1,63 @@
+<section class="verify" [class.is-ready]="ready()">
+  <header class="verify-header motion-fade-in">
+    <h2 class="verify-title">인증코드 입력</h2>
+    <p class="verify-desc">{{ identifier }} 로 보낸 6자리 코드를 입력하세요</p>
+  </header>
+
+  <div class="content motion-fade-in motion-delay-1">
+    <form class="content-body" (submit)="$event.preventDefault(); verify(otpRef.value)">
+      <label class="field-label" for="verify-code">인증코드</label>
+      <input
+        #otpRef
+        id="verify-code"
+        class="field-input is-code"
+        type="text"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
+        placeholder="000000"
+        [attr.aria-invalid]="!!error()"
+        [attr.aria-describedby]="error() ? 'verify-error' : null"
+      />
+
+      @if (error()) {
+        <p class="field-error" id="verify-error" role="alert" animate.enter="motion-fade-enter">
+          {{ error() }}
+        </p>
+      }
+      @if (success()) {
+        <p class="field-success" role="status" animate.enter="motion-fade-enter">{{ success() }}</p>
+      }
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [class.is-loading]="loading()"
+        [disabled]="loading() || isExpired()"
+      >
+        {{ loading() ? '확인 중...' : '인증하기' }}
+      </button>
+    </form>
+
+    <div class="content-footer">
+      <!--
+        타이머 둘의 뜻이 다르다.
+        · expiresLabel — 코드 유효시간(5분). 0 이 되면 코드가 죽는다
+        · resendWait   — 재전송 대기(60초). 이 안에 누르면 백엔드가 429
+      -->
+      <p class="verify-expiry" [class.is-expired]="isExpired()" role="status">
+        @if (isExpired()) {
+          <span class="verify-expiry-time">00:00</span>
+          <span class="verify-expiry-note">시간 만료</span>
+        } @else {
+          <span class="verify-expiry-time">{{ expiresLabel() }}</span>
+          <span class="verify-expiry-note">뒤 만료</span>
+        }
+      </p>
+
+      <button type="button" class="btn-text" [disabled]="!canResend()" (click)="resend()">
+        {{ canResend() ? '인증코드 다시 받기' : resendWait() + '초 후 다시 받기' }}
+      </button>
+    </div>
+  </div>
+</section>

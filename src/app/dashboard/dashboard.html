@@ -1,0 +1,42 @@
+<section class="dashboard" [class.is-ready]="ready()">
+  <header class="dashboard-header motion-fade-in">
+    <h2 class="dashboard-title">대시보드</h2>
+    <button type="button" class="btn-text" (click)="logout()">로그아웃</button>
+  </header>
+
+  <div class="content motion-fade-in motion-delay-1">
+    <div class="content-header">
+      <h3 class="content-title">로그인 정보</h3>
+    </div>
+
+    <!-- 항목 이름과 값의 관계라 dl 을 쓴다 -->
+    <dl class="content-body info-list">
+      <div class="info-item">
+        <dt class="info-term">id</dt>
+        <dd class="info-desc">{{ user()?.id ?? '(null)' }}</dd>
+      </div>
+      <div class="info-item">
+        <dt class="info-term">email</dt>
+        <dd class="info-desc">{{ user()?.email ?? '-' }}</dd>
+      </div>
+      <div class="info-item">
+        <dt class="info-term">phone</dt>
+        <dd class="info-desc">{{ user()?.phone ?? '-' }}</dd>
+      </div>
+      <div class="info-item">
+        <dt class="info-term">method</dt>
+        <dd class="info-desc">{{ user()?.method }}</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="dashboard-actions motion-fade-in motion-delay-2">
+    <button type="button" class="btn-primary" (click)="testApi()">
+      API 테스트 (GET /api/auth/user)
+    </button>
+
+    @if (apiResult()) {
+      <pre class="api-result" animate.enter="motion-fade-enter">{{ apiResult() }}</pre>
+    }
+  </div>
+</section>

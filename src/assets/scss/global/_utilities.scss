@@ -1,0 +1,119 @@
+// global/_utilities.scss — 전역 유틸 클래스 (CSS 방출).
+// src/styles.scss 에서만 1회 @use 한다.
+//
+// 왜 분리했는가:
+// 이전 저장소는 이 클래스들을 _mediaquery.scss / _a11y.scss / _helpers.scss /
+// _mixins.scss 안에 함께 두었다. 컴포넌트가 mixin 을 쓰려고 그 파일을 가져가면
+// 클래스까지 딸려 방출돼, 스타일을 한 줄도 쓰지 않은 컴포넌트가 4.6kB 를 차지했다
+// (anyComponentStyle 경고선 4kB 초과). mixin 제공과 클래스 방출을 갈라둔다.
+
+@use '../utils' as *;
+
+// ============================================================
+// 접근성
+// ============================================================
+
+.is-a11y-button-alt {
+  @include a11yButtonAltHidden();
+}
+
+.is-visually-hidden {
+  @include a11y_visually_hidden();
+}
+
+.a11y-hidden {
+  @include a11y_visually_hidden();
+}
+
+// ============================================================
+// 이미지
+// ============================================================
+
+.img-container {
+  width: 100%;
+
+  img {
+    @include objectFit();
+  }
+}
+
+// ============================================================
+// 상태·표시
+// ============================================================
+
+.is-pointer-events-none {
+  pointer-events: none !important;
+}
+
+.is-bold {
+  font-weight: bold !important;
+}
+
+.is-margin-bottom-0 {
+  margin-bottom: 0 !important;
+}
+
+// 개발 중 확인용 오버레이 — 배포 전에 사용처를 지운다.
+.dev-only {
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: unset;
+}
+
+// `.link` 는 base/_typography.scss 가 방출한다 (타이포 규칙이라 그쪽이 제자리).
+
+// ============================================================
+// 화면 크기별 표시/숨김
+// ============================================================
+
+.is-hidden-mobile {
+  @include mobile() {
+    display: none !important;
+  }
+}
+
+.is-hidden-tablet {
+  @include tablet() {
+    display: none !important;
+  }
+}
+
+.is-hidden-touch {
+  @include touch() {
+    display: none !important;
+  }
+}
+
+.is-hidden-desktop {
+  @include desktop() {
+    display: none !important;
+  }
+}
+
+.is-hidden-xsmallScreen {
+  @include xsmallScreen() {
+    display: none !important;
+  }
+}
+
+.is-hidden-smallWidth {
+  @include smallWidth-only() {
+    display: none !important;
+  }
+}
+
+.is-hidden-smallHeight {
+  @include smallHeight-only() {
+    display: none !important;
+  }
+}
+
+.is-smallWidth-only {
+  display: none !important;
+
+  @include smallWidth-only() {
+    display: block !important;
+  }
+}

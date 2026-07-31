@@ -1,0 +1,207 @@
+// _animations.scss — 전역 @keyframes 모음 (CSS 방출).
+// src/styles.scss 에서만 1회 @use 한다. utils/_index.scss 는 forward 하지 않는다
+// (컴포넌트가 가져가면 keyframes 가 컴포넌트마다 중복 방출된다).
+//
+// 대부분 이전 프로젝트(아바타·스프라이트) 전용이다. 사용처를 확정한 뒤 정리한다.
+//   이전 프로젝트 전용: sprite-200 / sprite-100 / spriteAni_step4 / spriteAni_step5
+//                      / shaking / statusIndicatorPulse / fadeInOut
+//   진입 모션은 _motion.scss 의 motion-* 체계를 쓴다 (아래 fadeIn 과 역할 중복).
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.2 !important;
+  }
+  to {
+    opacity: 1 !important;
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes sprite-200 {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes sprite-100 {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
+}
+
+@keyframes shaking {
+  0% {
+    transform: rotate(0deg);
+  }
+  12% {
+    transform: rotate(0deg);
+  }
+  14.5% {
+    transform: rotate(1.5deg);
+  } // 각도 더 감소
+  17.5% {
+    transform: rotate(-1.5deg);
+  } // 각도 더 감소
+  20% {
+    transform: rotate(2deg);
+  } // 각도 더 감소
+  24.5% {
+    transform: rotate(-1.5deg);
+  } // 각도 더 감소
+  30.5% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes statusIndicatorPulse {
+  0% {
+    opacity: 0.8;
+    transform: scaleX(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes spriteAni_step5 {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -1440px 0;
+  }
+}
+
+@keyframes spriteAni_step4 {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -1080px 0;
+  }
+}
+
+//------------------------------------------------------------------------------
+// Mixin: sprite-anim
+//------------------------------------------------------------------------------
+// Parameters:
+//   $prefix         : 이름 접두사. keyframes, container/img 클래스명에 사용됩니다.
+//   $sprite-url     : 스프라이트 이미지 URL.
+//   $frame-width    : 한 프레임의 너비(px).
+//   $frame-height   : 한 프레임의 높이(px).
+//   $frame-count    : 전체 프레임 개수.
+//   $play-duration  : 한 사이클에서 애니메이션(프레임 전환)에 쓰는 시간.
+//   $pause-duration : 한 사이클에서 애니메이션 후 정지하는 시간.
+//
+// Example usage:
+//   @include sprite-anim(
+//     "avatar",
+//     "/assets/images/sprite/avatar@2x.png",
+//     124px, 140px, 7,
+//     1s, 3s
+//   );
+//
+// This will generate:
+// - @keyframes avatar-keyframe { … }
+// - .avatar-container { width:124px; height:140px; overflow:hidden; }
+// - .avatar-img { background-image:url(...); … }
+// - .avatar-img.is-active { animation: avatar-keyframe 4s steps(6,end) infinite; }
+//------------------------------------------------------------------------------
+// @mixin sprite-anim(
+//   $prefix,
+//   $sprite-url,
+//   $frame-width,
+//   $frame-height,
+//   $frame-count,
+//   $play-duration,
+//   $pause-duration: 0s
+// ) {
+//   // 총 주기 = 재생 시간 + 정지 시간
+//   $total-duration: $play-duration + $pause-duration;
+//   // keyframes 구간에서 애니메이션이 끝나는 지점(비율)
+//   $play-percent: ($play-duration / $total-duration) * 100%;
+//   // steps() 용 스텝 수 = (프레임 수 - 1)
+//   $step-count: $frame-count - 1;
+
+//   //------------------------------------------------------------------------------
+//   // 1) Keyframes 자동 생성
+//   //------------------------------------------------------------------------------
+//   @keyframes #{$prefix}-keyframe {
+//     // 0%: 첫 프레임
+//     0% {
+//       background-position: 0 0;
+//     }
+//     // play-percent%: 마지막 프레임 위치로 전환 완료
+//     #{$play-percent}% {
+//       background-position: (-#{$frame-width} * $step-count) 0;
+//     }
+//     // 100%: 마지막 프레임 유지
+//     100% {
+//       background-position: (-#{$frame-width} * $step-count) 0;
+//     }
+//   }
+
+//   //------------------------------------------------------------------------------
+//   // 2) Container 정의
+//   //------------------------------------------------------------------------------
+//   .#{$prefix}-container {
+//     position: relative;
+//     width:  $frame-width;
+//     height: $frame-height;
+//     overflow: hidden; // 한 프레임 영역만 보이게 잘라냄
+//   }
+
+//   //------------------------------------------------------------------------------
+//   // 3) Sprite 이미지 정의
+//   //------------------------------------------------------------------------------
+//   .#{$prefix}-container {
+//     .#{$prefix}-img {
+//       position: absolute;
+//       top: 0; left: 0;
+
+//       // 전체 스프라이트 시트 크기
+//       width:  $frame-width  * $frame-count;
+//       height: $frame-height;
+
+//       background-image: url("#{$sprite-url}");
+//       background-repeat: no-repeat;
+//       background-size: $frame-width * $frame-count $frame-height;
+//       background-position: 0 0;
+
+//       //------------------------------------------------------------------------------
+//       // 4) is-active 클래스 붙으면 애니메이션 실행
+//       //------------------------------------------------------------------------------
+//       &.is-active {
+//         animation-name:       #{$prefix}-keyframe;
+//         animation-duration:   $total-duration;
+//         animation-timing-function: steps($step-count, end);
+//         animation-iteration-count: infinite;
+//         animation-fill-mode:  forwards; // 마지막 프레임 유지
+//       }
+//     }
+//   }
+// }

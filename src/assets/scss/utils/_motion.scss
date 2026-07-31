@@ -1,0 +1,357 @@
+// _motion.scss — 공용 진입/등장 모션 (전역 SCSS motion class).
+// (.claude/rules/animations.md 기준) 페이지 진입/정적 요소 순차 등장은 ready signal + 이 class로 처리.
+// 부모에 .is-ready 가 붙으면 자식 motion-* 이 재생된다.
+//
+// 주의: motion-rise-in / motion-pop-in 은 transform 을 애니메이트하므로,
+// 자체 포지셔닝에 transform(translate 등)을 쓰는 요소에는 붙이지 말 것(덮어써짐).
+// 그런 요소에는 opacity 만 바꾸는 motion-fade-in 을 쓰거나, transform 없는 내부 래퍼에 건다.
+//
+// 사용:
+//   <section [class.is-ready]="ready()">
+//     <div class="motion-rise-in">…</div>
+//     <div class="motion-fade-in motion-delay-1">…</div>
+//   </section>
+
+// M3 easing 토큰 (m3.material.io/styles/motion/easing-and-duration)
+// 진입은 decelerate 계열 — emphasized 는 화면의 주인공(히어로)에, standard 는 보조 요소에.
+:root {
+  --motion-ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --motion-ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+$ease-emphasized-decel: cubic-bezier(0.05, 0.7, 0.1, 1);
+$ease-standard-decel: cubic-bezier(0, 0, 0, 1);
+$ease-standard-accel: cubic-bezier(0.3, 0, 1, 1); // 퇴장(짧게)용
+
+// ============================================================
+// Soft Sequence — 페이지 진입 순차 등장 (animations.md 기준 체계)
+// 종류(motion-seq*)와 순서(motion-order-*)를 분리해 조합한다.
+//   motion-seq       일반 rise   620ms soft
+//   motion-seq-fade  단순 fade   520ms standard
+//   motion-seq-pop   핵심 pop    700ms emphasized (살짝 overshoot)
+//   motion-seq-left/right  좌우 조작 UI slide  520ms soft
+//   motion-order-1~5 80/220/360/500/640ms
+// ============================================================
+// 이름 지정 클래스 생성 mixin은 utils/_motion-mixins.scss 로 분리 (utils/_index.scss 경유로 어디서든 사용).
+// 이 파일은 전역 클래스/keyframes 방출 전용 — src/styles.scss 에서만 1회 @use 한다.
+// utils/_index.scss 는 이 파일을 forward 하지 않는다(컴포넌트마다 클래스가 중복 방출됨).
+
+.motion-seq,
+.motion-seq-fade,
+.motion-seq-pop,
+.motion-seq-left,
+.motion-seq-right {
+  opacity: 0;
+}
+
+.motion-seq {
+  transform: translateY(4px);
+}
+
+.motion-seq-pop {
+  transform: scale(0.93);
+}
+
+.motion-seq-left {
+  transform: translateX(-16px);
+}
+
+.motion-seq-right {
+  transform: translateX(16px);
+}
+
+.is-ready .motion-seq {
+  animation: motion-seq-rise 620ms var(--motion-ease-soft) both;
+}
+
+.is-ready .motion-seq-fade {
+  animation: motion-seq-fade 520ms var(--motion-ease-standard) both;
+}
+
+.is-ready .motion-seq-pop {
+  animation: motion-seq-pop 700ms var(--motion-ease-emphasized) both;
+}
+
+.is-ready .motion-seq-left,
+.is-ready .motion-seq-right {
+  animation: motion-seq-slide 520ms var(--motion-ease-soft) both;
+}
+
+// 등장 순서 — "안내 문구 → 핵심 콘텐츠 → 조작 UI → 다음 행동"
+.is-ready .motion-order-1 {
+  animation-delay: 80ms;
+}
+
+.is-ready .motion-order-2 {
+  animation-delay: 220ms;
+}
+
+.is-ready .motion-order-3 {
+  animation-delay: 360ms;
+}
+
+.is-ready .motion-order-4 {
+  animation-delay: 500ms;
+}
+
+.is-ready .motion-order-5 {
+  animation-delay: 640ms;
+}
+
+@keyframes motion-seq-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-seq-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes motion-seq-pop {
+  65% {
+    opacity: 1;
+    transform: scale(1.018);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes motion-seq-slide {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ============================================================
+// Legacy motion-*-in / motion-delay-* — main 등 기존 사용처 유지용.
+// 신규 코드는 위 motion-seq 체계를 사용한다. (마이그레이션 후 제거 예정)
+// ============================================================
+
+// 초기(대기) 상태 — .is-ready 전까지 숨김
+.motion-rise-in,
+.motion-fade-in,
+.motion-pop-in,
+.motion-slide-in-left,
+.motion-slide-in-right {
+  opacity: 0;
+}
+
+.motion-rise-in {
+  transform: translateY(4px);
+}
+
+.motion-pop-in {
+  transform: scale(0.9);
+}
+
+.motion-slide-in-left {
+  transform: translateX(-4px);
+}
+
+.motion-slide-in-right {
+  transform: translateX(4px);
+}
+
+// .is-ready 부착 시 재생 — 기준 속도: .4s ease-in-out (motion-fade-out 과 동일)
+.is-ready .motion-rise-in {
+  animation: motion-rise-in 0.4s ease-in-out both;
+}
+
+.is-ready .motion-fade-in {
+  animation: motion-fade-in 0.4s ease-in-out both;
+}
+
+// 히어로 강조 — emphasized + long(450ms)
+.is-ready .motion-pop-in {
+  animation: motion-pop-in 450ms $ease-emphasized-decel both;
+}
+
+// 좌/우 shared X axis 진입 — 유틸리티 요소라 standard 로 담백하게
+.is-ready .motion-slide-in-left {
+  animation: motion-slide-in-left 300ms $ease-standard-decel both;
+}
+
+.is-ready .motion-slide-in-right {
+  animation: motion-slide-in-right 300ms $ease-standard-decel both;
+}
+
+// 순차 등장 지연
+.is-ready .motion-delay-1 {
+  animation-delay: 0.12s;
+}
+
+.is-ready .motion-delay-2 {
+  animation-delay: 0.24s;
+}
+
+.is-ready .motion-delay-3 {
+  animation-delay: 0.36s;
+}
+
+// ============================================================
+// 목록 항목 스태거 등장 — animate.enter class 형태 (DOM 삽입 시 재생).
+// is-ready 게이트가 아니라 삽입 시점에 재생되므로, 더보기로 추가되는 묶음도 각자 스태거된다.
+// 이번에 추가된 묶음의 "상대" index 를 --motion-index 로 넘긴다(전체 index 를 쓰면
+// 2페이지부터 지연이 누적돼 한참 늦게 나타남).
+//   <li animate.enter="motion-stagger-in" [style.--motion-index]="$index - enterStart()">
+// (기존 항목은 track 으로 DOM 이 유지돼 enter 가 다시 발화하지 않는다)
+// ============================================================
+.motion-stagger-in {
+  animation: motion-rise-in 480ms var(--motion-ease-soft) both;
+  animation-delay: calc(var(--motion-index, 0) * 60ms);
+}
+
+// @if / overlay / modal enter·leave (animate.enter / animate.leave class 형태)
+.motion-fade-enter {
+  animation: motion-fade-in 300ms ease-out both;
+}
+
+.motion-fade-leave {
+  animation: motion-fade-out 220ms ease-in both;
+}
+
+// motion-fade-out(0 → 4px 가라앉음)의 역방향 — 4px 아래에서 떠오르며 등장
+@keyframes motion-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes motion-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@keyframes motion-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes motion-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes motion-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ============================================================
+// 페이지 이탈 — navigate 전에 페이지 루트에 .is-leaving 을 붙이면 .4s fade-out.
+// 컴포넌트는 createPageLeave()(core/page-leave.ts)의 run()으로 이동을 감싼다.
+// fill both 라 fade-out 완료 상태(투명)가 이동 시점까지 유지된다.
+// (배경까지 함께 사라져도 body 가 같은 캔버스색이라 색 변화 없음)
+// ============================================================
+.is-leaving {
+  animation: motion-fade-out 0.4s ease-in-out both;
+  pointer-events: none; // 이탈 중 재클릭 방지
+}
+
+// (withViewTransitions 는 제거됨 — 문서 동결로 인한 1프레임 팝/깜빡임. app.config.ts 주석 참고.
+//  페이지 전환은 .is-leaving 이탈 fade + 각 페이지 is-ready 진입 fade 조합으로 처리한다.)
+
+// 접근성 — 모션 최소화 선호 시 즉시 표시.
+// .is-ready 파생 셀렉터(특이도 0,2,0)의 animation 을 확실히 덮도록 같은 특이도로 리셋한다.
+@media (prefers-reduced-motion: reduce) {
+  .motion-seq,
+  .motion-seq-fade,
+  .motion-seq-pop,
+  .motion-seq-left,
+  .motion-seq-right,
+  .is-ready .motion-seq,
+  .is-ready .motion-seq-fade,
+  .is-ready .motion-seq-pop,
+  .is-ready .motion-seq-left,
+  .is-ready .motion-seq-right,
+  .motion-rise-in,
+  .motion-fade-in,
+  .motion-pop-in,
+  .motion-slide-in-left,
+  .motion-slide-in-right,
+  .is-ready .motion-rise-in,
+  .is-ready .motion-fade-in,
+  .is-ready .motion-pop-in,
+  .is-ready .motion-slide-in-left,
+  .is-ready .motion-slide-in-right {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  // animate.enter 스태거 — 애니메이션 없이 즉시 표시 (기본 상태가 visible 이라 opacity 리셋 불필요)
+  .motion-stagger-in {
+    animation: none;
+  }
+}
+
+@keyframes breathing {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bouncy {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+}

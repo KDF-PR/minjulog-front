@@ -1,0 +1,33 @@
+// _a11y.scss — 접근성 mixin (CSS 미방출).
+// `.is-visually-hidden` / `.is-a11y-button-alt` 클래스는 global/_utilities.scss 가
+// 전역 1회 방출한다 (컴포넌트마다 중복 방출되지 않게 여기서는 mixin만 제공).
+
+@mixin a11yFocusStyle() {
+  // 포커스 기본 스타일. 흰색과 파란색의 색상대비 비율이 3:1 이상이므로 모든 배경색에 적합하다.
+  outline: 2px solid #0071e3;
+  outline-offset: 2px;
+}
+
+// https://www.wah.or.kr:444/Participation/consultingView.asp?cType=&seq=3100&page=1?cType=&page=1&FindTxt=&cMail=&flag=2
+// button 요소 안쪽의 텍스트를 span 요소로 한 번 더 감싼 다음 span 요소를 화면에 보이지 않도록 CSS를 이용하여 처리할 수 있습니다.
+// visibility:hidden 속성을 사용하면 화면에는 보이지 않지만 화면낭독기는 읽을 수 있습니다.
+// 한편 visibility:hidden 속성을 사용했을 때 화면낭독기는 읽어야 하지만 이를 읽지 않는 화면낭독기가 있을 수 있습니다.
+// 이런 경우의 문제를 해결하려면 다음과 같은 코드를 작성할 수 있습니다.
+@mixin a11yButtonAltHidden() {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  font-size: 0;
+  line-height: 0;
+  overflow: hidden;
+}
+
+@mixin a11y_visually_hidden() {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
