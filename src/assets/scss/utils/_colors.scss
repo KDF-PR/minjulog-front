@@ -5,9 +5,9 @@
 // 화면 SCSS 는 Semantic·Component 토큰만 참조한다. Primitive 직접 참조 금지 —
 // 램프가 바뀔 때 고쳐야 할 지점이 화면으로 흩어진다.
 //
-// 브랜드 램프를 두지 않는다. 디자인 시스템에 brand 램프가 없고,
-// 시안 실측색이 전부 neutral 램프 값과 정확히 일치한다.
-// 근거: docs/ui-cleanup/02-review.md 2절 ② · 4-1 확정표.
+// 값의 출처는 Figma 「[내부] 민주로그 UI 디자인」의 로컬 변수다. 2026 디자인 시스템의
+// 구조를 복사해 온 뒤 이 프로젝트에 맞게 고쳐 쓰는 방식이라 원본 라이브러리와 값이 다르다.
+// 층 구조와 Figma 이름을 옮기는 규칙은 .claude/rules/style.md 「색상」.
 
 // Primitive — Neutral
 // 시안에서 실측된 8단. 400 / 600 / 800 은 쓰이는 곳이 없어 정의하지 않는다.
@@ -18,8 +18,16 @@ $neutral-100: #f5f5f5;
 $neutral-200: #ededed;
 $neutral-300: #d9d9d9;
 $neutral-500: #8a8a8a; // muted / disabled text
-$neutral-700: #444444; // secondary text · 획득 스탬프
+$neutral-700: #444444; // secondary text
 $neutral-900: #111111; // primary text
+
+// Primitive — Brand
+// Figma 가 primitive 로 노출하는 3색. 스탬프 마커가 장소마다 이 셋을 돌려 쓴다.
+// 브랜드 색이 없는 프로젝트는 이 절을 비운다.
+
+$brand-pink: #fd79ff;
+$brand-skyblue: #6dd3ff;
+$brand-orange: #ffbb00;
 
 // Primitive — System
 
@@ -29,13 +37,25 @@ $sys-green: #2e9d63; // success
 $sys-blue: #2563eb; // focus, link
 
 // Semantic — Background (아래 → 위 레이어)
-// 페이지가 흰색이고 카드·탭바가 #fafafa 다. 순서를 뒤집으면 카드 경계가 사라진다.
+// 본문 영역이 흰색이고 카드가 #fafafa 다. 순서를 뒤집으면 카드 경계가 사라진다.
 
-$color-bg-page: $neutral-0;
+$color-bg-page: $neutral-0; // 본문 기본값. 화면 상단 밴드는 아래 확장 슬롯을 쓴다
 $color-bg: $neutral-0;
-$color-bg-subtle: $neutral-50; // 카드 · 탭바
-$color-bg-muted: $neutral-100; // 미획득 스탬프 원형 · 섹션 구분 밴드
-$color-bg-inverse: $neutral-900; // 진행률 채움 · 탭 활성 pill
+$color-bg-subtle: $neutral-50; // 카드
+$color-bg-muted: $neutral-100; // 진행률 트랙 · 섹션 구분 밴드
+$color-bg-inverse: $neutral-900;
+
+// Semantic — Background (프로젝트 확장)
+// Figma 에 이 색들을 받쳐주는 primitive 가 없어 값을 직접 적는다.
+// primitive 가 생기면 참조로 바꾼다.
+
+$color-bg-brand-lemon: #fffb7e; // main 배경 · 내 방문기록 헤더 · 탭 활성 pill
+$color-bg-brand-lime: #ccff7b; // 방문할 곳 헤더
+$color-bg-brand-sky: #abf1ff; // 참여 선물 헤더
+$color-bg-brand-light: #55ee63; // 방문 완료 카드의 장소 이름 밴드
+$color-bg-status-error: #ffecec;
+$color-bg-status-disabled: #dfdfdf;
+$color-bg-overlay-disabled: #f1edea; // 아직 방문하지 않은 장소 카드
 
 // Semantic — Border
 
@@ -50,6 +70,11 @@ $color-action: $neutral-900;
 $color-action-hover: $neutral-700;
 $color-action-pressed: $neutral-900;
 $color-action-disabled: $neutral-200;
+
+// Semantic — Action (프로젝트 확장)
+// 진행 상태를 나타내는 초록. 위 $color-action 계열(검정)과 쓰임이 다르다.
+
+$color-action-brand: #45d652; // 진행률 채움
 
 // Semantic — Text
 
@@ -130,10 +155,37 @@ $chip-border: $color-border;
 $chip-border-hover: $color-border-strong;
 $chip-border-selected: $color-action;
 
-// Component — Stamp
-// 획득 원형은 $color-bg-inverse(#111111)가 아니라 #444444 다. 탭 활성 pill 과 구분된다.
+// Component — TabBar
+// 탭바 배경이 하늘색이고 선택된 탭만 레몬색 pill 에 검은 테두리다.
 
-$stamp-bg-earned: $neutral-700;
-$stamp-bg-pending: $color-bg-muted;
-$stamp-mark: $color-text-inverse;
+$tabbar-bg: $brand-skyblue;
+$tabbar-item-text: $color-text;
+$tabbar-item-active-bg: $color-bg-brand-lemon;
+$tabbar-item-active-text: $color-text;
+$tabbar-item-active-border: $color-text;
+
+// Component — Progress
+
+$progress-track: $color-bg-muted;
+$progress-fill: $color-action-brand;
+
+// Component — Stamp
+// 방문 완료 마커는 한 색이 아니라 장소마다 세 색을 돌려 쓴다.
+// 순서를 화면에서 계산해야 해서 목록 형태로도 함께 둔다.
+
+$stamp-mark-1: $brand-pink;
+$stamp-mark-2: $brand-skyblue;
+$stamp-mark-3: $brand-orange;
+$stamp-mark-cycle: ($stamp-mark-1, $stamp-mark-2, $stamp-mark-3);
+
+$stamp-mark-text: $color-text; // 마커 안 「방문 완료」 글자
+$stamp-name-bg: $color-bg-brand-light; // 완료 카드의 장소 이름 밴드
+$stamp-name-text: $color-text;
+
+// 아래 3개는 예전 이름이다. my-log.scss 가 아직 쓰고 있어 값만 새 디자인에 맞췄다.
+// 화면을 옮길 때 함께 지운다.
+$stamp-bg-earned: $stamp-mark-1;
+$stamp-bg-pending: $color-bg-overlay-disabled;
+$stamp-mark: $stamp-mark-text;
+
 $stamp-label: $color-text-sub;
