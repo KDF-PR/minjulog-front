@@ -1,0 +1,50 @@
+// reward-notice.scss — 받을 수 있는 선물 안내 카드.
+// 카드 배경(#fafafa)이 페이지(#ffffff)와 달라 1px 테두리와 함께 경계가 남는다.
+
+@use 'utils' as *;
+
+:host {
+  display: block;
+}
+
+.reward-notice {
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-lg;
+  @include flex(row, flex-start, center);
+  gap: $space-12;
+  padding: $spacing-card-sm;
+  background-color: $color-bg-subtle;
+
+  .reward-notice-icon {
+    border-radius: $radius-md;
+    width: $control-md;
+    height: $control-md;
+    flex-shrink: 0;
+    @include flexCenter();
+    background-color: $color-border-strong;
+    color: $color-text-inverse;
+
+    svg {
+      width: $icon-md;
+      height: $icon-md;
+    }
+  }
+
+  .reward-notice-title {
+    flex: 1;
+    color: $color-text-sub;
+    @include typo-ds('body', 'sm');
+  }
+
+  .reward-notice-link {
+    flex-shrink: 0;
+    color: $color-text;
+    @include typo-ds('label', 'md');
+    @include font-weight('bold');
+    cursor: pointer;
+
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
+  }
+}

@@ -1,35 +1,37 @@
-// _dialog.scss — 기능형 dialog 공통 레이아웃 (CSS 방출, 전역 1회).
-// 카드 프레임/사이즈는 구 .dialog-container 기준, header/body/footer/버튼은 .dialog 기준으로 통합.
+// _dialog.scss — dialog 공통 레이아웃 (CSS 방출, 전역 1회).
+// 딤(.dialog-dim) → 카드(.dialog) → header / body / footer 순서로 쌓인다.
+// 딤 색은 디자인 시스템에 opacity·dim 토큰이 없어 프로젝트 전용 $color-dim 을 쓴다.
 
 @use '../utils' as *;
 
+.dialog-dim {
+  z-index: $z-index-dim;
+  position: fixed;
+  inset: 0;
+  @include flexCenter();
+  padding: $page-x;
+  background-color: $color-dim;
+}
+
 .dialog {
+  z-index: $z-index-dialog;
   position: relative;
-  @include border-radius($radius-sm);
-  border: 2px solid $color-action;
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-lg;
 
   width: 100%;
-  max-width: rem(312px);
-  max-height: rem(592px);
+  max-width: $content-max-width;
+  max-height: 80dvh;
 
   overflow-x: hidden;
   overflow-y: auto;
 
   @include flex(column);
-  gap: $space-16;
+  gap: $space-24;
 
   margin: 0 auto;
   padding: $space-24;
   background-color: $color-bg;
-
-  @include tablet() {
-    max-width: rem(360px);
-    max-height: rem(672px);
-  }
-
-  @include smallWidth-only() {
-    max-width: rem(296px);
-  }
 
   @include smallHeight-only() {
     max-height: 90dvh;
@@ -38,70 +40,54 @@
   .dialog-header {
     text-align: center;
     @include flex(column);
-    row-gap: $space-8; // 8px
+    row-gap: $space-8;
 
     .dialog-title {
-      @include typo-ds('title', 'md'); // 26px
-      @include font-weight('semiBold');
+      @include typo-ds('title', 'md');
+      @include font-weight('bold');
     }
 
     .dialog-subtitle {
-      @include typo-ds('body', 'sm'); // 14px
-      @include font-weight('medium');
+      @include typo-ds('body', 'sm');
       color: $color-text-sub;
     }
   }
 
   .dialog-body {
     @include flex(column);
-    gap: $space-8;
+    gap: $space-16;
+    color: $color-text-sub;
+    @include typo-ds('body', 'sm');
+    text-align: center;
   }
 
   .dialog-footer {
-    @include flex(row);
+    @include flex(column);
     gap: $space-8;
 
-    .btn {
-      height: 100%;
+    .btn-primary {
+      @include button('primary', 'lg');
+      width: 100%;
+
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
     }
 
     .btn-secondary {
-      @include border-radius($radius-sm);
-      @include flexCenter();
-      gap: $space-12;
-      padding: $spacing-btn-y-lg $spacing-btn-x-lg;
-      background-color: $btn-secondary-bg;
-      border: 1px solid $btn-secondary-border;
-      color: $btn-secondary-text;
+      @include button('secondary', 'lg');
+      width: 100%;
 
-      @include typo-ds('label', 'lg');
-      // @include font-weight('semiBold');
-    }
-
-    .btn-primary {
-      @include border-radius($radius-sm);
-      @include flexCenter();
-      flex-grow: 2;
-      gap: $space-12;
-      padding: $spacing-btn-y-lg $spacing-btn-x-lg;
-      background-color: $btn-primary-bg;
-      color: $btn-primary-text;
-      border: 1px solid $btn-primary-border;
-
-      @include typo-ds('label', 'lg');
-
-      &:disabled {
-        background-color: $btn-primary-bg-disabled;
-        color: $btn-primary-text-disabled;
-        border: 1px solid $btn-primary-border-disabled;
+      &:focus-visible {
+        @include a11yFocusStyle();
       }
-      // @include font-weight('semiBold');
     }
   }
 
   // 닫기 버튼 (× 텍스트)
   .btn-close {
-    @include border-radius($radius-full);
+    z-index: $z-index-dialog-btn-close;
+    border-radius: $radius-full;
     position: absolute;
     top: $space-12;
     right: $space-12;
@@ -113,17 +99,10 @@
     background-color: transparent;
     color: $color-text-sub;
 
-    @include font-size($fs24);
-  }
+    @include typo-ds('title', 'md');
 
-  // footer / 일반 버튼
-  // .btn {
-  //   flex: 1;
-  //   &.btn-primary {
-  //     @include button('primary', 'md');
-  //   }
-  //   &.btn-text {
-  //     @include button('text', 'md');
-  //   }
-  // }
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
+  }
 }

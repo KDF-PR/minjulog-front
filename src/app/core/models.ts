@@ -1,32 +1,34 @@
-// models.ts — 화면이 쓰는 모델. 전부 camelCase.
-//
-// **세 가지를 분리한다.**
-//   ① `SpaceContent` — 프론트가 들고 있는 고정 콘텐츠 (주소·설명·인증 팁)
-//   ② `Space`        — ①에 백엔드 마스터 값(uuid·필수 여부)을 더한 **장소 고정 정보**
-//   ③ `Visit`        — **사용자마다 다른 상태** (언제 어떤 사진으로 인증했는가)
-//
-// ②와 ③을 한 객체에 합치지 않는다. 합치면 사용자 상태가 바뀔 때마다 장소 정보까지
-// 새로 만들어야 하고, 로그인 전후로 같은 장소가 다른 객체가 된다.
-// 둘이 함께 필요한 화면은 `SpaceVisit` 로 짝지어 받는다.
-//
-// 백엔드 원형은 `api.dto.ts`, 변환은 `api.mapper.ts` 한 곳에서만 한다.
+/**
+ * 화면이 쓰는 모델. 전부 camelCase.
+ *
+ * 세 가지를 분리한다.
+ * - `SpaceContent` — 프론트가 들고 있는 고정 콘텐츠 (주소·설명·인증 팁)
+ * - `Space` — 위에 백엔드 마스터 값(uuid·필수 여부)을 더한 **장소 고정 정보**
+ * - `Visit` — **사용자마다 다른 상태** (언제 어떤 사진으로 인증했는가)
+ *
+ * `Space` 와 `Visit` 를 한 객체로 합치지 않는다. 합치면 방문 하나가 바뀔 때마다 장소 정보까지
+ * 새로 만들어야 하고, 로그인 전후로 같은 장소가 다른 객체가 된다.
+ * 둘이 함께 필요한 화면은 `SpaceVisit` 로 짝지어 받는다.
+ *
+ * 백엔드 원형은 `api.dto.ts`, 변환은 `api.mapper.ts` 한 곳에서만 한다.
+ */
 
 /** 장소 식별자 — 프론트 콘텐츠의 키. 백엔드 uuid 와는 별개다 */
 export type SpaceSlug =
-  | 'minjuhwa'
-  | 'youthhostel'
-  | 'myeongdong'
-  | 'maronie'
-  | 'jeontaeil'
-  | 'gwanghwamun';
+  | 'korean-democracy-museum'
+  | 'seoul-youth-hostel'
+  | 'myeongdong-cathedral'
+  | 'marronnier-park'
+  | 'jeon-taeil-bridge'
+  | 'gwanghwamun-square';
 
 export const SPACE_SLUGS: readonly SpaceSlug[] = [
-  'minjuhwa',
-  'youthhostel',
-  'myeongdong',
-  'maronie',
-  'jeontaeil',
-  'gwanghwamun',
+  'korean-democracy-museum',
+  'seoul-youth-hostel',
+  'myeongdong-cathedral',
+  'marronnier-park',
+  'jeon-taeil-bridge',
+  'gwanghwamun-square',
 ] as const;
 
 /** 리워드 단계. 백엔드 `REWARD_TIERS = (3, 6)` 과 같아야 한다 (`app.py:459`) */
@@ -57,6 +59,43 @@ export interface SpaceContent {
   photoGuide: string;
   /** 일일 추천 코스 순번. 방문 조건과 무관한 참고값 */
   courseOrder: number;
+
+  // ── 선택 항목 ─────────────────────────────────────────────
+  // 공식 콘텐츠를 못 받아 비어 있는 장소가 있다. **없으면 그 영역을 통째로 숨긴다.**
+
+  /** 대표 사진. `/assets/images/spaces/<slug>.jpg` */
+  heroImage?: string;
+  /** 예시 인증 사진. `/assets/images/spaces/<slug>-example.jpg` */
+  photoExample?: string;
+  /** 방문 정보 — 개방시간 · 요금 · 교통 */
+  visitInfo?: SpaceVisitInfo;
+  /** 지도 미리보기·길찾기용 좌표 */
+  coords?: SpaceCoords;
+  /** 가까운 다른 장소. 상세 화면 하단에서 다음 걸음을 잇는다 */
+  nearby?: NearbySpace[];
+}
+
+/** 현장에서 필요한 정보만 담는다. 없는 항목은 화면에서 뺀다 */
+export interface SpaceVisitInfo {
+  /** 예: `상시 개방`, `09:30 – 17:30` */
+  openingHours?: string;
+  /** 예: `무료 관람` */
+  admissionFee?: string;
+  /** 예: `혜화역 2번 출구` */
+  transit?: string;
+  /** 휴관일 등 보충 안내 */
+  note?: string;
+}
+
+export interface SpaceCoords {
+  lat: number;
+  lng: number;
+}
+
+export interface NearbySpace {
+  slug: SpaceSlug;
+  /** 도보 소요 분 */
+  walkMinutes: number;
 }
 
 // ── ② 장소 고정 정보 — 사용자와 무관 ────────────────────────────────

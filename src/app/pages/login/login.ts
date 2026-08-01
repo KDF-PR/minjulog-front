@@ -1,8 +1,16 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService, AuthMethod } from '../auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService, AuthMethod } from '../../auth/auth.service';
+import { RETURN_URL_PARAM } from '../../auth/auth.guard';
 
-/** 로그인 화면 — 이메일/SMS 선택 후 인증코드 발송. */
+/**
+ * L1 · L3 — 로그인 화면. 휴대폰/이메일을 골라 인증코드를 받는다.
+ *
+ * 두 경로는 입력값만 다르고 흐름이 같아 한 화면으로 둔다.
+ *
+ * 게이트에서 넘어왔다면 `returnUrl` 을 들고 있다. 여기서 쓰지는 않고
+ * verify 까지 그대로 넘긴다 — 복귀는 인증이 끝난 뒤에 일어난다.
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.html',
@@ -11,6 +19,7 @@ import { AuthService, AuthMethod } from '../auth/auth.service';
 export class Login implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   /** 진입 모션 게이트 — .is-ready 가 붙은 뒤 자식 motion-* 이 재생된다. */
   readonly ready = signal(false);
@@ -18,13 +27,18 @@ export class Login implements OnInit {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
+  /** 인증 후 돌아갈 주소. 게이트를 거치지 않고 직접 왔으면 null */
+  private returnUrl: string | null = null;
+
   ngOnInit(): void {
     // DOM 을 먼저 그린 다음 프레임에서 모션을 시작한다 (첫 프레임에 붙으면 재생되지 않음)
     requestAnimationFrame(() => this.ready.set(true));
 
-    // 이미 로그인돼 있으면 바로 대시보드로
+    this.returnUrl = this.route.snapshot.queryParamMap.get(RETURN_URL_PARAM);
+
+    // 이미 로그인돼 있으면 로그인 화면을 보여줄 이유가 없다
     this.auth.fetchUser().subscribe((user) => {
-      if (user) this.router.navigate(['/dashboard']);
+      if (user) this.router.navigateByUrl(this.returnUrl ?? '/my-log');
     });
   }
 
@@ -48,7 +62,9 @@ export class Login implements OnInit {
       next: () => {
         this.auth.pendingIdentifier = id;
         this.auth.pendingMethod = method;
-        this.router.navigate(['/verify']);
+        this.router.navigate(['/verify'], {
+          queryParams: this.returnUrl ? { [RETURN_URL_PARAM]: this.returnUrl } : {},
+        });
       },
       error: (err) => {
         // 백엔드가 한국어 메시지를 { error: "..." } 로 줌

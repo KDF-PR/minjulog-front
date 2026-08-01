@@ -1,9 +1,11 @@
-// api.dto.ts — 백엔드가 주는 응답 **원형**.
-//
-// 화면은 이 타입을 쓰지 않는다. 서비스가 `models.ts` 의 화면 모델로 바꿔서 넘긴다.
-// 백엔드 표기법이 섞여 있어(camelCase / snake_case) 경계를 한 곳에 모으려는 목적이다.
-//
-// 근거: `../kdemo-stamp-back/app.py` 의 각 라우트 select 절. 필드를 임의로 늘리지 않는다.
+/**
+ * 백엔드가 주는 응답 **원형**.
+ *
+ * 화면은 이 타입을 쓰지 않는다. 서비스가 `models.ts` 의 화면 모델로 바꿔서 넘긴다.
+ * 백엔드 표기법이 섞여 있어(camelCase / snake_case) 경계를 여기 모은다.
+ *
+ * 근거는 `app.py` 각 라우트의 select 절. 필드를 임의로 늘리지 않는다.
+ */
 
 /** `GET /api/spaces` — `app.py:350` (`select("id, name, is_required")`) */
 export interface SpaceDto {

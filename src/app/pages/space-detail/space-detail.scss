@@ -1,0 +1,152 @@
+// space-detail.scss — 03 방문할 곳 상세.
+// 대표 이미지 → 요약 → 구분 밴드 → 운영 정보 → 이야기 순서로 쌓는다.
+
+@use 'utils' as *;
+
+.space-detail {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  @include flex(column, flex-start, stretch);
+  background-color: $color-bg-page;
+  color: $color-text;
+
+  .space-detail-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: $space-24;
+  }
+
+  .space-detail-state {
+    padding: $space-48 $page-x;
+    color: $color-text-muted;
+    @include typo-ds('body', 'sm');
+    text-align: center;
+  }
+
+  .space-hero {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    @include flexCenter();
+    margin: $spacing-page-y-mobile 0 $space-20;
+    padding: 0 $page-x;
+    background-color: $color-bg-subtle;
+
+    img {
+      @include objectFit('horizontal', cover);
+      height: 100%;
+    }
+  }
+
+  .space-hero-caption {
+    color: $color-text-muted;
+    @include typo-ds('body', 'sm');
+    text-align: center;
+  }
+
+  .space-summary {
+    @include flex(column);
+    gap: $space-8;
+    padding: 0 $page-x $space-24;
+  }
+
+  .space-name {
+    @include flex(row, flex-start, center);
+    gap: $space-8;
+    flex-wrap: wrap;
+    @include typo-ds('title', 'lg');
+    @include font-weight('bold');
+  }
+
+  // 받기 전에는 외곽선, 받은 뒤에는 검정 배경으로 반전한다
+  .space-status {
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    padding: $space-2 $space-8;
+    color: $color-text-muted;
+    @include typo-ds('label', 'sm');
+
+    &.is-visited {
+      border-color: $chip-border-selected;
+      background-color: $chip-bg-selected;
+      color: $chip-text-selected;
+    }
+  }
+
+  .space-address {
+    color: $color-text-muted;
+    @include typo-ds('body', 'md');
+  }
+
+  .space-highlights {
+    @include flex(row);
+    gap: $space-8;
+    flex-wrap: wrap;
+  }
+
+  .space-highlight {
+    border: 1px solid $color-border-subtle;
+    border-radius: $radius-sm;
+    padding: $space-4 $space-8;
+    color: $color-text-muted;
+    @include typo-ds('label', 'sm');
+  }
+
+  .space-desc {
+    margin-top: $space-4;
+    @include typo-ds('body', 'md');
+  }
+
+  .section-band {
+    height: $section-band-height;
+    background-color: $color-bg-muted;
+  }
+
+  .space-facts,
+  .space-guide {
+    @include flex(column);
+    gap: $spacing-content-gap-md;
+    padding: $spacing-page-y-mobile $page-x;
+  }
+
+  .space-facts-title,
+  .space-guide-title {
+    @include typo-ds('label', 'md');
+    @include font-weight('bold');
+  }
+
+  .space-fact-list {
+    @include flex(column);
+  }
+
+  .space-fact {
+    border-bottom: 1px solid $color-border-subtle;
+    @include flex(row, flex-start, baseline);
+    gap: $space-16;
+    padding: $space-12 0;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .space-fact-term {
+    flex-shrink: 0;
+    width: 30%;
+    color: $color-text-muted;
+    @include typo-ds('body', 'sm');
+  }
+
+  .space-fact-value {
+    min-width: 0;
+    @include typo-ds('body', 'sm');
+    @include font-weight('bold');
+    overflow-wrap: anywhere;
+  }
+
+  .space-guide-text {
+    color: $color-text-sub;
+    @include typo-ds('body', 'sm');
+  }
+}

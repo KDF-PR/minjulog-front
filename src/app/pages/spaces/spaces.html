@@ -1,0 +1,51 @@
+<section class="spaces" [class.is-ready]="ready()">
+  <app-page-header (introSelect)="openIntro()" />
+
+  <div class="spaces-scroll">
+    <div class="spaces-intro motion-fade-in">
+      <h2 class="spaces-title">참여 기관 {{ totalCount() }}곳</h2>
+      <p class="spaces-desc">원하는 곳부터 자유롭게 둘러봐요</p>
+    </div>
+
+    @if (loadState() === 'loading') {
+      <p class="spaces-state" role="status">기관 목록을 불러오는 중이에요</p>
+    } @else if (loadState() === 'error') {
+      <p class="spaces-state" role="alert">기관 목록을 불러오지 못했어요</p>
+    } @else {
+      <ul class="space-list motion-fade-in motion-delay-1">
+        @for (item of spaceVisits(); track item.space.slug) {
+          <li class="space-row" [class.is-visited]="item.visit !== null">
+            <a class="space-link" [routerLink]="['/spaces', item.space.slug]">
+              <span class="space-mark">
+                @if (item.visit !== null) {
+                  <!-- 체크 아이콘 자산 미수령 — 임시 SVG -->
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12.5 10 17.5 19 7" />
+                  </svg>
+                }
+              </span>
+
+              <span class="space-text">
+                <strong class="space-name">{{ item.space.name }}</strong>
+                <span class="space-region">{{ item.space.region }}</span>
+              </span>
+
+              <span class="space-status">{{ item.visit !== null ? '받음' : '받기 전' }}</span>
+              <span class="space-chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+
+  <app-tab-bar />
+</section>
+
+<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

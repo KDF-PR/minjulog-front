@@ -1,16 +1,15 @@
 import { Component, computed, inject, signal, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService, OTP_RESEND_WAIT_SECONDS, OTP_TTL_SECONDS } from '../auth/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService, OTP_RESEND_WAIT_SECONDS, OTP_TTL_SECONDS } from '../../auth/auth.service';
+import { RETURN_URL_PARAM } from '../../auth/auth.guard';
 
 /**
- * 인증코드 입력 화면 — 6자리 코드 검증 후 대시보드로 이동.
+ * L2 — 인증코드 입력 화면. 6자리 검증 후 원래 자리로 복귀한다.
  *
- * 타이머가 두 개다. 뜻이 달라 한 값으로 합칠 수 없다.
- *   ① 유효시간(`expiresIn`)   — 코드가 언제 죽는가. 화면에 `mm:ss` 로 보여준다
- *   ② 재전송 대기(`resendWait`) — 다시 받기 버튼을 언제 누를 수 있는가
- * 둘 다 백엔드가 강제하는 값이라 `auth.service.ts` 의 상수를 그대로 쓴다.
- *
- * 대기(60초)가 유효시간(300초)보다 짧아서, 코드가 만료된 시점에는 재전송이 항상 열려 있다.
+ * 타이머가 둘인데 뜻이 달라 합칠 수 없다 — `expiresIn` 은 코드가 죽는 시각(`mm:ss` 표시),
+ * `resendWait` 는 다시 받기 버튼이 열리는 시각. 둘 다 백엔드가 강제하는 값이라
+ * `auth.service.ts` 상수를 그대로 쓴다. 대기(60초)가 유효시간(300초)보다 짧아
+ * 만료 시점에는 재전송이 항상 열려 있다.
  */
 @Component({
   selector: 'app-verify',
@@ -20,6 +19,10 @@ import { AuthService, OTP_RESEND_WAIT_SECONDS, OTP_TTL_SECONDS } from '../auth/a
 export class Verify implements OnInit, OnDestroy {
   private auth = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  /** 인증 후 돌아갈 주소. 게이트를 거치지 않았으면 null → 방문 현황으로 */
+  private returnUrl: string | null = null;
 
   /** 진입 모션 게이트 — .is-ready 가 붙은 뒤 자식 motion-* 이 재생된다. */
   readonly ready = signal(false);
@@ -43,6 +46,7 @@ export class Verify implements OnInit, OnDestroy {
   ngOnInit(): void {
     // DOM 을 먼저 그린 다음 프레임에서 모션을 시작한다 (첫 프레임에 붙으면 재생되지 않음)
     requestAnimationFrame(() => this.ready.set(true));
+    this.returnUrl = this.route.snapshot.queryParamMap.get(RETURN_URL_PARAM);
     // 이 화면에 들어온 시점이 곧 발송 직후다 — 두 타이머를 함께 시작한다
     this.startTicker();
   }
@@ -64,8 +68,10 @@ export class Verify implements OnInit, OnDestroy {
       next: () => {
         this.loading.set(false);
         this.stopTicker();
-        this.success.set('인증 성공! 대시보드로 이동합니다...');
-        setTimeout(() => this.router.navigate(['/dashboard']), 800);
+        // 원래 하려던 일로 돌려보낸다. 게이트를 거치지 않았으면 방문 현황으로.
+        const target = this.returnUrl ?? '/my-log';
+        this.success.set('인증되었습니다. 이동합니다...');
+        setTimeout(() => this.router.navigateByUrl(target), 800);
       },
       error: (err) => {
         this.error.set(err?.error?.error ?? '인증에 실패했습니다.');

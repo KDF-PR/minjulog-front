@@ -11,7 +11,7 @@ body {
 }
 
 .contents-wrapper {
-  z-index: $z-index-1;
+  z-index: $z-index-contents;
   width: 100dvw;
   height: 100dvh;
   max-height: 100dvh;
@@ -21,10 +21,10 @@ body {
 
   @include tablet() {
     @include absCenter();
-    border: 2px solid $neutral-700;
-    width: $wrapper_width;
-    height: $wrapper_height;
-    max-height: $wrapper_height;
+    border: 2px solid $color-border-strong;
+    width: $app-frame-width;
+    height: $app-frame-height;
+    max-height: $app-frame-height;
     margin: 0 auto;
   }
 }

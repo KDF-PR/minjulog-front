@@ -1,0 +1,76 @@
+<section class="my-log" [class.is-ready]="ready()">
+  <app-page-header (introSelect)="openIntro()" />
+
+  <div class="my-log-scroll">
+    <section class="progress motion-fade-in" aria-labelledby="my-log-progress-title">
+      <div class="progress-head">
+        <h2 class="progress-title" id="my-log-progress-title">내 스탬프</h2>
+        <p class="progress-count">
+          <strong class="progress-count-current">{{ visitedCount() }}</strong>
+          <span class="progress-count-total">/ {{ totalCount() }}개</span>
+        </p>
+      </div>
+
+      <div
+        class="progress-bar"
+        role="progressbar"
+        [attr.aria-valuenow]="visitedCount()"
+        aria-valuemin="0"
+        [attr.aria-valuemax]="totalCount()"
+      >
+        <span class="progress-bar-fill" [style.width.%]="progressPercent()"></span>
+      </div>
+
+      @if (remainingToReward() > 0) {
+        <!-- 선물 이름 미확정 — 시안의 자리 문구를 그대로 둔다 -->
+        <p class="progress-next">
+          다음 선물 <span class="progress-next-name">○○○○</span> 까지
+          <strong>{{ remainingToReward() }}개</strong>
+        </p>
+      }
+
+      @if (hasClaimableReward()) {
+        <app-reward-notice (linkSelect)="goReward()" />
+      }
+    </section>
+
+    <div class="section-band" aria-hidden="true"></div>
+
+    <section class="stamps motion-fade-in motion-delay-1" aria-labelledby="my-log-stamps-title">
+      <h2 class="stamps-title" id="my-log-stamps-title">방문하면 스탬프를 받아요</h2>
+
+      @if (loadState() === 'loading') {
+        <p class="stamps-state" role="status">스탬프를 불러오는 중이에요</p>
+      } @else if (loadState() === 'error') {
+        <p class="stamps-state" role="alert">스탬프를 불러오지 못했어요</p>
+      } @else {
+        <ul class="stamp-grid">
+          @for (item of spaceVisits(); track item.space.slug) {
+            <li class="stamp-item">
+              <span class="stamp-circle" [class.is-earned]="item.visit !== null">
+                @if (item.visit !== null) {
+                  <!-- 체크 아이콘 자산 미수령 — 임시 SVG -->
+                  <svg
+                    class="stamp-check"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12.5 10 17.5 19 7" />
+                  </svg>
+                }
+              </span>
+              <span class="stamp-label">{{ item.space.shortName }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </div>
+
+  <app-tab-bar />
+</section>
+
+<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

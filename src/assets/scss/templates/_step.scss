@@ -10,7 +10,10 @@
   overflow: hidden;
   color: $color-text;
 
-  // text-align: center;
+  .step-header {
+    width: 100%;
+    padding: $spacing-page-y-mobile $page-x;
+  }
 
   .step-title {
     @include typo-ds('title', 'lg');
@@ -18,21 +21,13 @@
   }
 
   .step-subtitle {
-    // typo-ds에 없는 크기 → 기존 typo('ko','title','small') 값 하드코딩
-    @include font-size(16px);
-    @include font-weight('medium');
-    line-height: 140%;
-  }
-
-  .step-header {
-    width: 100%;
-    padding: $spacing-page-y-mobile $spacing-page-x-mobile;
+    @include typo-ds('title', 'sm');
   }
 
   .step-body {
     position: relative;
     width: 100%;
-    padding: auto $spacing-page-x-mobile;
+    padding: 0 $page-x;
   }
 
   &.is-scrolly {
@@ -45,24 +40,28 @@
       padding: $space-16;
 
       .step-title {
-        @include font-size(20px);
+        @include typo-ds('title', 'md');
       }
     }
 
-    .step-body {
-      // padding: $space-16 $space-16;
-    }
     .step-footer {
-      padding: $space-16 $space-16;
+      padding: $space-16;
+
       button {
-        height: $btn_size_large;
+        height: $control-lg;
       }
     }
   }
 }
 
+// 하단 버튼 영역. 기본은 secondary, `.is-primary` 로 주요 동작을 올린다.
+// CTA 는 전폭이 아니라 중앙 고정폭이다 — 시안 전 장이 같은 규칙이다.
 .btn-container {
-  z-index: $z-index-2;
+  z-index: $z-index-btn-fixed;
+  width: 100%;
+  @include flex(row, center, center);
+  column-gap: $space-8;
+  padding: $space-12 $page-x;
 
   &.is-fixed {
     position: fixed;
@@ -70,71 +69,44 @@
     left: 50%;
     @include translate(-50%, 0);
   }
-  width: 100%;
-  @include flex(row, center, center);
-
-  column-gap: $padding2;
-  padding: $padding1 $padding3;
-
-  background-color: transparent;
-  border: 1px solid transparent;
 
   button,
   a {
-    @include border-radius($radius-sm);
-    border: 1px solid transparent;
-
-    @include flexCenter();
-    padding: $spacing-btn-y-lg $spacing-btn-x-lg;
-    background-color: $btn-secondary-bg;
-    color: $color-text-muted;
-
-    @include typo-ds('label', 'lg');
-    @include font-weight('semiBold');
+    @include button('secondary', 'lg');
+    min-width: $result-cta-width;
 
     .btn-arrow {
-      margin-right: $spacing-min;
+      margin-right: $space-4;
     }
 
     &.is-primary {
+      border-color: $btn-primary-border;
       background-color: $btn-primary-bg;
       color: $btn-primary-text;
-      border: 1px solid $btn-primary-bg;
 
       &:hover {
         background-color: $btn-primary-bg-hover;
+        border-color: $btn-primary-border-hover;
       }
 
       &.is-pressed,
       &[aria-pressed='true'] {
         background-color: $btn-primary-bg-pressed;
       }
-    }
 
-    &.is-secondary {
-      background-color: $btn-secondary-bg;
-      color: $btn-secondary-text;
-      border: 1px solid $btn-secondary-border;
-
-      &:hover {
-        background-color: $btn-secondary-bg-hover;
-      }
-
-      &.is-pressed,
-      &[aria-pressed='true'] {
-        background-color: $btn-secondary-bg-pressed;
+      &:disabled {
+        background-color: $btn-primary-bg-disabled;
+        border-color: $btn-primary-border-disabled;
+        color: $btn-primary-text-disabled;
       }
     }
 
-    &.is-next {
-      flex-grow: 2;
-      background-color: $accent-highlight;
-      border-color: $accent-primary;
-      color: $color-text;
+    &:focus-visible {
+      @include a11yFocusStyle();
     }
   }
 
   @include smallWidth-only() {
-    padding: $padding1 $padding2;
+    padding: $space-12 $space-16;
   }
 }

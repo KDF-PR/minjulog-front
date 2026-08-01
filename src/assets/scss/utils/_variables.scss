@@ -1,12 +1,13 @@
 // _variables.scss — 치수·타이포 토큰 (CSS 미방출).
 // 색상은 _colors.scss, 미디어쿼리는 _mediaquery.scss 가 담당한다.
+//
+// 글자 크기는 $typo-* / $lh-* 한 벌만 쓴다. 같은 값을 픽셀 이름($fs14 등)으로
+// 다시 두면 두 곳을 함께 고쳐야 하고, 스케일에 없는 값(15px·21px)이 섞여 들어온다.
 
 @use 'functions' as *; // rem()
 
-// ============================================================
 // Design System — Font Weight
 // (font-weight() mixin이 컴포넌트 스코프에서도 참조할 수 있도록 여기서 정의)
-// ============================================================
 
 $weight-thin: 100;
 $weight-light: 300;
@@ -17,16 +18,14 @@ $weight-bold: 700;
 $weight-extraBold: 800;
 $weight-heavy: 900;
 
-// ============================================================
 // Design System — Typography Tokens
 // (typo-ds() mixin이 컴포넌트 스코프에서도 참조할 수 있도록 여기서 정의)
 // Source: design_system/typography/*.tokens.json
 // 전역 출력(@font-face, base element 규칙)은 base/_typography.scss 가 담당.
-// ============================================================
 
 // Font Family — 단일 소스
-// GabiaNull 은 정적 단일 weight(400) 폰트다. variable font 가 아니므로
-// 400 초과 굵기는 브라우저 합성(synthetic bold)으로 표현된다.
+// 폰트 교체 지점은 이 한 줄이다. 화면 SCSS 에 font-family 를 직접 쓰지 않는다.
+// GabiaNull 은 정적 단일 weight(400) 폰트라 400 초과 굵기는 브라우저 합성이다.
 // @font-face 선언은 base/_typography.scss.
 $font-primary: 'GabiaNull', sans-serif;
 
@@ -118,11 +117,10 @@ $lh-label-xs-dt: 16px;
 $letter-spacing-default: 0px;
 $letter-spacing-tight: -1px;
 $letter-spacing-wide: 1px;
+$letter-spacing-code: 10px; // 인증코드 입력 — 자릿수를 눈으로 세게 하는 넓은 자간
 
-// ============================================================
 // Design System — Spacing (scale)
 // Source: design_system/spacing.tokens.json > scale
-// ============================================================
 
 $space-0: rem(0px);
 $space-2: rem(2px);
@@ -140,10 +138,8 @@ $space-48: rem(48px);
 $space-64: rem(64px);
 $space-80: rem(80px);
 
-// ============================================================
 // Design System — Spacing (semantic)
 // Source: design_system/spacing.tokens.json > semantic & component
-// ============================================================
 
 // Page margins
 $spacing-page-x-mobile: $space-16;
@@ -181,28 +177,24 @@ $spacing-btn-y-lg: $space-12;
 // Component — Chip
 $spacing-chip-x: $space-12;
 $spacing-chip-y: $space-8;
-$chip-dot-size: rem(12px);
 
 // Component — Input
 $spacing-input-x: $space-16;
 $spacing-input-y: $space-12;
 
-// ============================================================
 // Design System — Radius
 // Source: design_system/radius.tokens.json
-// ============================================================
+// 버튼·input·chip 은 md(8px). 완전 원형은 full.
 
 $radius-none: rem(0px);
 $radius-sm: rem(4px);
 $radius-md: rem(8px);
 $radius-lg: rem(16px);
-$radius-xl: rem(24px); // was 32px in legacy
+$radius-xl: rem(24px);
 $radius-full: rem(9999px);
 
-// ============================================================
 // Design System — Sizing
 // Source: design_system/sizing.tokens.json
-// ============================================================
 
 // Icon
 $icon-xs: rem(12px);
@@ -210,7 +202,8 @@ $icon-sm: rem(16px);
 $icon-md: rem(24px);
 $icon-lg: rem(32px);
 
-// Control (interactive element height: button, input, chip)
+// Control — 조작 요소 높이
+//   sm 작은 인터랙션 요소 · md 기본 버튼/입력 · lg 메인 CTA
 $control-sm: rem(40px);
 $control-md: rem(48px);
 $control-lg: rem(56px);
@@ -220,135 +213,29 @@ $thumb-sm: rem(64px);
 $thumb-md: rem(128px);
 $thumb-lg: rem(256px);
 
-// OGP image sizes
-$ogp-square: rem(480px);
-$ogp-wide-w: rem(1200px);
-$ogp-wide-h: rem(630px);
-
 // Container widths
 $container-mobile: rem(390px);
 $container-tablet: rem(768px);
 $container-desktop: rem(1280px);
 $container-max: rem(1440px);
 
-// ============================================================
-// Legacy Aliases — Spacing
-// 기존 변수명 유지, 신규 $space-N 으로 포인팅
-// ============================================================
+// Project — 화면 골격
+// 디자인 시스템에 없는 값이다. 시안(360×640) 실측을 8배수로 정렬했다.
+// 라이브러리 승격은 별도 트랙 — docs/ui-cleanup/02-review.md 3-2.
 
-// $spacing-N (sequential index) → $space-{px value}
-$spacing-min: $space-4;
-$spacing-0: $space-8;
-$spacing-1: $space-12;
-$spacing-2: $space-16;
-$spacing-3: $space-24;
-$spacing-4: $space-32;
-$spacing-5: $space-40;
-$spacing-6: $space-48;
-$spacing-7: rem(56px);
-$spacing-8: $space-64;
-$spacing-9: rem(72px);
-$spacing-10: $space-80;
+$page-x: $space-32; // 화면 좌우 여백 (실측 31px)
+$content-max-width: rem(296px); // 360 - 좌우 여백 32×2
+$app-header-height: rem(44px); // 상단 헤더 (실측 42px)
+$app-tabbar-height: rem(56px); // 하단 탭바
+$app-tab-pill-height: rem(33px); // 탭 활성 pill
+$app-frame-width: rem(480px); // 태블릿 이상에서 화면을 감싸는 프레임
+$app-frame-height: rem(720px);
 
-// $paddingN aliases
-$paddingMin: $space-4;
-$padding0: $space-8;
-$padding1: $space-12;
-$padding2: $space-16;
-$padding3: $space-24;
-$padding4: $space-32;
-$padding5: $space-40;
-$padding6: $space-48;
-$padding7: rem(56px);
-$padding8: $space-64;
-$padding9: rem(72px);
-$padding10: $space-80;
+// Project — 화면 부품
+// 시안에만 있고 디자인 시스템에 대응 토큰이 없는 치수.
 
-// ============================================================
-// Legacy Aliases — Sizing
-// ============================================================
-
-// Icon
-$icon_size_small: $icon-sm;
-$icon_size: $icon-md;
-$icon_size_large: $icon-lg;
-$icon_size_xlarge: rem(40px);
-$icon_size_xxl: rem(48px);
-$icon_size_tool: rem(30px);
-$icon_size_fixedBtn: rem(64px);
-$icon_checked_small: rem(24px);
-$icon_checked: rem(20px);
-$emoji_size: rem(48px);
-
-// Button heights (old → $control-{sm/md/lg})
-// old: xsmall=32px, small=40px, default=48px, large=56px, xlarge=64px
-$btn_size_xsmall: $control-sm; // 32px → 36px
-$btn_size_small: $control-sm; // 40px → 36px
-$btn_size: $control-md; // 48px → 44px
-$btn_size_large: $control-lg; // 56px → 54px
-$btn_size_xlarge: rem(64px);
-
-// ============================================================
-// Project-specific
-// 디자인 시스템 토큰에 없는 프로젝트 전용 값
-// ============================================================
-
-// Spacing extended scale (> 80px, not in design_system tokens)
-$spacing-11: rem(88px);
-$spacing-12: rem(96px);
-$spacing-13: rem(104px);
-$spacing-14: rem(136px);
-$spacing-15: rem(224px);
-
-// Radius (not in design_system tokens)
-$radius-2xl: rem(128px);
-$radius-3xl: rem(360px);
-
-// Font sizes (→ typography 통합 예정, design_system/typography/*.tokens.json)
-$fs10: 10px;
-$fs12: 12px;
-$fs13: 13px;
-$fs14: 14px;
-$fs15: 15px;
-$fs16: 16px;
-$fs18: 18px;
-$fs20: 20px;
-$fs21: 21px;
-$fs22: 22px;
-$fs24: 24px;
-$fs28: 28px;
-$fs36: 36px;
-
-// Layout containers (project-specific, not in design_system sizing tokens)
-$wrapper_width: rem(480px);
-$wrapper_height: rem(720px);
-
-$bg_width: rem(340px);
-$bg_wide_width: rem(768px);
-$bg_wide_motion_width: rem(1328px);
-
-$bg_height: rem(768px);
-$ui_bg_height: rem(640px);
-
-$bg_ogp_width: rem(630px);
-$bg_ogp_height: rem(314px);
-
-$preview_marginTop: rem(56px);
-$preview_img_height: 240px;
-$preview_img_size: 320px;
-
-$avatar_size_min: rem(220px);
-$avatar_size: rem(260px);
-$avatar_size_tablet: rem(320px);
-
-$max_width: rem(312px);
-$max_width_mobile: rem(312px);
-$max_width_tablet: rem(416px);
-
-$tab_height: 320px;
-$tab_height_tablet: 320px;
-$tab_header_height: 40px;
-
-$captureElement_size: 340px;
-$captureElement_wide_width: 1440px; // 공유 OGP 캔버스 (Figma wide-avatar 779-5416, 2:1)
-$captureElement_wide_height: 720px;
+$stamp-circle-size: rem(72px); // 스탬프 원형 (실측 70px)
+$progress-bar-height: $space-8; // 진행률 바
+$section-band-height: $space-4; // 섹션 구분 밴드
+$result-graphic-size: rem(150px); // 결과 화면 원형 그래픽
+$result-cta-width: rem(166px); // 결과 화면 CTA 고정폭

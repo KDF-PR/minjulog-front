@@ -1,8 +1,10 @@
-// space.service.ts — 장소 6곳의 **고정 정보**.
-//
-// 사용자 상태(방문 여부)는 여기서 다루지 않는다. `PhotoService` 가 들고 있고,
-// 둘이 함께 필요한 화면은 `spaceVisits` 로 짝지어 받는다.
-// 이렇게 나눠두면 로그인 전에도 장소 목록을 그대로 쓸 수 있다.
+/**
+ * 장소 6곳의 **고정 정보**.
+ *
+ * 사용자 상태(방문 여부)는 여기서 다루지 않는다. `PhotoService` 가 들고 있고,
+ * 둘이 함께 필요한 화면은 `spaceVisits` 로 짝지어 받는다.
+ * 나눠두면 로그인 전에도 장소 목록을 그대로 쓸 수 있다.
+ */
 
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -81,9 +83,7 @@ export class SpaceService {
     // mock 전환 지점 — Supabase 준비 후 environment.useMockApi = false
     const source: Observable<SpaceDto[]> = environment.useMockApi
       ? of(SPACES_MOCK).pipe(delay(MOCK_LATENCY))
-      : this.http
-          .get<SpacesResponseDto>(`${this.base}/api/spaces`)
-          .pipe(map((res) => res.spaces));
+      : this.http.get<SpacesResponseDto>(`${this.base}/api/spaces`).pipe(map((res) => res.spaces));
 
     return source.pipe(
       map(mergeWithContent),

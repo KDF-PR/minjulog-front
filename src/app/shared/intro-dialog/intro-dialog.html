@@ -1,0 +1,31 @@
+@if (open()) {
+  <div
+    class="dialog-dim"
+    animate.enter="motion-fade-enter"
+    animate.leave="motion-fade-leave"
+    (click)="close.emit()"
+  >
+    <!-- 카드 안쪽 클릭이 딤까지 올라가면 열자마자 닫힌다 -->
+    <div
+      class="dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="intro-dialog-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="dialog-header">
+        <h2 class="dialog-title" id="intro-dialog-title">{{ title() }}</h2>
+      </div>
+
+      <div class="dialog-body">
+        @for (paragraph of paragraphs(); track $index) {
+          <p>{{ paragraph }}</p>
+        }
+      </div>
+
+      <div class="dialog-footer">
+        <button type="button" class="btn-primary" (click)="close.emit()">닫기</button>
+      </div>
+    </div>
+  </div>
+}

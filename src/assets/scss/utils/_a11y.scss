@@ -2,9 +2,11 @@
 // `.is-visually-hidden` / `.is-a11y-button-alt` 클래스는 global/_utilities.scss 가
 // 전역 1회 방출한다 (컴포넌트마다 중복 방출되지 않게 여기서는 mixin만 제공).
 
+@use 'colors' as *;
+
 @mixin a11yFocusStyle() {
   // 포커스 기본 스타일. 흰색과 파란색의 색상대비 비율이 3:1 이상이므로 모든 배경색에 적합하다.
-  outline: 2px solid #0071e3;
+  outline: 2px solid $color-border-focus;
   outline-offset: 2px;
 }
 

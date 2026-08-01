@@ -1,0 +1,55 @@
+// gate.scss — G1 로그인 게이트.
+// 안내 문구와 버튼뿐이라 화면 가운데에 모은다.
+
+@use 'utils' as *;
+
+.gate {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  @include flex(column, center, center);
+  gap: $spacing-section-y-sm;
+  padding: $spacing-page-y-mobile $spacing-page-x-mobile;
+  color: $color-text;
+
+  .gate-header {
+    width: 100%;
+    max-width: $content-max-width;
+    text-align: center;
+
+    .gate-title {
+      @include typo-ds('title', 'xl');
+    }
+
+    .gate-desc {
+      margin-top: $space-8;
+      color: $color-text-sub;
+      @include typo-ds('body', 'sm');
+    }
+  }
+
+  .gate-actions {
+    width: 100%;
+    max-width: $content-max-width;
+    @include flex(column);
+    gap: $spacing-content-gap-sm;
+  }
+
+  .btn-primary {
+    @include button('primary', 'lg');
+    width: 100%;
+
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
+  }
+
+  .btn-text {
+    @include button('text', 'md');
+    width: 100%;
+
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
+  }
+}

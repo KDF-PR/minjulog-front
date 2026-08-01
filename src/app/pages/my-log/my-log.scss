@@ -1,0 +1,143 @@
+// my-log.scss — 02 내 스탬프.
+// 헤더·탭바는 고정하고 가운데만 스크롤한다. 프레임(.contents-wrapper)이 높이를 잡으므로
+// 이 화면은 그 안에서 세로 3단(header / scroll / tabbar)으로 나눈다.
+
+@use 'utils' as *;
+
+.my-log {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  @include flex(column, flex-start, stretch);
+  background-color: $color-bg-page;
+  color: $color-text;
+
+  .my-log-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .progress {
+    @include flex(column);
+    gap: $space-12;
+    padding: $spacing-page-y-mobile $page-x;
+  }
+
+  .progress-head {
+    @include flex(row, space-between, baseline);
+    gap: $space-8;
+  }
+
+  .progress-title {
+    color: $color-text-sub;
+    @include typo-ds('label', 'md');
+    @include font-weight('bold');
+  }
+
+  .progress-count {
+    @include flex(row, flex-end, baseline);
+    gap: $space-4;
+  }
+
+  .progress-count-current {
+    @include typo-ds('display', 'sm');
+  }
+
+  .progress-count-total {
+    color: $color-text-muted;
+    @include typo-ds('title', 'md');
+  }
+
+  // 진행률 — 트랙 #ededed 위에 채움 #111111
+  .progress-bar {
+    border-radius: $radius-full;
+    width: 100%;
+    height: $progress-bar-height;
+    overflow: hidden;
+    background-color: $color-border-subtle;
+  }
+
+  .progress-bar-fill {
+    display: block;
+    height: 100%;
+    background-color: $color-bg-inverse;
+    transition: width 0.3s ease;
+  }
+
+  .progress-next {
+    color: $color-text-sub;
+    @include typo-ds('body', 'sm');
+
+    strong {
+      @include font-weight('bold');
+    }
+  }
+
+  .progress-next-name {
+    color: $color-text;
+    @include font-weight('bold');
+  }
+
+  // 섹션 구분 밴드 — 4px
+  .section-band {
+    height: $section-band-height;
+    background-color: $color-bg-muted;
+  }
+
+  .stamps {
+    @include flex(column);
+    gap: $spacing-content-gap-lg;
+    padding: $spacing-page-y-mobile $page-x;
+  }
+
+  .stamps-title {
+    color: $color-text-muted;
+    @include typo-ds('body', 'sm');
+  }
+
+  .stamps-state {
+    color: $color-text-muted;
+    @include typo-ds('body', 'sm');
+    text-align: center;
+  }
+
+  // 3열 고정 그리드. 열 수가 정해져 있고 행이 이어지는 2차원 구조라 grid 를 쓴다.
+  .stamp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    gap: $space-20 $space-8;
+  }
+
+  .stamp-item {
+    @include flex(column, flex-start, center);
+    gap: $space-8;
+  }
+
+  // 획득 원형은 #444444 다. 탭 활성 pill(#111111)과 구분된다.
+  .stamp-circle {
+    border-radius: $radius-full;
+    width: $stamp-circle-size;
+    height: $stamp-circle-size;
+    @include flexCenter();
+    background-color: $stamp-bg-pending;
+    color: $stamp-mark;
+
+    &.is-earned {
+      background-color: $stamp-bg-earned;
+    }
+  }
+
+  .stamp-check {
+    width: $icon-lg;
+    height: $icon-lg;
+  }
+
+  // 획득·미획득 라벨 색을 통일한다. 미획득만 흐리게 하면 기관 이름이 4.5:1 에 못 미친다.
+  .stamp-label {
+    color: $stamp-label;
+    @include typo-ds('body', 'xs');
+    text-align: center;
+  }
+}

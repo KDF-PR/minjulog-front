@@ -1,0 +1,43 @@
+<section class="stamp-result">
+  <div class="stamp-result-graphic motion-fade-in" [class.is-stamp]="view().graphic === 'stamp'">
+    @if (view().graphic === 'stamp') {
+      <!-- 스탬프 그래픽 자산 미수령 — 시안과 같은 문구 자리표시자 -->
+      <span class="stamp-result-placeholder">스탬프</span>
+    } @else if (view().mark) {
+      <span class="stamp-result-mark" aria-hidden="true">{{ view().mark }}</span>
+    }
+  </div>
+
+  <div class="stamp-result-body motion-fade-in motion-delay-1">
+    <h2 class="stamp-result-title">{{ view().title }}</h2>
+
+    @for (description of view().descriptions; track $index) {
+      <p class="stamp-result-desc">{{ description }}</p>
+    }
+
+    @if (view().boxedDescription) {
+      <p class="stamp-result-note">{{ view().boxedDescription }}</p>
+    }
+  </div>
+
+  @if (view().showRewardCard) {
+    <app-reward-notice
+      class="stamp-result-notice motion-fade-in motion-delay-2"
+      linkLabel="보러가기"
+      (linkSelect)="actionSelect.emit('viewRewards')"
+    />
+  }
+
+  <div class="stamp-result-actions">
+    @for (item of view().actions; track item.action) {
+      <button
+        type="button"
+        class="stamp-result-cta"
+        [class.is-primary]="item.variant === 'primary'"
+        (click)="actionSelect.emit(item.action)"
+      >
+        {{ item.label }}
+      </button>
+    }
+  </div>
+</section>

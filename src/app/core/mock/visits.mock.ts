@@ -1,7 +1,9 @@
-// visits.mock.ts — `GET /api/photos` 가짜 응답 + 방문 상태 시나리오.
-//
-// 디자인 `02`~`06` 다섯 화면이 각각 어떤 방문 상태인지 여기서 만든다.
-// `04` 는 방문 수만으로 재현되지 않는다 — 3곳이지만 필수(민주화운동기념관)를 빼야 한다.
+/**
+ * `GET /api/photos` 가짜 응답 + 방문 상태 시나리오.
+ *
+ * 디자인 `02`~`06` 다섯 화면이 각각 어떤 방문 상태인지 여기서 만든다.
+ * `04` 는 방문 수만으로 재현되지 않는다 — 3곳이지만 필수(민주화운동기념관)를 빼야 한다.
+ */
 
 import { PhotoDto } from '../api.dto';
 import { SpaceSlug } from '../models';
@@ -20,17 +22,17 @@ export const MOCK_SCENARIO: MockVisitScenario = 'partial';
 
 const SCENARIO_SLUGS: Record<MockVisitScenario, SpaceSlug[]> = {
   empty: [],
-  partial: ['minjuhwa', 'maronie'],
+  partial: ['korean-democracy-museum', 'marronnier-park'],
   // 필수를 일부러 뺀다 — 방문 3곳인데 1차 리워드가 안 열리는 상태
-  requiredMissing: ['maronie', 'myeongdong', 'jeontaeil'],
-  firstComplete: ['minjuhwa', 'maronie', 'myeongdong'],
+  requiredMissing: ['marronnier-park', 'myeongdong-cathedral', 'jeon-taeil-bridge'],
+  firstComplete: ['korean-democracy-museum', 'marronnier-park', 'myeongdong-cathedral'],
   allComplete: [
-    'minjuhwa',
-    'youthhostel',
-    'myeongdong',
-    'maronie',
-    'jeontaeil',
-    'gwanghwamun',
+    'korean-democracy-museum',
+    'seoul-youth-hostel',
+    'myeongdong-cathedral',
+    'marronnier-park',
+    'jeon-taeil-bridge',
+    'gwanghwamun-square',
   ],
 };
 

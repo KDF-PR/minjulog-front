@@ -1,14 +1,19 @@
-// spaces.content.ts — 장소 6곳의 화면 콘텐츠.
-//
-// **왜 프론트가 들고 있나** — 백엔드 `spaces` 테이블 컬럼이 `id` · `name` · `is_required` 뿐이다
-// (`../kdemo-stamp-back/sql/spaces_table.sql`). 주소·설명·인증 팁은 저장할 자리가 없다.
-//
-// **연결 키 문제** — 백엔드 `id` 는 Supabase 가 만드는 uuid 라 여기 `slug` 와 맞출 방법이 없다.
-// 지금은 `name` 문자열로 잇는다(아래 `findContentByName`). 이름이 바뀌면 깨지므로
-// 백엔드에 `slug` 컬럼 추가를 요청해 둔 상태다 — `docs/요구사항정의.md` 9장 ⑦.
-//
-// 원본: `stamptour/src/app/core/institutions.ts` + 디자인 v3 `08 장소 상세`.
-// `category` · `photoGuide` 는 v3 시안 문구를 옮긴 것이고 나머지 장소는 임시값이다.
+/**
+ * 장소 6곳의 화면 콘텐츠.
+ *
+ * 백엔드 `spaces` 테이블에는 `id` · `name` · `is_required` 뿐이라 주소·설명·인증 팁을
+ * 저장할 자리가 없다. 그래서 프론트가 들고 있다 (`sql/spaces_table.sql`).
+ *
+ * 연결 키는 아직 `name` 문자열이다(`findContentByName`). 백엔드 `id` 가 Supabase uuid 라
+ * 여기 `slug` 와 맞출 수 없어서다. 이름이 바뀌면 깨지므로 `slug` 컬럼 추가를 요청해 둔
+ * 상태다 — `docs/요구사항정의.md` 9장 ⑦.
+ *
+ * 값의 출처가 섞여 있다. 각 항목 주석의 `확정` · `시안` · `임시` · `미정` 표시를 따른다.
+ * **선택 항목은 비어 있을 수 있다. 화면은 값이 없으면 그 영역을 통째로 숨긴다** —
+ * 빈 문자열을 넣지 않는다.
+ *
+ * 원본: `stamptour/src/app/core/institutions.ts` + 디자인 v3 `08 장소 상세`.
+ */
 
 import { SpaceContent, SpaceSlug } from './models';
 
@@ -20,11 +25,11 @@ export const OPERATION_PERIOD = {
 } as const;
 
 /** 필수 방문 장소. 리워드 1차 조건에 들어간다 */
-export const REQUIRED_SPACE_SLUG: SpaceSlug = 'minjuhwa';
+export const REQUIRED_SPACE_SLUG: SpaceSlug = 'korean-democracy-museum';
 
 export const SPACES_CONTENT: readonly SpaceContent[] = [
   {
-    slug: 'minjuhwa',
+    slug: 'korean-democracy-museum',
     shortName: '민주화운동기념관',
     name: '민주화운동기념관',
     region: '용산구',
@@ -36,9 +41,11 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '그 위에 기억하는 공간을 얹었어요. 여섯 곳 가운데 이곳만 꼭 들러야 해요.',
     photoGuide: '기념관 입구나 상징 조형물이 보이게 한 장 담아 주세요.',
     courseOrder: 1,
+    // 관람 시간·휴관일은 공식 안내를 받아 채운다 — 지금은 비워 둔다
+    nearby: [],
   },
   {
-    slug: 'youthhostel',
+    slug: 'seoul-youth-hostel',
     shortName: '서울시립유스호스텔',
     name: '서울시립유스호스텔',
     region: '종로구',
@@ -50,7 +57,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     courseOrder: 2,
   },
   {
-    slug: 'myeongdong',
+    slug: 'myeongdong-cathedral',
     shortName: '명동성당',
     name: '명동성당',
     region: '중구',
@@ -62,9 +69,18 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '지금도 미사가 열리는 공간이라 방문 전에 시간을 확인하면 좋아요.',
     photoGuide: '성당 전경이나 정문이 보이게 담아 주세요. 미사 중에는 조용히 부탁드려요.',
     courseOrder: 3,
+    // v3 `09 장소 상세 · 방문 완료` 시안 문구
+    visitInfo: {
+      openingHours: '방문 전 미사 시간 확인',
+      transit: '명동역 6번 출구',
+    },
+    nearby: [
+      { slug: 'marronnier-park', walkMinutes: 20 },
+      { slug: 'jeon-taeil-bridge', walkMinutes: 10 },
+    ],
   },
   {
-    slug: 'maronie',
+    slug: 'marronnier-park',
     shortName: '마로니에공원',
     name: '마로니에공원',
     region: '종로구',
@@ -75,9 +91,19 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '1980년대부터 시민들이 목소리를 나누고, 공연과 전시가 열리는 열린 마당으로 자리 잡았어요.',
     photoGuide: '마로니에 나무나 상징 조형물이 보이게 한 장 담아 주세요. 구도는 자유롭게요.',
     courseOrder: 4,
+    // v3 `08 장소 상세 · 미방문` 시안 문구
+    visitInfo: {
+      openingHours: '상시 개방',
+      admissionFee: '무료',
+      transit: '혜화역 2번 출구',
+    },
+    nearby: [
+      { slug: 'jeon-taeil-bridge', walkMinutes: 12 },
+      { slug: 'myeongdong-cathedral', walkMinutes: 20 },
+    ],
   },
   {
-    slug: 'jeontaeil',
+    slug: 'jeon-taeil-bridge',
     shortName: '전태일다리',
     name: '전태일다리',
     region: '종로구',
@@ -91,7 +117,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     courseOrder: 5,
   },
   {
-    slug: 'gwanghwamun',
+    slug: 'gwanghwamun-square',
     shortName: '광화문광장',
     name: '광화문광장',
     region: '종로구',

@@ -13,7 +13,7 @@
 
   .login-header {
     width: 100%;
-    max-width: $max_width;
+    max-width: $content-max-width;
     margin-bottom: $spacing-section-y-sm;
     text-align: center;
 
@@ -33,7 +33,7 @@
     border: 1px solid $color-border-subtle;
     border-radius: $radius-lg;
     width: 100%;
-    max-width: $max_width;
+    max-width: $content-max-width;
     @include flex(column);
     gap: $spacing-content-gap-lg;
     padding: $spacing-card-md;

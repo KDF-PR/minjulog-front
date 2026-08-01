@@ -26,6 +26,3 @@
 @use 'templates/contents-wrapper';
 @use 'templates/dialog';
 @use 'templates/step';
-
-// 5) Angular Material — 테마 (CSS 방출, 전역 1회)
-@use 'templates/customMaterialTheme';

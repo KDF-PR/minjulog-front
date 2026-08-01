@@ -1,0 +1,33 @@
+// page-header.scss — 탭 화면 공통 상단 헤더.
+// 높이는 프로젝트 전용 토큰 $app-header-height(44px). 조작 요소가 아니라 골격이라
+// $control-* 를 쓰지 않는다.
+
+@use 'utils' as *;
+
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+.page-header {
+  border-bottom: 1px solid $color-border;
+  height: $app-header-height;
+  @include flex(row, space-between, center);
+  padding: 0 $page-x;
+  background-color: $color-bg;
+
+  .page-header-title {
+    color: $color-text;
+    @include typo-ds('title', 'md');
+    @include font-weight('bold');
+  }
+
+  .page-header-intro {
+    @include chip();
+    height: rem(32px); // 헤더(44px) 안에 들어가야 해 $control-sm 40px 보다 낮춘다
+
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
+  }
+}

@@ -1,15 +1,13 @@
-// ============================================================
 // Button mixin — 버튼의 모양·크기·상태를 한 곳에서 관리
 // 사용: @include button($variant, $size, $shape)
 //   $variant: 'primary' | 'secondary' | 'text'
-//   $size:    'sm' | 'md' | 'lg'   (height/padding/font-size)
-//   $shape:   'pill' | 'rounded'
+//   $size:    'sm' 40px | 'md' 48px (기본) | 'lg' 56px 메인 CTA
+//   $shape:   'rounded' 8px (기본) | 'pill' 완전 원형
 // width / 그룹 레이아웃 / 여백 / 포지셔닝은 각 페이지에서 담당한다.
 //
-// 색상은 _colors.scss의 $btn-* 토큰, 치수는 _variables.scss의
-// $control-*/$radius-*/$spacing-btn-*/$fs* 토큰을 참조한다 (여기서 값 지정 금지).
+// 색상은 _colors.scss 의 $btn-* 토큰, 치수는 _variables.scss 의
+// $control-* / $radius-* / $spacing-btn-* / $typo-label-* 토큰을 참조한다.
 // CSS 미방출 — 호출한 선택자 안에서만 규칙을 만든다.
-// ============================================================
 
 @use 'colors' as *;
 @use 'variables' as *;
@@ -23,10 +21,12 @@
 
     &:hover {
       background-color: $btn-primary-bg-hover;
+      border-color: $btn-primary-border-hover;
     }
     &:disabled,
     &.is-disabled {
       background-color: $btn-primary-bg-disabled;
+      border-color: $btn-primary-border-disabled;
       color: $btn-primary-text-disabled;
     }
   } @else if $variant == 'secondary' {
@@ -58,13 +58,12 @@
   }
 }
 
-@mixin button($variant: 'primary', $size: 'sm', $shape: 'pill') {
-  // 'rounded' 만 완전 원형 모서리, 그 외('pill' 포함)는 기본 라운드.
+@mixin button($variant: 'primary', $size: 'md', $shape: 'rounded') {
   // Sass 의 if() 함수는 deprecated → @if 로 분기한다.
-  @if $shape == 'rounded' {
+  @if $shape == 'pill' {
     border-radius: $radius-full;
   } @else {
-    border-radius: $radius-sm;
+    border-radius: $radius-md;
   }
 
   @if $size == 'lg' {
@@ -80,19 +79,65 @@
 
   @include flexCenter();
 
+  // 메인 CTA(lg)만 bold. 라이브러리 텍스트 스타일 label/lg-strong 에 대응한다.
   @if $size == 'lg' {
-    @include font-size($fs16);
+    @include font-size($typo-label-lg);
+    line-height: $lh-label-lg;
+    @include font-weight('bold');
   } @else if $size == 'sm' {
-    @include font-size($fs13);
+    @include font-size($typo-label-sm);
+    line-height: $lh-label-sm;
+    @include font-weight('semiBold');
   } @else {
-    @include font-size($fs15);
+    @include font-size($typo-label-md);
+    line-height: $lh-label-md;
+    @include font-weight('semiBold');
   }
-  @include font-weight('semiBold');
 
   cursor: pointer;
   transition:
     background-color 0.15s ease,
+    border-color 0.15s ease,
     color 0.15s ease;
 
   @include _button-variant($variant);
+}
+
+// Chip mixin — 외곽선 pill. 선택 상태는 검정 배경 + 흰 글씨 반전이다.
+// 사용: @include chip();  상태는 호출부에서 `.is-selected` 로 켠다.
+
+@mixin chip() {
+  border: 1px solid $chip-border;
+  border-radius: $radius-full;
+  height: $control-sm;
+  @include flexCenter();
+  padding: 0 $spacing-chip-x;
+  background-color: $chip-bg;
+  color: $chip-text;
+  @include font-size($typo-label-sm);
+  line-height: $lh-label-sm;
+  @include font-weight('medium');
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    border-color: $chip-border-hover;
+    background-color: $chip-bg-hover;
+  }
+
+  &.is-selected {
+    border-color: $chip-border-selected;
+    background-color: $chip-bg-selected;
+    color: $chip-text-selected;
+  }
+
+  &:disabled,
+  &.is-disabled {
+    background-color: $chip-bg-disabled;
+    color: $chip-text-disabled;
+    cursor: default;
+  }
 }

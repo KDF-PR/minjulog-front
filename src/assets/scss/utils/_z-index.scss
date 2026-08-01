@@ -1,50 +1,8 @@
 // _z-index.scss — z-index 토큰 (변수 전용 · CSS 미방출).
-// 아래 대부분은 이전 프로젝트(아바타 레이어 적층) 전용이다. 정리 단계에서
-// 레벨 시스템($z-index-0~5)과 dialog 값만 남긴다.
+// 레벨 시스템 6단과 화면 골격·오버레이 이름만 둔다.
+// 이전 프로젝트(아바타 레이어 적층) 전용 토큰 40여 개는 사용처가 없어 제거했다.
 
-//// z-index ////
-$z-index-survey-hidden-layer: -1;
-$z-index-cropElement: -1; // 크롭 이미지 영역 (결과이미지 생성)
-$z-index-cropElement-bg: 100; // 결과이미지 > 배경 이미지
-$z-index-cropElement-keyword-backward: 110; // 결과이미지 > keyword 2
-$z-index-cropElement-keyword-frontward: 120; // 결과이미지 > keyword 1,3
-$z-index-cropElement-frame: 130; // 결과이미지 > 프레임
-
-$z-index-cropEl-bg: 100;
-$z-index-cropEl-avatar: 200;
-
-$z-index-step-preview-bg: 100; // Step > preview 영역 배경
-
-// step-body(1000) < preview-img < fixed-nav (1300)
-$z-index-step-preview-img: 200; // Step > preview 영역 이미지
-$z-index-step-preview-effect: 220; // (배경)효과
-$z-index-step-preview-top_acc_back: 240; // 상의 장식 (back: 날개)
-
-$z-index-step-preview-move_back: 260; // 이동 (back  : 전동 휠체어, 보드)
-$z-index-step-preview-top_acc_cape: 265; // 상의 장식 (무지개망토 only)
-
-$z-index-step-preview-top_bodysuit: 290; // 상의 바디수트 only
-$z-index-step-preview-base_bottom: 270; // 캐릭터 하체
-$z-index-step-preview-bottom: 300; // 하의
-
-// $z-index-step-preview-base_top: 1220;           // 캐릭터 상체
-$z-index-step-preview-base_top: 280; // 캐릭터 상체
-
-$z-index-step-preview-top: 340; // 상의
-
-$z-index-step-preview-base_head: 360; // 캐릭터 머리 (head)
-$z-index-step-preview-face_acc: 380; // 얼굴 장식
-$z-index-step-preview-hair: 400; // 머리 모양
-$z-index-step-preview-hair_acc: 410; // 머리 장식
-
-$z-index-step-preview-flag_and_thing: 420; // 깃발 & 소품
-
-$z-index-step-preview-move_front: 440; // 이동 (front: 스쿠터, 오토바이)
-$z-index-step-preview-top_acc_front: 460; // 상의 장식 (front: 꽃 브로치)
-
-$z-index-tools: 500;
-
-// z-index level system.
+// 레벨 시스템 — 새 이름은 이 값을 가리키게 만든다.
 $z-index-0: 0;
 $z-index-1: 500;
 $z-index-2: 600;
@@ -52,70 +10,13 @@ $z-index-3: 700;
 $z-index-4: 800;
 $z-index-5: 900;
 
-// cdk-overlay = 1000; // mat-dialog (...)
-$z-index-11: 1100;
-$z-index-dialog-sticky-header: 1100;
+// 화면 골격
+$z-index-contents: $z-index-1; // .contents-wrapper
+$z-index-page-header: $z-index-2; // 상단 헤더
+$z-index-tabbar: $z-index-3; // 하단 탭바
+$z-index-btn-fixed: $z-index-3; // 화면 하단 고정 버튼 영역
+
+// 오버레이 — dim 이 탭바보다 위, dialog 가 dim 보다 위.
+$z-index-dim: 1000;
+$z-index-dialog: 1100;
 $z-index-dialog-btn-close: 1200;
-// dialog sticky-header btn-close
-
-// cdk-overlay-backdrop
-
-// ---
-
-// 일반 콘텐츠 요소
-$z-index-contents: $z-index-1;
-$z-index-contents-wrapper: $z-index-1;
-
-// main
-// .main-container, .main-header, .main-body
-
-// intro
-$z-index-intro-gungeedungee: $z-index-2;
-$z-index-intro-gungeedungee_active: 610;
-$z-index-intro-speechbubble-tail: 650; // 상단 말풍선 꼬리
-$z-index-intro-speechbubble-body: 660; // 상단 말풍선
-$z-index-intro-btn: $z-index-3; // 하단 버튼 영역
-
-// detail
-$z-index-detail-bg: 100; // 미리보기 영역 > 배경 이미지
-$z-index-detail-specialBg: 150; // 미리보기 영역 > 특별 이미지 (고양이 등)
-$z-index-detail-body: $z-index-1; // 미리보기 영역 > 캐릭터 영역
-$z-index-detail-tab: $z-index-2; // 미리보기 영역 > 탭 영역
-
-$z-index-icon-checked: $z-index-2; // detail > .options > icon-checked (옵션 체크 시 표시되는 버튼)
-
-// main
-// .fixed-element
-
-// z-index-3
-$z-index-detail-target-container: $z-index-3; // detail > hand_acc > 고정영역
-$z-index-btn-main: $z-index-4; // 메인페이지 시작하기 버튼
-$z-index-btn-nav: $z-index-3; // BACK, NEXT, DONE
-
-$z-index-result-header: $z-index-3; // 결과페이지 > 헤더 영역
-$z-index-result-body: $z-index-1; // 결과페이지 > 캐릭터 영역
-$z-index-result-img-download: $z-index-2; // 결과이미지 > 다운로드 가이드
-
-$z-index-cdk-global-backdrop: 1000; // material overlay container (dialog)
-$z-index-cdk-overlay-backdrop: 1000;
-$z-index-cdk-global-overlay: 1000; // material overlay container (dialog)
-$z-index-cdk-overlay-pane: 1000; // material overlay container (dialog)
-
-// $z-index-dialog-btn-close: 6000;        // 다이얼로그 닫기 버튼
-
-// .cdk-overlay-contaienr 5000
-// .cdk-overlay-backdrop 4000
-// .cdk-global-overlay-wrapper 5000
-// . cdk-overlay-pane 1000
-
-// 버튼 영역
-// $z-index-btn-main: 1200;                // 메인페이지 시작하기 버튼
-// $z-index-btn-option: 1200;              // 단계별 옵션
-
-// $z-index-btn-stepIndex: 1200;           // 스텝 이동 (뒤로가기, 앞으로 가기)
-// $z-index-btn-prev: 1200;                // 뒤로가기 버튼
-// $z-index-btn-next: 1200;
-
-$z-index-btn-icon-active: $z-index-icon-checked; // 단계별 옵션 .is-active &:before 체크 아이콘
-
-// $z-index-progressbar: 2000;

@@ -1,7 +1,9 @@
-// reward.service.ts — 리워드 자격 조회와 코드 발급.
-//
-// **자격 판정은 항상 서버가 한다.** 화면의 진행률 계산은 표시용이고,
-// 신청 가능 여부는 `eligibleTiers` 를 따른다. 어긋나면 서버가 맞다 (`app.py:540` 재계산).
+/**
+ * 리워드 자격 조회와 코드 발급.
+ *
+ * **자격 판정은 항상 서버가 한다.** 화면의 진행률 계산은 표시용이고, 신청 가능 여부는
+ * `eligibleTiers` 를 따른다. 어긋나면 서버가 맞다 (`app.py:540` 재계산).
+ */
 
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';

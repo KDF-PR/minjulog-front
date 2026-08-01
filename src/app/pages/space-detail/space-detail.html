@@ -1,0 +1,67 @@
+<section class="space-detail" [class.is-ready]="ready()">
+  <app-page-header (introSelect)="openIntro()" />
+
+  <div class="space-detail-scroll">
+    @if (loadState() === 'loading') {
+      <p class="space-detail-state" role="status">기관 정보를 불러오는 중이에요</p>
+    } @else if (loadState() === 'error') {
+      <p class="space-detail-state" role="alert">기관 정보를 불러오지 못했어요</p>
+    } @else if (spaceVisit(); as item) {
+      <figure class="space-hero motion-fade-in">
+        @if (item.space.heroImage) {
+          <img [src]="item.space.heroImage" [alt]="item.space.name + ' 대표 이미지'" />
+        } @else {
+          <!-- 대표 이미지 자산 미수령 — 시안과 같은 문구 자리표시자 -->
+          <figcaption class="space-hero-caption">대표 이미지<br />or 스탬프</figcaption>
+        }
+      </figure>
+
+      <div class="space-summary motion-fade-in motion-delay-1">
+        <h2 class="space-name">
+          {{ item.space.name }}
+          <span class="space-status" [class.is-visited]="isVisited()">
+            {{ isVisited() ? '받음' : '받기 전' }}
+          </span>
+        </h2>
+
+        <p class="space-address">{{ item.space.address }} · {{ item.space.region }}</p>
+
+        @if (highlights().length > 0) {
+          <ul class="space-highlights">
+            @for (highlight of highlights(); track highlight) {
+              <li class="space-highlight">{{ highlight }}</li>
+            }
+          </ul>
+        }
+
+        <p class="space-desc">{{ item.space.summary }}</p>
+      </div>
+
+      <div class="section-band" aria-hidden="true"></div>
+
+      <section class="space-facts motion-fade-in motion-delay-2" aria-labelledby="space-facts-title">
+        <h3 class="space-facts-title" id="space-facts-title">운영 정보</h3>
+
+        <dl class="space-fact-list">
+          @for (fact of facts(); track fact.term) {
+            <div class="space-fact">
+              <dt class="space-fact-term">{{ fact.term }}</dt>
+              <dd class="space-fact-value">{{ fact.value }}</dd>
+            </div>
+          }
+        </dl>
+      </section>
+
+      <section class="space-guide" aria-labelledby="space-guide-title">
+        <h3 class="space-guide-title" id="space-guide-title">이곳의 이야기</h3>
+        <p class="space-guide-text">{{ item.space.description }}</p>
+      </section>
+    } @else {
+      <p class="space-detail-state" role="alert">찾을 수 없는 기관이에요</p>
+    }
+  </div>
+
+  <app-tab-bar />
+</section>
+
+<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

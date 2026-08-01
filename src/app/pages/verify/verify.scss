@@ -14,7 +14,7 @@
 
   .verify-header {
     width: 100%;
-    max-width: $max_width;
+    max-width: $content-max-width;
     margin-bottom: $spacing-section-y-sm;
     text-align: center;
 
@@ -33,7 +33,7 @@
     border: 1px solid $color-border-subtle;
     border-radius: $radius-lg;
     width: 100%;
-    max-width: $max_width;
+    max-width: $content-max-width;
     @include flex(column);
     gap: $spacing-content-gap-md;
     padding: $spacing-card-md;
@@ -101,10 +101,10 @@
     // padding-left 로 자간이 만드는 오른쪽 여백을 상쇄해 실제로 가운데 보이게 한다.
     &.is-code {
       height: $control-lg;
-      padding-left: calc(#{$spacing-input-x} + 10px);
+      padding-left: calc(#{$spacing-input-x} + #{$letter-spacing-code});
       text-align: center;
-      letter-spacing: 10px;
-      @include font-size($fs24);
+      letter-spacing: $letter-spacing-code;
+      @include typo-ds('title', 'xl');
       @include font-weight('bold');
     }
   }

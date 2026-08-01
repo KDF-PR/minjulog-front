@@ -1,0 +1,11 @@
+<div class="stamp" [class.is-ready]="ready()">
+  <app-stamp-result
+    [status]="status()"
+    [spaceName]="spaceName()"
+    [spaceSummary]="spaceSummary()"
+    [stampCount]="stampCount()"
+    [totalCount]="totalCount()"
+    [remainingToReward]="remainingToReward()"
+    (actionSelect)="onAction($event)"
+  />
+</div>

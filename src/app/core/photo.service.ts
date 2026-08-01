@@ -1,7 +1,9 @@
-// photo.service.ts — 방문 인증 사진. 업로드와 방문 목록을 담당한다.
-//
-// 방문 여부는 여러 화면이 함께 본다(방문 현황 그리드 · 목록의 완료 표시 · 상세 버튼 ·
-// 리워드 진행률). 그래서 이 서비스 한 곳에서 signal 로 들고, 화면은 computed 로 파생시킨다.
+/**
+ * 방문 인증 사진. 업로드와 방문 목록을 담당한다.
+ *
+ * 방문 여부는 여러 화면이 함께 본다(방문 현황 그리드 · 목록의 완료 표시 · 상세 버튼 ·
+ * 리워드 진행률). 그래서 여기 한 곳에서 signal 로 들고, 화면은 computed 로 파생시킨다.
+ */
 
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -24,9 +26,7 @@ export class PhotoService {
   private readonly uploading = signal(false);
 
   /** 방문한 장소의 백엔드 uuid 집합 */
-  readonly visitedSpaceIds = computed(
-    () => new Set(this.visits().map((visit) => visit.spaceId)),
-  );
+  readonly visitedSpaceIds = computed(() => new Set(this.visits().map((visit) => visit.spaceId)));
   readonly visitedCount = computed(() => this.visitedSpaceIds().size);
   readonly isUploading = this.uploading.asReadonly();
   readonly visitList = this.visits.asReadonly();
@@ -44,9 +44,7 @@ export class PhotoService {
     // mock 전환 지점 — Supabase 준비 후 environment.useMockApi = false
     const source: Observable<PhotoDto[]> = environment.useMockApi
       ? of(VISITS_MOCK).pipe(delay(MOCK_LATENCY))
-      : this.http
-          .get<PhotosResponseDto>(`${this.base}/api/photos`)
-          .pipe(map((res) => res.photos));
+      : this.http.get<PhotosResponseDto>(`${this.base}/api/photos`).pipe(map((res) => res.photos));
 
     return source.pipe(
       map((photos) => photos.map(toVisit)),
