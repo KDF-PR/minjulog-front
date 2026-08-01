@@ -41,6 +41,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '그 위에 기억하는 공간을 얹었어요. 여섯 곳 가운데 이곳만 꼭 들러야 해요.',
     photoGuide: '기념관 입구나 상징 조형물이 보이게 한 장 담아 주세요.',
     courseOrder: 1,
+    markColor: 'pink', // 확정 — 시안 `02 내 방문기록`
     // 관람 시간·휴관일은 공식 안내를 받아 채운다 — 지금은 비워 둔다
     nearby: [],
   },
@@ -55,6 +56,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     description: '북한산 자락에 있어 도심에서 잠시 벗어나 쉬어 갈 수 있는 곳이에요.',
     photoGuide: '건물 외관이나 안내 표지가 보이게 찍어 주세요.',
     courseOrder: 2,
+    markColor: 'skyblue', // 임시 — 시안에 방문 완료 상태가 없어 색을 못 봤다
   },
   {
     slug: 'myeongdong-cathedral',
@@ -69,6 +71,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '지금도 미사가 열리는 공간이라 방문 전에 시간을 확인하면 좋아요.',
     photoGuide: '성당 전경이나 정문이 보이게 담아 주세요. 미사 중에는 조용히 부탁드려요.',
     courseOrder: 3,
+    markColor: 'orange', // 임시 — 시안에 방문 완료 상태가 없어 색을 못 봤다
     // v3 `09 장소 상세 · 방문 완료` 시안 문구
     visitInfo: {
       openingHours: '방문 전 미사 시간 확인',
@@ -91,6 +94,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '1980년대부터 시민들이 목소리를 나누고, 공연과 전시가 열리는 열린 마당으로 자리 잡았어요.',
     photoGuide: '마로니에 나무나 상징 조형물이 보이게 한 장 담아 주세요. 구도는 자유롭게요.',
     courseOrder: 4,
+    markColor: 'skyblue', // 확정 — 시안 `02 내 방문기록`
     // v3 `08 장소 상세 · 미방문` 시안 문구
     visitInfo: {
       openingHours: '상시 개방',
@@ -115,6 +119,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '다리 위에 그를 기리는 동상과 동판이 있어요.',
     photoGuide: '전태일 동상이나 다리 이름 표지가 보이게 찍어 주세요.',
     courseOrder: 5,
+    markColor: 'pink', // 임시 — 시안에 방문 완료 상태가 없어 색을 못 봤다
   },
   {
     slug: 'gwanghwamun-square',
@@ -127,6 +132,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     description: '집회와 추모, 축제가 모두 열려온 자리예요. 동선이 넓어 천천히 둘러보기 좋아요.',
     photoGuide: '광장 전경이나 대표 조형물이 보이게 담아 주세요.',
     courseOrder: 6,
+    markColor: 'orange', // 확정 — 시안 `02 내 방문기록`
   },
 ] as const;
 

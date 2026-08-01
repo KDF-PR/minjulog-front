@@ -49,19 +49,19 @@
     @include typo-ds('title', 'md');
   }
 
-  // 진행률 — 트랙 #ededed 위에 채움 #111111
+  // 진행률 — 회색 트랙 위에 초록 채움
   .progress-bar {
     border-radius: $radius-full;
     width: 100%;
     height: $progress-bar-height;
     overflow: hidden;
-    background-color: $color-border-subtle;
+    background-color: $progress-track;
   }
 
   .progress-bar-fill {
     display: block;
     height: 100%;
-    background-color: $color-bg-inverse;
+    background-color: $progress-fill;
     transition: width 0.3s ease;
   }
 
@@ -115,17 +115,26 @@
     gap: $space-8;
   }
 
-  // 획득 원형은 #444444 다. 탭 활성 pill(#111111)과 구분된다.
+  // 방문 완료 마커 색은 장소마다 다르다. 어느 장소가 어느 색인지는 장소 데이터가 정하고
+  // 여기서는 붙은 이름에 색만 맞춘다. 방문 전에는 색 이름이 붙지 않아 회색으로 남는다.
   .stamp-circle {
     border-radius: $radius-full;
     width: $stamp-circle-size;
     height: $stamp-circle-size;
     @include flexCenter();
-    background-color: $stamp-bg-pending;
-    color: $stamp-mark;
+    background-color: $color-bg-overlay-disabled;
+    color: $stamp-mark-text;
 
-    &.is-earned {
-      background-color: $stamp-bg-earned;
+    &.is-mark-pink {
+      background-color: $stamp-mark-pink;
+    }
+
+    &.is-mark-skyblue {
+      background-color: $stamp-mark-skyblue;
+    }
+
+    &.is-mark-orange {
+      background-color: $stamp-mark-orange;
     }
   }
 

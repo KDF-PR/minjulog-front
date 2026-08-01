@@ -1,6 +1,6 @@
 // tab-bar.scss — 하단 탭바.
-// 활성 탭은 검정 pill 이다. 배경(#fafafa)과 페이지(#ffffff)가 다른 값이라
-// 탭바가 페이지 위에 올라선 층으로 읽힌다.
+// 탭바 배경이 하늘색이고 선택된 탭만 레몬색 pill 이다. 페이지 배경과 색이 아예 달라
+// 탭바가 그 위에 올라선 층으로 읽힌다.
 
 @use 'utils' as *;
 
@@ -13,7 +13,7 @@
   z-index: $z-index-tabbar;
   border-top: 1px solid $color-border;
   height: $app-tabbar-height;
-  background-color: $color-bg-subtle;
+  background-color: $tabbar-bg;
 
   .tab-list {
     height: 100%;
@@ -28,18 +28,20 @@
 
   .tab-link {
     border-radius: $radius-full;
+    border: 1px solid transparent;
     height: $app-tab-pill-height;
     @include flexCenter();
     padding: 0 $spacing-chip-x;
-    color: $color-text-muted;
+    color: $tabbar-item-text;
     @include typo-ds('label', 'md');
     transition:
       background-color 0.15s ease,
       color 0.15s ease;
 
     &.is-active {
-      background-color: $color-bg-inverse;
-      color: $color-text-inverse;
+      border-color: $tabbar-item-active-border;
+      background-color: $tabbar-item-active-bg;
+      color: $tabbar-item-active-text;
       @include font-weight('bold');
     }
 

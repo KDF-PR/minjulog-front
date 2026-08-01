@@ -47,7 +47,12 @@
         <ul class="stamp-grid">
           @for (item of spaceVisits(); track item.space.slug) {
             <li class="stamp-item">
-              <span class="stamp-circle" [class.is-earned]="item.visit !== null">
+              <span
+                class="stamp-circle"
+                [class.is-mark-pink]="item.visit !== null && item.space.markColor === 'pink'"
+                [class.is-mark-skyblue]="item.visit !== null && item.space.markColor === 'skyblue'"
+                [class.is-mark-orange]="item.visit !== null && item.space.markColor === 'orange'"
+              >
                 @if (item.visit !== null) {
                   <!-- 체크 아이콘 자산 미수령 — 임시 SVG -->
                   <svg

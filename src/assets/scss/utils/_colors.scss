@@ -170,22 +170,14 @@ $progress-track: $color-bg-muted;
 $progress-fill: $color-action-brand;
 
 // Component — Stamp
-// 방문 완료 마커는 한 색이 아니라 장소마다 세 색을 돌려 쓴다.
-// 순서를 화면에서 계산해야 해서 목록 형태로도 함께 둔다.
+// 방문 완료 마커 색은 장소마다 고정이다. 어느 장소가 어느 색인지는
+// core/spaces.content.ts 의 markColor 가 들고 있고 여기에는 색만 둔다.
 
-$stamp-mark-1: $brand-pink;
-$stamp-mark-2: $brand-skyblue;
-$stamp-mark-3: $brand-orange;
-$stamp-mark-cycle: ($stamp-mark-1, $stamp-mark-2, $stamp-mark-3);
+$stamp-mark-pink: $brand-pink;
+$stamp-mark-skyblue: $brand-skyblue;
+$stamp-mark-orange: $brand-orange;
 
 $stamp-mark-text: $color-text; // 마커 안 「방문 완료」 글자
 $stamp-name-bg: $color-bg-brand-light; // 완료 카드의 장소 이름 밴드
 $stamp-name-text: $color-text;
-
-// 아래 3개는 예전 이름이다. my-log.scss 가 아직 쓰고 있어 값만 새 디자인에 맞췄다.
-// 화면을 옮길 때 함께 지운다.
-$stamp-bg-earned: $stamp-mark-1;
-$stamp-bg-pending: $color-bg-overlay-disabled;
-$stamp-mark: $stamp-mark-text;
-
 $stamp-label: $color-text-sub;

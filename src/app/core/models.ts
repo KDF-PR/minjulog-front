@@ -35,6 +35,15 @@ export const SPACE_SLUGS: readonly SpaceSlug[] = [
 export type RewardTier = 3 | 6;
 export const REWARD_TIERS: readonly RewardTier[] = [3, 6] as const;
 
+/**
+ * 방문 완료 스탬프 마커 색. 장소마다 하나씩 고정이다.
+ *
+ * 색 값은 `utils/_colors.scss` 의 `$stamp-mark-*` 가 들고 있다. 여기에는 이름만 둔다 —
+ * 색 자체가 오면 화면 코드가 색을 아는 자리가 된다.
+ */
+export type StampMark = 'pink' | 'skyblue' | 'orange';
+export const STAMP_MARKS: readonly StampMark[] = ['pink', 'skyblue', 'orange'] as const;
+
 // ── ① 고정 콘텐츠 — 프론트 소유 ────────────────────────────────────
 
 /**
@@ -59,6 +68,8 @@ export interface SpaceContent {
   photoGuide: string;
   /** 일일 추천 코스 순번. 방문 조건과 무관한 참고값 */
   courseOrder: number;
+  /** 방문 완료 스탬프 마커 색 */
+  markColor: StampMark;
 
   // ── 선택 항목 ─────────────────────────────────────────────
   // 공식 콘텐츠를 못 받아 비어 있는 장소가 있다. **없으면 그 영역을 통째로 숨긴다.**
