@@ -19,7 +19,7 @@ export class Main implements OnInit {
   protected readonly ready = signal(false);
 
   protected readonly tagline = '민주·인권·평화 공간을 따라 걷기';
-  protected readonly wordmark = '민주로드';
+  protected readonly wordmark = '민주로그';
   protected readonly subtitle = '모바일 스탬프 투어';
   protected readonly periodLabel = OPERATION_PERIOD.label;
 

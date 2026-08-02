@@ -15,7 +15,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 })
 export class PageHeader {
   /** 워드마크 자리 문구. 자산 export 를 받으면 이미지로 바뀐다 */
-  readonly title = input('민주로드');
+  readonly title = input('민주로그');
 
   /** `소개` 칩을 눌렀다 */
   readonly introSelect = output<void>();

@@ -15,11 +15,11 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 })
 export class IntroDialog {
   readonly open = input(false);
-  readonly title = input('민주로드');
+  readonly title = input('민주로그');
 
   /** 확정 문구 미수령 — 시안 자리 문구 */
   readonly paragraphs = input<readonly string[]>([
-    '민주로드 모바일 스탬프 투어는 민주·인권·평화 분야의 기념관을 소개하고 함께 걷기를 바라는 마음으로 만들었습니다.',
+    '민주로그 모바일 스탬프 투어는 민주·인권·평화 분야의 기념관을 소개하고 함께 걷기를 바라는 마음으로 만들었습니다.',
     '기관을 방문해 QR을 찍으면 스탬프가 쌓이고, 모은 개수에 따라 선물이 하나씩 열립니다.',
   ]);
 
