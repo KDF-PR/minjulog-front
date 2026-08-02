@@ -130,16 +130,44 @@
   text-align: center;
 }
 
+// 불러오는 동안 자리를 지키는 빈 칸
+//
+// 목록이 비면 화면이 접혔다가 데이터가 오는 순간 튄다. 실제 요소와 같은 크기의
+// 빈 칸을 먼저 깔아 높이를 잡아 둔다. 모양은 붙는 쪽에서 정하고 여기서는 색과
+// 숨소리만 준다 — 멈춘 화면이 아니라 기다리는 중임을 알리려는 것이다.
+
+.is-skeleton {
+  background-color: $color-bg-muted;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-skeleton {
+    animation: none;
+  }
+}
+
 // 스탬프 마커
 //
 // `내 방문기록` 카드와 장소 상세가 같은 원형을 쓴다. 배경색은 아래 .is-mark-* 가 덮고,
 // 색 클래스가 붙지 않으면 방문 전 회색으로 남는다.
-// 위치는 화면마다 달라 여기서 잡지 않는다 — 붙는 쪽에서 정한다.
+// 위치와 크기는 화면마다 달라 붙는 쪽에서 정한다. 여기 크기는 카드용 기본값이다.
 
 .stamp-mark {
   border-radius: $radius-full;
-  width: $stamp-circle-size;
-  height: $stamp-circle-size;
+  width: $stamp-mark-sm;
+  height: $stamp-mark-sm;
   @include flexCenter();
   background-color: $color-bg-subtle;
   color: $stamp-mark-text;

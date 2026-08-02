@@ -35,7 +35,15 @@
       <h3 class="a11y-hidden" id="my-log-logs-label">장소별 방문 기록</h3>
 
       @if (loadState() === 'loading') {
-        <p class="page-state" role="status">방문 기록을 불러오는 중이에요</p>
+        <!-- 실제 카드와 같은 크기로 자리를 잡아 데이터가 와도 화면이 튀지 않게 한다 -->
+        <ul class="log-list" aria-hidden="true">
+          @for (slug of placeholderSlugs; track slug) {
+            <li class="log-item">
+              <span class="log-link is-skeleton"></span>
+            </li>
+          }
+        </ul>
+        <p class="a11y-hidden" role="status">방문 기록을 불러오는 중이에요</p>
       } @else if (loadState() === 'error') {
         <p class="page-state" role="alert">방문 기록을 불러오지 못했어요</p>
       } @else {

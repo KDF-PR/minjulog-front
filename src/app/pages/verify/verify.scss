@@ -38,112 +38,62 @@
     gap: $spacing-content-gap-md;
     padding: $spacing-card-md;
     background-color: $color-bg;
-  }
 
-  .content-body {
-    @include flex(column);
-    gap: $spacing-content-gap-sm;
-  }
+    .content-body {
+      @include flex(column);
+      gap: $spacing-content-gap-sm;
 
-  .content-footer {
-    border-top: 1px solid $color-border-subtle;
-    padding-top: $spacing-content-gap-md;
-  }
+      .btn-primary {
+        @include button('primary', 'lg');
+        width: 100%;
+        margin-top: $space-4;
 
-  // 코드 유효시간 — 재전송 버튼 위에 남은 시간을 보여준다.
-  // 재전송 대기(버튼 라벨)와 뜻이 다르므로 두 값을 나란히 두지 않는다.
-  .verify-expiry {
-    @include flex(row, center, center);
-    gap: $space-4;
-    margin: 0 0 $space-8;
-    color: $color-text-muted;
-    @include typo-ds('body', 'sm');
+        &:focus-visible {
+          @include a11yFocusStyle();
+        }
 
-    &.is-expired {
-      color: $color-error;
-    }
-  }
-
-  .verify-expiry-time {
-    font-variant-numeric: tabular-nums; // 초가 줄어도 폭이 흔들리지 않게
-    font-weight: 700;
-  }
-
-  .field-label {
-    color: $color-text-sub;
-    @include typo-ds('label', 'sm');
-  }
-
-  .field-input {
-    border: 1px solid $input-border;
-    border-radius: $radius-md;
-    width: 100%;
-    height: $control-md;
-    padding: 0 $spacing-input-x;
-    background-color: $input-bg;
-    color: $input-text;
-    @include typo-ds('body', 'md');
-
-    &::placeholder {
-      color: $input-text-placeholder;
+        &.is-loading {
+          cursor: progress;
+        }
+      }
     }
 
-    &:focus-visible {
-      border-color: $input-border-focus;
-      @include a11yFocusStyle();
-    }
+    .content-footer {
+      border-top: 1px solid $color-border-subtle;
+      padding-top: $spacing-content-gap-md;
 
-    &[aria-invalid='true'] {
-      border-color: $input-border-error;
-    }
+      // 코드 유효시간 — 재전송 버튼 위에 남은 시간을 보여준다.
+      // 재전송 대기(버튼 라벨)와 뜻이 다르므로 두 값을 나란히 두지 않는다.
+      .verify-expiry {
+        @include flex(row, center, center);
+        gap: $space-4;
+        margin: 0 0 $space-8;
+        color: $color-text-muted;
+        @include typo-ds('body', 'sm');
 
-    // 6자리 코드 — 자릿수가 눈에 들어오게 넓은 자간으로 가운데 정렬.
-    // padding-left 로 자간이 만드는 오른쪽 여백을 상쇄해 실제로 가운데 보이게 한다.
-    &.is-code {
-      height: $control-lg;
-      padding-left: calc(#{$spacing-input-x} + #{$letter-spacing-code});
-      text-align: center;
-      letter-spacing: $letter-spacing-code;
-      @include typo-ds('title', 'xl');
-      @include font-weight('bold');
-    }
-  }
+        &.is-expired {
+          color: $color-error;
+        }
 
-  .field-error {
-    color: $color-error;
-    @include typo-ds('body', 'sm');
-  }
+        .verify-expiry-time {
+          font-variant-numeric: tabular-nums; // 초가 줄어도 폭이 흔들리지 않게
+          font-weight: 700;
+        }
+      }
 
-  .field-success {
-    color: $color-success;
-    @include typo-ds('body', 'sm');
-  }
+      // 재전송 — 대기 중에는 disabled 로 잠긴다 (백엔드 제한 60초)
+      .btn-text {
+        @include button('text', 'md');
+        width: 100%;
 
-  .btn-primary {
-    @include button('primary', 'lg');
-    width: 100%;
-    margin-top: $space-4;
+        &:focus-visible {
+          @include a11yFocusStyle();
+        }
 
-    &:focus-visible {
-      @include a11yFocusStyle();
-    }
-
-    &.is-loading {
-      cursor: progress;
-    }
-  }
-
-  // 재전송 — 대기 중에는 disabled 로 잠긴다 (백엔드 제한 60초)
-  .btn-text {
-    @include button('text', 'md');
-    width: 100%;
-
-    &:focus-visible {
-      @include a11yFocusStyle();
-    }
-
-    &:disabled {
-      cursor: not-allowed;
+        &:disabled {
+          cursor: not-allowed;
+        }
+      }
     }
   }
 }

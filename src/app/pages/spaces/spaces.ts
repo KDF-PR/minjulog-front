@@ -7,7 +7,7 @@ import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
 import { MapLinks } from '../../shared/map-links/map-links';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
-import { LoadState } from '../../core/models';
+import { LoadState, SPACE_SLUGS } from '../../core/models';
 
 /**
  * 03 방문할 곳 — 참여 기관 목록.
@@ -40,6 +40,14 @@ export class Spaces implements OnInit {
    * 그때까지는 첫 장소 이름으로 검색을 연다 — `docs/할일.md` D-2.
    */
   protected readonly mapQuery = computed(() => this.spaceVisits()[0]?.space.name ?? '민주로그');
+
+  /**
+   * 불러오는 동안 자리를 채울 빈 칸.
+   *
+   * 장소 수는 프론트가 이미 알고 있다 — 방문 여부만 서버에서 온다.
+   * 그래서 응답 전에도 실제와 같은 개수로 높이를 잡아 둘 수 있다.
+   */
+  protected readonly placeholderSlugs = SPACE_SLUGS;
 
   ngOnInit(): void {
     requestAnimationFrame(() => this.ready.set(true));

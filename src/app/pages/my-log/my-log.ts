@@ -8,7 +8,7 @@ import { RewardNotice } from '../../shared/reward-notice/reward-notice';
 import { PhotoService } from '../../core/photo.service';
 import { RewardService } from '../../core/reward.service';
 import { SpaceService } from '../../core/space.service';
-import { LoadState, REWARD_TIERS } from '../../core/models';
+import { LoadState, REWARD_TIERS, SPACE_SLUGS } from '../../core/models';
 
 /**
  * 02 내 스탬프 — 진행률과 스탬프 그리드.
@@ -66,6 +66,14 @@ export class MyLog implements OnInit {
       ? `${remaining}곳 더 방문하고 다음 선물도 받아요.`
       : '여섯 곳을 모두 방문했어요.';
   });
+
+  /**
+   * 불러오는 동안 자리를 채울 빈 칸.
+   *
+   * 장소 수는 프론트가 이미 알고 있다 — 방문 여부만 서버에서 온다.
+   * 그래서 응답 전에도 실제와 같은 개수로 높이를 잡아 둘 수 있다.
+   */
+  protected readonly placeholderSlugs = SPACE_SLUGS;
 
   ngOnInit(): void {
     requestAnimationFrame(() => this.ready.set(true));

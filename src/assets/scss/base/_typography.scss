@@ -27,11 +27,13 @@
   font-display: swap;
 }
 
-// Font Face — SUIT (라벨 전용)
+// Font Face — SUIT (골라 쓰는 글꼴)
 //
 // GabiaNull 과 반대로 굵기 축이 있는 variable font 다. 범위를 100 900 으로 열어야
 // 브라우저가 합성하지 않고 폰트가 가진 굵기를 그대로 쓴다.
-// 쓰는 자리는 typo-ds('label', ...) 와 button() · chip() 세 곳이다.
+//
+// **어디에도 자동으로 붙지 않는다.** 필요한 선택자에서 $font-label 을 직접 걸어 쓴다.
+// 지금은 쓰는 곳이 없어 브라우저가 내려받지 않는다 — 쓰기 시작하면 그때 받는다.
 
 @font-face {
   font-family: 'SUIT';

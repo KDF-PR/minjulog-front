@@ -135,7 +135,6 @@
       font-size: $typo-body-xs;
     }
   } @else if $type == 'label' {
-    font-family: $font-label;
     @include font-weight('medium');
 
     @if $size == 'lg' {

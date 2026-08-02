@@ -1,20 +1,23 @@
 <!-- 프레임(.contents-wrapper)은 app.html 이 이미 감싼다. 여기서 다시 감싸지 않는다. -->
 <section class="main" [class.is-ready]="ready()">
   <div class="main-intro motion-fade-in">
-    <p class="main-tagline">{{ tagline }}</p>
     <h1 class="main-wordmark">{{ wordmark }}</h1>
     <p class="main-subtitle">{{ subtitle }}</p>
-    <p class="main-period">{{ periodLabel }}</p>
+  </div>
+
+  <div class="main-info motion-fade-in motion-delay-1">
+    <!-- 테이프 자산 미수령 — 크기와 자리만 잡아 둔다 (87×31, 카드 위로 15 나옴) -->
+    <span class="main-info-tape" aria-hidden="true"></span>
+
+    <p class="main-info-lead">{{ tagline }}</p>
+    <p class="main-info-period">{{ periodLabel }}</p>
   </div>
 
   <!-- 메인 그래픽 자산 미수령 — 시안과 같은 문구 자리표시자 -->
-  <figure class="main-graphic motion-fade-in motion-delay-1">
+  <figure class="main-graphic motion-fade-in motion-delay-2">
+    <img src="/assets/images/main/graphics/main-bg@2x.png" alt="" aria-hidden="true" />
     <figcaption class="main-graphic-caption">메인 그래픽</figcaption>
   </figure>
-
-  <p class="main-reward-note motion-fade-in motion-delay-2">
-    스탬프를 모으면 선물이 하나씩 열려요
-  </p>
 
   <div class="btn-container">
     <a class="is-primary" routerLink="/my-log">시작하기</a>

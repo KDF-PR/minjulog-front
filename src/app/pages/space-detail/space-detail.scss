@@ -13,178 +13,198 @@
   height: 100%;
   overflow: hidden;
   @include flex(column, flex-start, stretch);
-  background-color: $color-bg-page;
+  background-color: $color-bg-brand-lemon;
   color: $color-text;
 
+  // 헤더 뒤는 레몬이고 본문은 흰색이다. 스크롤 영역이 흰 바탕을 맡는다
   .space-detail-scroll {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    background-color: $color-bg;
   }
 
-  // 대표 이미지 영역. 초록 바탕 위에 정사각 사진이 얹히고 마커가 모서리에 걸친다.
+  // 대표 이미지 영역. 초록 바탕 위에 정사각 사진이 얹힌다.
+  // 아래 여백이 위보다 넓은 것은 물결 자산이 들어올 자리를 비워 둔 것이다 (시안 실측 44 / 76).
   .detail-hero {
-    position: relative;
     @include flexCenter();
-    padding: $spacing-page-y-mobile $page-x;
+    padding: $space-40 $page-x;
     background-color: $color-action-brand;
-  }
 
-  .detail-hero-figure {
-    border-radius: $radius-lg;
-    width: $detail-hero-size;
-    height: $detail-hero-size;
-    overflow: hidden;
-    @include flexCenter();
-    background-color: $color-bg-subtle;
+    .detail-hero-figure {
+      position: relative;
+      border-radius: $radius-lg;
+      width: $detail-hero-size;
+      height: $detail-hero-size;
+      overflow: hidden;
+      @include flexCenter();
+      background-color: $color-bg-subtle;
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .detail-hero-caption {
+        color: $color-text-muted;
+        font-size: $typo-label-xs;
+      }
+
+      // 원형·글자는 전역 .stamp-mark 가 맡고 여기서는 위치와 크기만 잡는다.
+      // 사진 안쪽 오른쪽 위에 놓인다 (시안 실측 상 6 · 우 6).
+      .detail-hero-mark {
+        z-index: 1;
+        position: absolute;
+        top: $space-6;
+        right: $space-6;
+        width: $stamp-mark-md;
+        height: $stamp-mark-md;
+      }
     }
-  }
-
-  .detail-hero-caption {
-    color: $color-text-muted;
-    @include typo-ds('label', 'xs');
-  }
-
-  // 원형·글자는 전역 .stamp-mark 가 맡고 여기서는 위치만 잡는다.
-  // 사진 오른쪽 위 모서리에 절반쯤 걸치게 둔다.
-  .detail-hero-mark {
-    z-index: 1;
-    position: absolute;
-    top: $space-16;
-    right: calc(50% - #{$detail-hero-size} / 2 - #{$space-16});
   }
 
   .detail-head {
     @include flex(column, flex-start, center);
-    gap: $space-8;
-    padding: $spacing-page-y-mobile $page-x;
+    padding: $space-32 $page-x $space-48;
     text-align: center;
-  }
 
-  .detail-title {
-    @include typo-ds('title', 'lg');
-  }
+    .detail-title {
+      @include typo-ds('title', 'lg');
+    }
 
-  .detail-subtitle {
-    color: $color-text-sub;
-    @include typo-ds('body', 'md');
-  }
+    .detail-subtitle {
+      color: $color-text-sub;
+      @include typo-ds('body', 'md');
+    }
 
-  .detail-address {
-    @include flex(row, center, center);
-    gap: $space-4;
-    color: $color-text-muted;
-    @include typo-ds('label', 'sm');
-  }
+    .detail-address {
+      @include flex(row, center, center);
+      gap: $space-4;
+      margin-top: $space-16;
+      color: $color-text-muted;
+      @include typo-ds('label', 'sm');
 
-  .detail-address-icon {
-    flex: 0 0 auto;
-    width: $icon-sm;
-    height: $icon-sm;
-  }
+      .detail-address-icon {
+        flex: 0 0 auto;
+        width: $icon-sm;
+        height: $icon-sm;
+      }
+    }
 
-  // 제목 묶음은 가운데 정렬이지만 요약 문단만 왼쪽으로 되돌린다.
-  .detail-summary {
-    margin-top: $space-8;
-    text-align: left;
+    // 제목 묶음은 가운데 정렬이지만 요약 문단만 왼쪽으로 되돌린다.
+    .detail-summary {
+      margin-top: $space-24;
+      @include typo-ds('body', 'sm');
+      text-align: left;
+    }
   }
 
   // 세 절이 같은 골격을 쓴다. 제목은 가운데, 본문은 왼쪽 정렬이다.
   .content {
     @include flex(column);
-    gap: $space-16;
-    padding: $spacing-page-y-mobile $page-x;
+    gap: $space-32;
+    padding: $space-40 $page-x;
 
     & + .content {
       border-top: 1px solid $color-border-subtle;
     }
-  }
 
-  .content-header {
-    @include flex(column, flex-start, center);
-    gap: $space-8;
-  }
+    .content-header {
+      @include flex(column, flex-start, center);
+      gap: $space-8;
 
-  // 절 아이콘 자산 미수령 — 자리만 잡아 둔다.
-  .content-icon {
-    border-radius: $radius-full;
-    width: $icon-lg;
-    height: $icon-lg;
-    background-color: $color-bg-muted;
-  }
+      // 절 아이콘 자산 미수령 — 자리만 잡아 둔다.
+      .content-icon {
+        border-radius: $radius-full;
+        width: $icon-lg;
+        height: $icon-lg;
+        background-color: $color-bg-muted;
+      }
 
-  .content-title {
-    @include typo-ds('title', 'md');
-  }
+      .content-title {
+        @include typo-ds('title', 'md');
+      }
+    }
 
-  .content-body {
-    @include flex(column);
-    gap: $space-12;
-  }
+    .content-body {
+      @include flex(column);
+      gap: $space-12;
 
-  .content-text {
-    @include typo-ds('body', 'sm');
-  }
+      .content-text {
+        @include typo-ds('body', 'sm');
+      }
+    }
 
-  .content-footer {
-    text-align: center;
-  }
+    .content-footer {
+      text-align: center;
 
-  // 밑줄은 전역 .link 가 맡는다 (base/_typography.scss).
-  .content-link {
-    color: $color-text-sub;
-    @include typo-ds('label', 'sm');
-  }
+      // 밑줄은 전역 .link 가 맡는다 (base/_typography.scss).
+      .content-link {
+        color: $color-text-sub;
+        @include typo-ds('label', 'sm');
+      }
+    }
 
-  .record-list {
-    gap: $space-16;
-  }
+    .record-list {
+      gap: $space-12;
 
-  .record {
-    @include flex(column);
-    gap: $space-4;
-  }
+      .record {
+        @include flex(column);
+        gap: $space-4;
 
-  .record-title {
-    @include flex(row, flex-start, center);
-    gap: $space-8;
-    @include typo-ds('label', 'md');
-  }
+        .record-title {
+          @include flex(row, flex-start, center);
+          gap: $space-8;
+          @include typo-ds('label', 'md');
 
-  .record-icon {
-    color: $color-action-brand;
-  }
+          .record-icon {
+            color: $color-action-brand;
+          }
+        }
 
-  .record-summary {
-    color: $color-text-sub;
-    @include typo-ds('body', 'sm');
+        .record-summary {
+          color: $color-text-sub;
+          @include typo-ds('body', 'sm');
+        }
+      }
+    }
   }
 
   // 하단 고정 영역. 인증 버튼 자체는 전역 .btn-container 가 그린다 (templates/_step.scss).
-  // 여기서는 뒤로 가기 버튼을 왼쪽에 붙이고 바깥 여백만 잡는다.
+  // 바는 본문(24)보다 가장자리에 붙어 좌우 16 이고, 높이 68 안에서 세로 가운데다.
+  // .btn-container 기본값은 중앙 고정폭이라 여기서 전폭으로 되돌린다.
   .detail-actions {
     flex-shrink: 0;
     border-top: 1px solid $color-border-subtle;
+    height: $app-bar-height;
     @include flex(row, flex-start, center);
-    padding-left: $page-x;
+    gap: $space-20;
+    padding: 0 $app-bar-x;
     background-color: $color-bg;
-  }
 
-  .detail-back {
-    flex: 0 0 auto;
-    border-radius: $radius-full;
-    width: $control-sm;
-    height: $control-sm;
-    @include flexCenter();
-    @include typo-ds('title', 'md');
+    .detail-back {
+      flex: 0 0 auto;
+      border-radius: $radius-full;
+      width: $icon-lg;
+      height: $icon-lg;
+      @include flexCenter();
+      font-size: $typo-title-md;
 
-    &:focus-visible {
-      @include a11yFocusStyle();
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
+    }
+
+    .btn-container {
+      flex: 1 1 0;
+      padding: 0;
+
+      a {
+        flex: 1 1 0;
+        min-width: 0;
+        height: $control-md;
+      }
     }
   }
 }

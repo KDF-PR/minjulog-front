@@ -1,5 +1,7 @@
 <header class="page-header">
-  <h1 class="page-header-title">{{ title() }}</h1>
+  <h1 class="page-header-title">
+    <a class="page-header-home" routerLink="/main">{{ title() }}</a>
+  </h1>
 
   <button type="button" class="page-header-intro" (click)="introSelect.emit()">소개</button>
 </header>

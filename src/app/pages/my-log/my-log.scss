@@ -2,8 +2,9 @@
 // 헤더·탭바는 고정하고 가운데만 스크롤한다. 프레임(.contents-wrapper)이 높이를 잡으므로
 // 이 화면은 그 안에서 세로 3단(header / scroll / tabbar)으로 나눈다.
 //
-// 스크롤 영역은 다시 세 덩이다 — 레몬 밴드(제목) · 흰 바탕(진행률) · 카드 그리드.
-// 밴드 색이 화면 배경을 대신하므로 .my-log 자체에는 색을 깔지 않는다.
+// 위에서 아래로 레몬 밴드(헤더 + 제목) · 흰 바탕(진행률) · 카드 그리드다.
+// 밴드 색은 헤더 뒤까지 이어져야 해서 .my-log 가 깐다 — 헤더는 배경이 없다.
+// 그래서 흰색이 필요한 절은 각자 배경을 다시 칠한다.
 
 @use 'utils' as *;
 
@@ -12,7 +13,7 @@
   height: 100%;
   overflow: hidden;
   @include flex(column, flex-start, stretch);
-  background-color: $color-bg-page;
+  background-color: $color-bg-brand-lemon;
   color: $color-text;
 
   .my-log-scroll {
@@ -21,68 +22,71 @@
     overflow-y: auto;
   }
 
+  // 배경은 .my-log 에서 이어진다
   .my-log-intro {
     @include flex(column);
     gap: $space-8;
     padding: $spacing-page-y-mobile $page-x;
-    background-color: $color-bg-brand-lemon;
-  }
 
-  .my-log-title {
-    @include typo-ds('title', 'lg');
-  }
+    .my-log-title {
+      @include typo-ds('title', 'lg');
+    }
 
-  .my-log-desc {
-    @include typo-ds('body', 'sm');
+    .my-log-desc {
+      @include typo-ds('body', 'sm');
+    }
   }
 
   .my-log-progress {
     @include flex(column);
     gap: $space-12;
     padding: $spacing-page-y-mobile $page-x;
-  }
+    background-color: $color-bg;
 
-  .progress-head {
-    @include flex(row, space-between, baseline);
-    gap: $space-8;
-  }
+    .progress-head {
+      @include flex(row, space-between, baseline);
+      gap: $space-8;
 
-  .progress-label {
-    color: $color-text-sub;
-    @include typo-ds('label', 'md');
-  }
+      .progress-label {
+        color: $color-text-sub;
+        @include typo-ds('label', 'md');
+      }
 
-  .progress-count {
-    @include flex(row, flex-end, baseline);
-    gap: $space-4;
-  }
+      .progress-count {
+        @include flex(row, flex-end, baseline);
+        gap: $space-4;
 
-  .progress-count-current {
-    @include typo-ds('display', 'sm');
-  }
+        .progress-count-current {
+          @include typo-ds('display', 'sm');
+        }
 
-  .progress-count-total {
-    color: $color-text-muted;
-    @include typo-ds('title', 'md');
-  }
+        .progress-count-total {
+          color: $color-text-muted;
+          @include typo-ds('title', 'md');
+        }
+      }
+    }
 
-  .progress-bar {
-    border-radius: $radius-full;
-    width: 100%;
-    height: $progress-bar-height;
-    overflow: hidden;
-    background-color: $progress-track;
-  }
+    // 진행률 — 회색 트랙 위에 초록 채움
+    .progress-bar {
+      border-radius: $radius-full;
+      width: 100%;
+      height: $progress-bar-height;
+      overflow: hidden;
+      background-color: $progress-track;
 
-  .progress-bar-fill {
-    display: block;
-    height: 100%;
-    background-color: $progress-fill;
-    transition: width 0.3s ease;
+      .progress-bar-fill {
+        display: block;
+        height: 100%;
+        background-color: $progress-fill;
+        transition: width 0.3s ease;
+      }
+    }
   }
 
   .my-log-logs {
     padding: 0 $page-x $spacing-page-y-mobile;
+    background-color: $color-bg;
   }
 
   // 2열 고정 그리드. 열 수가 정해져 있고 행이 이어지는 2차원 구조라 grid 를 쓴다.
@@ -90,91 +94,92 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: $space-16;
-  }
 
-  .log-item {
-    // 방문 완료는 사진이 카드를 채우고 이름 밴드만 그 위에 얹는다.
-    &.is-visited {
-      .log-thumb {
-        position: absolute;
-        inset: 0;
-      }
+    .log-item {
+      // 방문 완료는 사진이 카드를 채우고 이름 밴드만 그 위에 얹는다.
+      &.is-visited {
+        .log-thumb {
+          position: absolute;
+          inset: 0;
+        }
 
-      .log-text {
-        z-index: 1;
-        margin-top: auto;
-        background-color: $stamp-name-bg;
+        .log-text {
+          z-index: 1;
+          margin-top: auto;
+          background-color: $stamp-name-bg;
+        }
       }
     }
-  }
 
-  .log-link {
-    position: relative;
-    border: 1px solid $color-border-subtle;
-    border-radius: $radius-lg;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    @include flex(column, center, stretch);
-    gap: $space-8;
-    background-color: $color-bg-overlay-disabled;
-    color: $color-text;
-
-    &:focus-visible {
-      @include a11yFocusStyle();
-    }
-  }
-
-  .log-thumb {
-    @include flexCenter();
-    color: $color-text-muted;
-
-    img {
+    .log-link {
+      position: relative;
+      border: 1px solid $color-border-subtle;
+      border-radius: $radius-lg;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      @include flex(column, center, stretch);
+      gap: $space-8;
+      background-color: $color-bg-overlay-disabled;
+      color: $color-text;
+
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
     }
-  }
 
-  .log-thumb-icon {
-    width: $icon-lg;
-    height: $icon-lg;
-  }
+    .log-thumb {
+      @include flexCenter();
+      color: $color-text-muted;
 
-  // 필수 방문 장소 표시. 리워드 1차 조건이라 카드 위에 항상 띄운다.
-  .log-required {
-    z-index: 1;
-    position: absolute;
-    top: $space-8;
-    left: $space-8;
-    border-radius: $radius-sm;
-    padding: $space-2 $space-6;
-    background-color: $color-bg-inverse;
-    color: $color-text-inverse;
-    @include typo-ds('label', 'xs');
-  }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
 
-  // 원형·글자·색은 전역 .stamp-mark 와 .is-mark-* 가 맡는다 (global/_utilities.scss).
-  .log-mark {
-    z-index: 1;
-    position: absolute;
-    top: $space-8;
-    right: $space-8;
-  }
+      .log-thumb-icon {
+        width: $icon-lg;
+        height: $icon-lg;
+      }
+    }
 
-  .log-text {
-    @include flex(column);
-    gap: $space-2;
-    padding: $space-8;
-    text-align: center;
-  }
+    // 필수 방문 장소 표시. 리워드 1차 조건이라 카드 위에 항상 띄운다.
+    .log-required {
+      z-index: 1;
+      position: absolute;
+      top: $space-8;
+      left: $space-8;
+      border-radius: $radius-sm;
+      padding: $space-2 $space-6;
+      background-color: $color-bg-inverse;
+      color: $color-text-inverse;
+      @include typo-ds('label', 'xs');
+    }
 
-  .log-name {
-    @include typo-ds('label', 'md');
-  }
+    // 원형·글자·색은 전역 .stamp-mark 와 .is-mark-* 가 맡는다 (global/_utilities.scss).
+    // 카드 오른쪽 위 안쪽에 붙는다 (시안 실측 상 5 · 우 4).
+    .log-mark {
+      z-index: 1;
+      position: absolute;
+      top: $space-4;
+      right: $space-4;
+    }
 
-  .log-guide {
-    color: $color-text-muted;
-    @include typo-ds('label', 'xs');
+    .log-text {
+      @include flex(column);
+      gap: $space-2;
+      padding: $space-8;
+      text-align: center;
+
+      .log-name {
+        @include typo-ds('label', 'md');
+      }
+
+      .log-guide {
+        color: $color-text-muted;
+        @include typo-ds('label', 'xs');
+      }
+    }
   }
 }

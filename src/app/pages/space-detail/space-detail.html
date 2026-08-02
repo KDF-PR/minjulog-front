@@ -15,19 +15,19 @@
             <!-- 대표 이미지 자산 미수령 — 자리표시자 -->
             <figcaption class="detail-hero-caption">대표 이미지</figcaption>
           }
-        </figure>
 
-        <span
-          class="detail-hero-mark stamp-mark"
-          [class.is-mark-pink]="isVisited() && item.space.markColor === 'pink'"
-          [class.is-mark-skyblue]="isVisited() && item.space.markColor === 'skyblue'"
-          [class.is-mark-orange]="isVisited() && item.space.markColor === 'orange'"
-          [class.is-mark-lemon]="isVisited() && item.space.markColor === 'lemon'"
-          [class.is-mark-lime]="isVisited() && item.space.markColor === 'lime'"
-          [class.is-mark-green]="isVisited() && item.space.markColor === 'green'"
-        >
-          {{ isVisited() ? '방문 완료' : '방문 전' }}
-        </span>
+          <span
+            class="detail-hero-mark stamp-mark"
+            [class.is-mark-pink]="isVisited() && item.space.markColor === 'pink'"
+            [class.is-mark-skyblue]="isVisited() && item.space.markColor === 'skyblue'"
+            [class.is-mark-orange]="isVisited() && item.space.markColor === 'orange'"
+            [class.is-mark-lemon]="isVisited() && item.space.markColor === 'lemon'"
+            [class.is-mark-lime]="isVisited() && item.space.markColor === 'lime'"
+            [class.is-mark-green]="isVisited() && item.space.markColor === 'green'"
+          >
+            {{ isVisited() ? '방문 완료' : '방문 전' }}
+          </span>
+        </figure>
       </div>
 
       <div class="detail-head motion-fade-in motion-delay-1">
@@ -45,7 +45,7 @@
           {{ item.space.address }}
         </p>
 
-        <p class="detail-summary content-text">{{ item.space.summary }}</p>
+        <p class="detail-summary">{{ item.space.summary }}</p>
       </div>
 
       <section class="content motion-fade-in motion-delay-2" aria-labelledby="detail-way-title">
@@ -111,7 +111,13 @@
       </button>
 
       <div class="btn-container">
-        <a class="is-primary" [routerLink]="['/stamp', item.space.slug]">사진으로 방문 인증하기</a>
+        <!-- capture=1 로 들어가면 안내 화면을 건너뛰고 촬영기부터 뜬다 -->
+        <a
+          class="is-primary"
+          [routerLink]="['/stamp', item.space.slug]"
+          [queryParams]="{ capture: 1 }"
+          >사진으로 방문 인증하기</a
+        >
       </div>
     </div>
   }

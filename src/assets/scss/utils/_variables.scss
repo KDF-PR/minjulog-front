@@ -24,9 +24,16 @@ $weight-heavy: 900;
 // 전역 출력(@font-face, base element 규칙)은 base/_typography.scss 가 담당.
 
 // Font Family — 단일 소스
-// 폰트 교체 지점은 이 두 줄이다. 화면 SCSS 에 font-family 를 직접 쓰지 않는다.
-// GabiaNull 은 정적 단일 weight(400) 폰트라 400 초과 굵기는 브라우저 합성이다.
-// 라벨은 SUIT 를 쓴다 (Figma family/label). @font-face 선언은 base/_typography.scss.
+// 폰트 교체 지점은 이 두 줄이다. 화면 SCSS 에 글꼴 이름을 직접 쓰지 않는다.
+//
+// 기본은 GabiaNull 하나다. 정적 단일 weight(400) 폰트라 400 초과 굵기는 브라우저 합성이고,
+// 굵기는 font-stroke 로 낸다 (typo-ds 참고).
+//
+// $font-label 은 **자동으로 붙지 않는다.** typo-ds('label', …) 도 GabiaNull 로 그린다.
+// SUIT 가 필요한 자리에만 그 선택자에서 직접 건다:
+//   .some-label { font-family: $font-label; }
+// Figma 변수 family/label 이 SUIT 라 이름을 맞춰 뒀다.
+// @font-face 선언은 base/_typography.scss.
 $font-primary: 'GabiaNull', sans-serif;
 $font-label: 'SUIT', sans-serif;
 
@@ -207,7 +214,8 @@ $container-max: rem(1440px);
 $page-x: $space-24;
 $app-bar-x: $space-16;
 $content-max-width: rem(296px); // 360 - 좌우 여백 32×2
-$app-header-height: rem(44px); // 상단 헤더 (실측 42px)
+$app-header-height: rem(48px); // 상단 헤더
+$app-header-chip-height: rem(32px); // 헤더 안 「소개」 칩. 헤더에 들어가야 해 $control-sm 보다 낮다
 $app-tabbar-height: rem(56px); // 하단 탭바
 $app-tab-pill-height: rem(33px); // 탭 활성 pill
 $app-frame-width: rem(480px); // 태블릿 이상에서 화면을 감싸는 프레임
@@ -216,9 +224,14 @@ $app-frame-height: rem(720px);
 // Project — 화면 부품
 // 시안에만 있고 디자인 시스템에 대응 토큰이 없는 치수.
 
-$stamp-circle-size: rem(72px); // 스탬프 원형 (실측 70px)
+// 스탬프 마커는 붙는 곳마다 크기가 다르다. 기본은 카드용이고 상세에서 키운다.
+$stamp-mark-sm: rem(48px); // 내 방문기록 카드 (실측 48px)
+$stamp-mark-md: rem(61px); // 장소 상세 대표 이미지 (실측 61px)
+
 $detail-hero-size: rem(204px); // 장소 상세 대표 이미지 정사각
+$app-bar-height: rem(68px); // 하단 버튼 바
 $progress-bar-height: $space-8; // 진행률 바
 $section-band-height: $space-4; // 섹션 구분 밴드
 $result-graphic-size: rem(150px); // 결과 화면 원형 그래픽
 $result-cta-width: rem(166px); // 결과 화면 CTA 고정폭
+$main-cta-width: rem(264px); // 메인 시작하기 버튼 고정폭

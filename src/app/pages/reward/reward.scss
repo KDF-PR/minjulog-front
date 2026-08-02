@@ -9,7 +9,7 @@
   height: 100%;
   overflow: hidden;
   @include flex(column, flex-start, stretch);
-  background-color: $color-bg-page;
+  background-color: $color-bg-brand-sky;
   color: $color-text;
 
   .reward-scroll {
@@ -19,6 +19,7 @@
     padding-bottom: $space-24;
   }
 
+  // 배경은 .reward 에서 헤더 뒤까지 이어진다
   .reward-intro {
     @include flex(column);
     gap: $space-12;
@@ -35,100 +36,95 @@
     @include typo-ds('body', 'md');
   }
 
-  .reward-state {
-    padding: $space-24 $page-x;
-    color: $color-text-muted;
-    @include typo-ds('body', 'sm');
-    text-align: center;
-  }
 
   .reward-timeline {
+    background-color: $color-bg;
     @include flex(column);
     gap: $space-16;
     padding: 0 $page-x;
-  }
 
-  .timeline-step {
-    @include flex(row, flex-start, center);
-    gap: $space-16;
-  }
+    .timeline-step {
+      @include flex(row, flex-start, center);
+      gap: $space-16;
 
-  .timeline-mark {
-    border: 1px solid $color-border;
-    border-radius: $radius-full;
-    width: $control-sm;
-    height: $control-sm;
-    flex-shrink: 0;
-    @include flexCenter();
-    color: $color-text-inverse;
+      .timeline-mark {
+        border: 1px solid $color-border;
+        border-radius: $radius-full;
+        width: $control-sm;
+        height: $control-sm;
+        flex-shrink: 0;
+        @include flexCenter();
+        color: $color-text-inverse;
 
-    svg {
-      width: $icon-sm;
-      height: $icon-sm;
+        svg {
+          width: $icon-sm;
+          height: $icon-sm;
+        }
+      }
+
+      .timeline-name {
+        color: $color-text-sub;
+        @include typo-ds('label', 'lg');
+        @include font-weight('bold');
+      }
+
+      &.is-earned .timeline-mark {
+        border-color: $color-bg-inverse;
+        background-color: $color-bg-inverse;
+      }
     }
-  }
 
-  .timeline-step.is-earned .timeline-mark {
-    border-color: $color-bg-inverse;
-    background-color: $color-bg-inverse;
-  }
+    .timeline-reward {
+      padding-left: $space-40;
 
-  .timeline-name {
-    color: $color-text-sub;
-    @include typo-ds('label', 'lg');
-    @include font-weight('bold');
-  }
+      .reward-card {
+        border: 1px solid $color-border-subtle;
+        border-radius: $radius-lg;
+        @include flex(column);
+        gap: $spacing-content-gap-md;
+        padding: $spacing-card-md;
+        background-color: $color-bg-subtle;
 
-  .timeline-reward {
-    padding-left: $space-40;
-  }
+        .reward-card-head {
+          @include flex(row, flex-start, center);
+          gap: $spacing-content-gap-md;
 
-  .reward-card {
-    border: 1px solid $color-border-subtle;
-    border-radius: $radius-lg;
-    @include flex(column);
-    gap: $spacing-content-gap-md;
-    padding: $spacing-card-md;
-    background-color: $color-bg-subtle;
-  }
+          .reward-card-image {
+            border-radius: $radius-md;
+            width: $thumb-sm;
+            height: $thumb-sm;
+            flex-shrink: 0;
+            @include flexCenter();
+            background-color: $color-border-subtle;
+            color: $color-text-muted;
+            @include typo-ds('label', 'sm');
+          }
 
-  .reward-card-head {
-    @include flex(row, flex-start, center);
-    gap: $spacing-content-gap-md;
-  }
+          .reward-card-text {
+            @include flex(column);
+            gap: $space-4;
 
-  .reward-card-image {
-    border-radius: $radius-md;
-    width: $thumb-sm;
-    height: $thumb-sm;
-    flex-shrink: 0;
-    @include flexCenter();
-    background-color: $color-border-subtle;
-    color: $color-text-muted;
-    @include typo-ds('label', 'sm');
-  }
+            .reward-card-title {
+              @include typo-ds('label', 'lg');
+              @include font-weight('bold');
+            }
 
-  .reward-card-text {
-    @include flex(column);
-    gap: $space-4;
-  }
+            .reward-card-requirement {
+              color: $color-text-muted;
+              @include typo-ds('body', 'sm');
+            }
+          }
+        }
 
-  .reward-card-title {
-    @include typo-ds('label', 'lg');
-    @include font-weight('bold');
-  }
+        .reward-card-cta {
+          @include button('primary', 'md');
+          width: 100%;
 
-  .reward-card-requirement {
-    color: $color-text-muted;
-    @include typo-ds('body', 'sm');
-  }
-
-  .reward-card-cta {
-    @include button('primary', 'md');
-    width: 100%;
-
-    &:focus-visible {
-      @include a11yFocusStyle();
+          &:focus-visible {
+            @include a11yFocusStyle();
+          }
+        }
+      }
     }
   }
 

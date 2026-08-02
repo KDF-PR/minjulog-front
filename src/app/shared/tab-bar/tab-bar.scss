@@ -19,34 +19,34 @@
     height: 100%;
     @include flex(row, space-between, center);
     padding: 0 $app-bar-x;
-  }
 
-  .tab-item {
-    flex: 1;
-    @include flexCenter();
-  }
+    .tab-item {
+      flex: 1;
+      @include flexCenter();
 
-  .tab-link {
-    border-radius: $radius-full;
-    border: 1px solid transparent;
-    height: $app-tab-pill-height;
-    @include flexCenter();
-    padding: 0 $spacing-chip-x;
-    color: $tabbar-item-text;
-    @include typo-ds('label', 'md');
-    transition:
-      background-color 0.15s ease,
-      color 0.15s ease;
+      .tab-link {
+        border-radius: $radius-full;
+        border: 1px solid transparent;
+        height: $app-tab-pill-height;
+        @include flexCenter();
+        padding: 0 $spacing-chip-x;
+        color: $tabbar-item-text;
+        @include typo-ds('label', 'md');
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
 
-    &.is-active {
-      border-color: $tabbar-item-active-border;
-      background-color: $tabbar-item-active-bg;
-      color: $tabbar-item-active-text;
-      @include font-weight('bold');
-    }
+        &.is-active {
+          border-color: $tabbar-item-active-border;
+          background-color: $tabbar-item-active-bg;
+          color: $tabbar-item-active-text;
+          @include font-weight('bold');
+        }
 
-    &:focus-visible {
-      @include a11yFocusStyle();
+        &:focus-visible {
+          @include a11yFocusStyle();
+        }
+      }
     }
   }
 }

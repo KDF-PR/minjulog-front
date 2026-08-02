@@ -1,8 +1,8 @@
 // spaces.scss — 03 방문할 곳.
 // 헤더·탭바는 고정하고 가운데만 스크롤한다.
 //
-// 스크롤 영역은 세 덩이다 — 연두 밴드(제목) · 흰 바탕(목록) · 초록 바탕(지도 카드).
-// 밴드 색이 화면 배경을 대신하므로 .spaces 자체에는 색을 깔지 않는다.
+// 위에서 아래로 연두 밴드(헤더 + 제목) · 흰 바탕(목록) · 초록 바탕(지도 카드)다.
+// 밴드 색은 헤더 뒤까지 이어져야 해서 .spaces 가 깐다 — 헤더는 배경이 없다.
 
 @use 'utils' as *;
 
@@ -11,7 +11,7 @@
   height: 100%;
   overflow: hidden;
   @include flex(column, flex-start, stretch);
-  background-color: $color-bg-page;
+  background-color: $color-bg-brand-lime;
   color: $color-text;
 
   .spaces-scroll {
@@ -20,66 +20,83 @@
     overflow-y: auto;
   }
 
+  // 배경은 .spaces 에서 이어진다
   .spaces-intro {
     @include flex(column);
     gap: $space-8;
     padding: $spacing-page-y-mobile $page-x;
-    background-color: $color-bg-brand-lime;
-  }
 
-  .spaces-title {
-    @include typo-ds('title', 'lg');
-  }
+    .spaces-title {
+      @include typo-ds('title', 'lg');
+    }
 
-  .spaces-desc {
-    @include typo-ds('body', 'sm');
-  }
-
-  // 행 사이만 선을 긋는다. 목록 위아래는 밴드 경계가 이미 있어 선이 겹친다.
-  .space-row + .space-row {
-    border-top: 1px solid $color-border-subtle;
-  }
-
-  .space-link {
-    @include flex(row, flex-start, center);
-    gap: $space-12;
-    padding: $space-12 $page-x;
-    color: $color-text;
-
-    &:focus-visible {
-      @include a11yFocusStyle();
+    .spaces-desc {
+      @include typo-ds('body', 'sm');
     }
   }
 
-  // 방문 전에는 회색 원, 방문 후에는 장소 색이다.
-  // 색 클래스(.is-mark-*)는 global/_utilities.scss 가 방출한다.
-  .space-mark {
-    flex: 0 0 auto;
-    border: 1px solid $color-border;
-    border-radius: $radius-full;
-    width: $icon-lg;
-    height: $icon-lg;
-    background-color: $color-bg-subtle;
-  }
+  .space-list {
+    background-color: $color-bg;
 
-  .space-text {
-    flex: 1 1 0;
-    @include flex(column);
-    gap: $space-2;
-  }
+    // 행 사이만 선을 긋는다. 목록 위아래는 밴드 경계가 이미 있어 선이 겹친다.
+    .space-row + .space-row {
+      border-top: 1px solid $color-border-subtle;
+    }
 
-  .space-name {
-    @include typo-ds('label', 'md');
-  }
+    .space-link {
+      @include flex(row, flex-start, center);
+      gap: $space-12;
+      padding: $space-12 $page-x;
+      color: $color-text;
 
-  .space-region {
-    color: $color-text-muted;
-    @include typo-ds('label', 'xs');
-  }
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
+    }
 
-  .space-arrow {
-    flex: 0 0 auto;
-    @include typo-ds('title', 'md');
+    // 방문 전에는 회색 원, 방문 후에는 장소 색이다.
+    // 색 클래스(.is-mark-*)는 global/_utilities.scss 가 방출한다.
+    .space-mark {
+      flex: 0 0 auto;
+      border: 1px solid $color-border;
+      border-radius: $radius-full;
+      width: $icon-lg;
+      height: $icon-lg;
+      background-color: $color-bg-subtle;
+    }
+
+    .space-text {
+      flex: 1 1 0;
+      @include flex(column);
+      gap: $space-2;
+
+      // 글자가 없는 빈 칸은 높이가 0 이라 줄 크기를 직접 준다
+      .space-name {
+        @include typo-ds('label', 'md');
+
+        &.is-skeleton {
+          border-radius: $radius-sm;
+          width: 60%;
+          height: rem(14px);
+        }
+      }
+
+      .space-region {
+        color: $color-text-muted;
+        @include typo-ds('label', 'xs');
+
+        &.is-skeleton {
+          border-radius: $radius-sm;
+          width: 35%;
+          height: rem(10px);
+        }
+      }
+    }
+
+    .space-arrow {
+      flex: 0 0 auto;
+      @include typo-ds('title', 'md');
+    }
   }
 
   // 목록 아래 초록 바탕. 일러스트 자산이 들어올 자리라 세로 여백을 넉넉히 둔다.
@@ -87,18 +104,18 @@
     @include flex(column, center, stretch);
     padding: $spacing-page-y-mobile $page-x $space-80;
     background-color: $color-action-brand;
-  }
 
-  .spaces-map-card {
-    border-radius: $radius-lg;
-    @include flex(column, center, center);
-    gap: $space-12;
-    padding: $spacing-card-sm;
-    background-color: $color-bg;
-  }
+    .spaces-map-card {
+      border-radius: $radius-lg;
+      @include flex(column, center, center);
+      gap: $space-12;
+      padding: $spacing-card-sm;
+      background-color: $color-bg;
 
-  .spaces-map-title {
-    @include typo-ds('label', 'md');
-    text-align: center;
+      .spaces-map-title {
+        @include typo-ds('label', 'md');
+        text-align: center;
+      }
+    }
   }
 }

@@ -13,9 +13,9 @@
     </div>
 
     @if (loadState() === 'loading') {
-      <p class="reward-state" role="status">리워드를 불러오는 중이에요</p>
+      <p class="page-state" role="status">리워드를 불러오는 중이에요</p>
     } @else if (loadState() === 'error') {
-      <p class="reward-state" role="alert">리워드를 불러오지 못했어요</p>
+      <p class="page-state" role="alert">리워드를 불러오지 못했어요</p>
     } @else {
       <ul class="reward-timeline motion-fade-in motion-delay-1">
         @for (item of timeline(); track item.key) {
@@ -73,7 +73,7 @@
       }
 
       @if (claimError(); as message) {
-        <p class="reward-state" role="alert" animate.enter="motion-fade-enter">{{ message }}</p>
+        <p class="page-state" role="alert" animate.enter="motion-fade-enter">{{ message }}</p>
       }
     }
   </div>

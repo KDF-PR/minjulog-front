@@ -74,6 +74,7 @@
   a {
     @include button('secondary', 'lg');
     min-width: $result-cta-width;
+    max-width: 264px;
 
     .btn-arrow {
       margin-right: $space-4;

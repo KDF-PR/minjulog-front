@@ -33,16 +33,16 @@
     &.is-stamp {
       border-radius: $radius-lg;
     }
-  }
 
-  .stamp-result-placeholder {
-    color: $color-text-muted;
-    @include typo-ds('label', 'md');
-    @include font-weight('bold');
-  }
+    .stamp-result-placeholder {
+      color: $color-text-muted;
+      @include typo-ds('label', 'md');
+      @include font-weight('bold');
+    }
 
-  .stamp-result-mark {
-    @include typo-ds('title', 'md');
+    .stamp-result-mark {
+      @include typo-ds('title', 'md');
+    }
   }
 
   .stamp-result-body {
@@ -50,24 +50,24 @@
     max-width: $content-max-width;
     @include flex(column);
     gap: $space-8;
-  }
 
-  .stamp-result-title {
-    @include typo-ds('title', 'lg');
-    @include font-weight('bold');
-  }
+    .stamp-result-title {
+      @include typo-ds('title', 'lg');
+      @include font-weight('bold');
+    }
 
-  .stamp-result-desc {
-    color: $color-text-muted;
-    @include typo-ds('body', 'md');
-  }
+    .stamp-result-desc {
+      color: $color-text-muted;
+      @include typo-ds('body', 'md');
+    }
 
-  .stamp-result-note {
-    border: 1px solid $color-border-subtle;
-    border-radius: $radius-sm;
-    padding: $space-8 $space-12;
-    color: $color-text-muted;
-    @include typo-ds('body', 'sm');
+    .stamp-result-note {
+      border: 1px solid $color-border-subtle;
+      border-radius: $radius-sm;
+      padding: $space-8 $space-12;
+      color: $color-text-muted;
+      @include typo-ds('body', 'sm');
+    }
   }
 
   .stamp-result-notice {
@@ -79,25 +79,26 @@
   .stamp-result-actions {
     @include flex(column, flex-start, center);
     gap: $space-8;
-  }
 
-  .stamp-result-cta {
-    @include button('secondary', 'md');
-    width: $result-cta-width;
+    .stamp-result-cta {
+      @include button('secondary', 'md');
+      width: $result-cta-width;
 
-    &.is-primary {
-      border-color: $btn-primary-border;
-      background-color: $btn-primary-bg;
-      color: $btn-primary-text;
+      &.is-primary {
+        border-color: $btn-primary-border;
+        background-color: $btn-primary-bg;
+        color: $btn-primary-text;
 
-      &:hover {
-        background-color: $btn-primary-bg-hover;
-        border-color: $btn-primary-border-hover;
+        &:hover {
+          background-color: $btn-primary-bg-hover;
+          border-color: $btn-primary-border-hover;
+        }
+      }
+
+      &:focus-visible {
+        @include a11yFocusStyle();
       }
     }
-
-    &:focus-visible {
-      @include a11yFocusStyle();
-    }
   }
+
 }

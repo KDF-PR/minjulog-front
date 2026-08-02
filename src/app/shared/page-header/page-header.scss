@@ -1,5 +1,10 @@
-// page-header.scss — 탭 화면 공통 상단 헤더.
-// 높이는 프로젝트 전용 토큰 $app-header-height(44px). 조작 요소가 아니라 골격이라
+// page-header.scss — 화면 공통 상단 헤더.
+//
+// **배경색과 아래 경계선을 두지 않는다.** 시안에서 헤더는 화면 위에 얹힌 띠가 아니라
+// 그 화면의 밴드 색이 위까지 이어진 부분이다 — 내 방문기록은 레몬, 방문할 곳은 라임,
+// 참여 선물은 하늘색이 헤더 뒤로 그대로 올라온다. 색은 각 화면이 깐다.
+//
+// 높이는 프로젝트 전용 토큰 $app-header-height. 조작 요소가 아니라 골격이라
 // $control-* 를 쓰지 않는다.
 
 @use 'utils' as *;
@@ -10,21 +15,31 @@
 }
 
 .page-header {
-  border-bottom: 1px solid $color-border;
   height: $app-header-height;
   @include flex(row, space-between, center);
   padding: 0 $app-bar-x;
-  background-color: $color-bg;
 
   .page-header-title {
     color: $color-text;
     @include typo-ds('title', 'md');
     @include font-weight('bold');
+
+    // 글자만 누르게 둔다. 헤더 폭 전체가 링크가 되면 옆의 칩과 겹쳐 잘못 눌린다.
+    .page-header-home {
+      color: inherit;
+
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
+    }
   }
 
+  // 밴드 색 위에 놓여 흰 배경과 검은 테두리로 떠 보인다.
+  // chip() 기본 테두리는 옅은 회색이라 밴드 위에서 사라진다.
   .page-header-intro {
     @include chip();
-    height: rem(32px); // 헤더(44px) 안에 들어가야 해 $control-sm 40px 보다 낮춘다
+    border-color: $color-text;
+    height: $app-header-chip-height;
 
     &:focus-visible {
       @include a11yFocusStyle();

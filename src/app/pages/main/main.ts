@@ -18,7 +18,8 @@ export class Main implements OnInit {
   /** 진입 모션 게이트 — .is-ready 가 붙은 뒤 자식 motion-* 이 재생된다. */
   protected readonly ready = signal(false);
 
-  protected readonly tagline = '민주·인권·평화 공간을 따라 걷기';
+  /** 안내 카드 본문. 시안 `main-info` 문구 그대로 */
+  protected readonly tagline = '민주 · 인권 · 평화 장소를 찾아가 사진으로 인증하고 선물 받아가세요!';
   protected readonly wordmark = '민주로그';
   protected readonly subtitle = '모바일 스탬프 투어';
   protected readonly periodLabel = OPERATION_PERIOD.label;

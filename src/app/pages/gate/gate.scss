@@ -33,23 +33,23 @@
     max-width: $content-max-width;
     @include flex(column);
     gap: $spacing-content-gap-sm;
-  }
 
-  .btn-primary {
-    @include button('primary', 'lg');
-    width: 100%;
+    .btn-primary {
+      @include button('primary', 'lg');
+      width: 100%;
 
-    &:focus-visible {
-      @include a11yFocusStyle();
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
     }
-  }
 
-  .btn-text {
-    @include button('text', 'md');
-    width: 100%;
+    .btn-text {
+      @include button('text', 'md');
+      width: 100%;
 
-    &:focus-visible {
-      @include a11yFocusStyle();
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
     }
   }
 }
