@@ -24,19 +24,29 @@ $weight-heavy: 900;
 // 전역 출력(@font-face, base element 규칙)은 base/_typography.scss 가 담당.
 
 // Font Family — 단일 소스
-// 폰트 교체 지점은 이 한 줄이다. 화면 SCSS 에 font-family 를 직접 쓰지 않는다.
+// 폰트 교체 지점은 이 두 줄이다. 화면 SCSS 에 font-family 를 직접 쓰지 않는다.
 // GabiaNull 은 정적 단일 weight(400) 폰트라 400 초과 굵기는 브라우저 합성이다.
-// @font-face 선언은 base/_typography.scss.
+// 라벨은 SUIT 를 쓴다 (Figma family/label). @font-face 선언은 base/_typography.scss.
 $font-primary: 'GabiaNull', sans-serif;
+$font-label: 'SUIT', sans-serif;
+
+// Font Stroke
+// GabiaNull 이 굵기 하나뿐이라 글자 테두리로 두께를 낸다. 값은 Figma font-stroke/*.
+// 모든 글자에 light 를 깔고 display 만 heavy 로 올린다.
+
+$font-stroke-light: 0.1px;
+$font-stroke-medium: 0.15px;
+$font-stroke-bold: 0.2px;
+$font-stroke-heavy: 0.5px;
 
 // Font Size (mobile)
-$typo-display-xl: 44px;
+$typo-display-xl: 48px;
 $typo-display-lg: 40px;
 $typo-display-md: 34px;
 $typo-display-sm: 28px;
 
 $typo-title-xl: 26px;
-$typo-title-lg: 22px;
+$typo-title-lg: 24px;
 $typo-title-md: 20px;
 $typo-title-sm: 14px;
 
@@ -71,51 +81,20 @@ $typo-label-md-dt: 14px;
 $typo-label-sm-dt: 13px;
 $typo-label-xs-dt: 10px;
 
-// Line Height (mobile)
-$lh-display-xl: 55px;
-$lh-display-lg: 52px;
-$lh-display-md: 44px;
-$lh-display-sm: 36px;
+// Line Height
+// Figma 가 줄간격을 배수로 준다. 기본값 하나를 깔고 다른 값이 필요한 스타일만 따로 둔다.
+// px 로 박으면 글자 크기를 바꿀 때마다 줄간격을 다시 계산해야 한다.
 
-$lh-title-xl: 34px;
-$lh-title-lg: 29px;
-$lh-title-md: 26px;
-$lh-title-sm: 18px;
-
-$lh-body-lg: 25px;
-$lh-body-md: 22px;
-$lh-body-sm: 20px;
-$lh-body-xs: 18px;
-
-$lh-label-lg: 21px;
-$lh-label-md: 18px;
-$lh-label-sm: 17px;
-$lh-label-xs: 16px;
-
-// Line Height (desktop)
-$lh-display-xl-dt: 69px;
-$lh-display-lg-dt: 62px;
-$lh-display-md-dt: 57px;
-$lh-display-sm-dt: 47px;
-
-$lh-title-xl-dt: 42px;
-$lh-title-lg-dt: 36px;
-$lh-title-md-dt: 31px;
-$lh-title-sm-dt: 21px;
-
-$lh-body-lg-dt: 28px;
-$lh-body-md-dt: 22px;
-$lh-body-sm-dt: 20px;
-$lh-body-xs-dt: 18px;
-
-$lh-label-lg-dt: 21px;
-$lh-label-md-dt: 18px;
-$lh-label-sm-dt: 17px;
-$lh-label-xs-dt: 16px;
+$lh-base: 1.64;
+$lh-snug: 1.5; // title/md · label/lg
+$lh-display-xl: 1.15; // 48 × 1.15 ≈ 55px
+$lh-label-lg-strong: 1.31; // 16 × 1.31 ≈ 21px
+$lh-label-xs: 1.6; // 10 × 1.6 = 16px
 
 // Letter Spacing
 $letter-spacing-default: 0px;
-$letter-spacing-tight: -1px;
+$letter-spacing-narrow: -0.5px; // body 전체 · label/xs
+$letter-spacing-tight: -1px; // title 전체 · label/md · label/sm
 $letter-spacing-wide: 1px;
 $letter-spacing-code: 10px; // 인증코드 입력 — 자릿수를 눈으로 세게 하는 넓은 자간
 
@@ -235,6 +214,7 @@ $app-frame-height: rem(720px);
 // 시안에만 있고 디자인 시스템에 대응 토큰이 없는 치수.
 
 $stamp-circle-size: rem(72px); // 스탬프 원형 (실측 70px)
+$detail-hero-size: rem(204px); // 장소 상세 대표 이미지 정사각
 $progress-bar-height: $space-8; // 진행률 바
 $section-band-height: $space-4; // 섹션 구분 밴드
 $result-graphic-size: rem(150px); // 결과 화면 원형 그래픽

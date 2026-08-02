@@ -22,12 +22,19 @@ $neutral-700: #444444; // secondary text
 $neutral-900: #111111; // primary text
 
 // Primitive — Brand
-// Figma 가 primitive 로 노출하는 3색. 스탬프 마커가 장소마다 이 셋을 돌려 쓴다.
-// 브랜드 색이 없는 프로젝트는 이 절을 비운다.
+// 위 3색은 Figma 가 primitive/brand/* 로 내보내는 값이다.
+// 아래 5색은 Figma 가 아직 semantic 값으로만 들고 있어 코드에서 먼저 원색으로 뽑았다.
+// primitive 가 생기면 이름을 맞춘다. 브랜드 색이 없는 프로젝트는 이 절을 비운다.
 
 $brand-pink: #fd79ff;
 $brand-skyblue: #6dd3ff;
 $brand-orange: #ffbb00;
+
+$brand-lemon: #fffb7e;
+$brand-lime: #ccff7b;
+$brand-sky: #abf1ff;
+$brand-green: #45d652;
+$brand-green-light: #55ee63;
 
 // Primitive — System
 
@@ -46,13 +53,12 @@ $color-bg-muted: $neutral-100; // 진행률 트랙 · 섹션 구분 밴드
 $color-bg-inverse: $neutral-900;
 
 // Semantic — Background (프로젝트 확장)
-// Figma 에 이 색들을 받쳐주는 primitive 가 없어 값을 직접 적는다.
-// primitive 가 생기면 참조로 바꾼다.
+// 아래 status·overlay 3색은 브랜드 램프에 속하지 않는 한 번씩 쓰는 값이라 그대로 적는다.
 
-$color-bg-brand-lemon: #fffb7e; // main 배경 · 내 방문기록 헤더 · 탭 활성 pill
-$color-bg-brand-lime: #ccff7b; // 방문할 곳 헤더
-$color-bg-brand-sky: #abf1ff; // 참여 선물 헤더
-$color-bg-brand-light: #55ee63; // 방문 완료 카드의 장소 이름 밴드
+$color-bg-brand-lemon: $brand-lemon; // main 배경 · 내 방문기록 헤더 · 탭 활성 pill
+$color-bg-brand-lime: $brand-lime; // 방문할 곳 헤더
+$color-bg-brand-sky: $brand-sky; // 참여 선물 헤더
+$color-bg-brand-light: $brand-green-light; // 방문 완료 카드의 장소 이름 밴드
 $color-bg-status-error: #ffecec;
 $color-bg-status-disabled: #dfdfdf;
 $color-bg-overlay-disabled: #f1edea; // 아직 방문하지 않은 장소 카드
@@ -74,7 +80,7 @@ $color-action-disabled: $neutral-200;
 // Semantic — Action (프로젝트 확장)
 // 진행 상태를 나타내는 초록. 위 $color-action 계열(검정)과 쓰임이 다르다.
 
-$color-action-brand: #45d652; // 진행률 채움
+$color-action-brand: $brand-green; // 진행률 채움
 
 // Semantic — Text
 
@@ -176,6 +182,9 @@ $progress-fill: $color-action-brand;
 $stamp-mark-pink: $brand-pink;
 $stamp-mark-skyblue: $brand-skyblue;
 $stamp-mark-orange: $brand-orange;
+$stamp-mark-lemon: $brand-lemon;
+$stamp-mark-lime: $brand-lime;
+$stamp-mark-green: $brand-green;
 
 $stamp-mark-text: $color-text; // 마커 안 「방문 완료」 글자
 $stamp-name-bg: $color-bg-brand-light; // 완료 카드의 장소 이름 밴드

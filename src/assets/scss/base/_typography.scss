@@ -27,6 +27,20 @@
   font-display: swap;
 }
 
+// Font Face — SUIT (라벨 전용)
+//
+// GabiaNull 과 반대로 굵기 축이 있는 variable font 다. 범위를 100 900 으로 열어야
+// 브라우저가 합성하지 않고 폰트가 가진 굵기를 그대로 쓴다.
+// 쓰는 자리는 typo-ds('label', ...) 와 button() · chip() 세 곳이다.
+
+@font-face {
+  font-family: 'SUIT';
+  src: url('/assets/fonts/SUIT/SUIT-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 // ============================================================
 // Base HTML Styles
 // ============================================================
@@ -39,11 +53,14 @@ html {
   font-weight: $weight-regular;
 }
 
+// 글자 테두리는 상속되는 속성이라 여기서 한 번 깔면 모든 글자에 적용된다.
+// typo-ds() 를 안 쓰는 글자까지 같은 두께로 맞추려는 것이다. display 만 믹스인에서 올린다.
 body {
   font-family: $default-sans;
   font-weight: $weight-regular;
   word-break: keep-all;
   letter-spacing: 0;
+  -webkit-text-stroke-width: $font-stroke-light;
 }
 
 h1,

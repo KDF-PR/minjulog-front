@@ -79,18 +79,20 @@
 
   @include flexCenter();
 
+  font-family: $font-label;
+
   // 메인 CTA(lg)만 bold. 라이브러리 텍스트 스타일 label/lg-strong 에 대응한다.
   @if $size == 'lg' {
     @include font-size($typo-label-lg);
-    line-height: $lh-label-lg;
+    line-height: $lh-label-lg-strong;
     @include font-weight('bold');
   } @else if $size == 'sm' {
     @include font-size($typo-label-sm);
-    line-height: $lh-label-sm;
+    line-height: $lh-base;
     @include font-weight('semiBold');
   } @else {
     @include font-size($typo-label-md);
-    line-height: $lh-label-md;
+    line-height: $lh-base;
     @include font-weight('semiBold');
   }
 
@@ -114,8 +116,9 @@
   padding: 0 $spacing-chip-x;
   background-color: $chip-bg;
   color: $chip-text;
+  font-family: $font-label;
   @include font-size($typo-label-sm);
-  line-height: $lh-label-sm;
+  line-height: $lh-base;
   @include font-weight('medium');
   cursor: pointer;
   transition:

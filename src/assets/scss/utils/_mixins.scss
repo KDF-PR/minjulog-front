@@ -74,145 +74,84 @@
   }
 }
 
-// ============================================================
 // typo-ds($type, $size) — 디자인 시스템 타이포 (mobile-first)
-// 토큰 변수는 utils/_variables.scss, weight는 font-weight() 사용.
-// 이번 콘텐츠는 모바일 단일 스케일(360×640 → 480×720 확장)이라
-// tablet() 분기(-dt 변수)는 전부 주석 처리해둠 — 필요 시 복원.
+// 토큰 변수는 utils/_variables.scss, weight 는 font-weight() 사용.
+//
+// 줄간격과 자간은 기본값을 먼저 깔고, 기본과 다른 스타일에서만 다시 적는다.
+// 기본은 line-height $lh-base(1.64) · letter-spacing 0.
+//
+// 글자 테두리(font-stroke)와 word-break 는 여기서 적지 않는다. 둘 다 상속되는 속성이라
+// base/_typography.scss 의 body 에 한 번 깔아두면 전부 따라온다.
+// 호출 한 번마다 선언이 붙으면 컴포넌트 스타일 예산을 넘긴다. display 테두리만 여기서 올린다.
+//
+// 데스크톱 스케일(-dt 변수)은 쓰지 않는다. 이번 콘텐츠가 모바일 단일 스케일이라
+// (360×640 → 480×720 확장) 값을 다시 뽑기 전까지 분기를 두지 않는다.
 // 컴포넌트 scss 에서 `@use 'utils' as *` 만 하면 사용 가능.
-// ============================================================
+
 @mixin typo-ds($type: 'body', $size: 'md') {
   font-family: $font-primary;
-  letter-spacing: $letter-spacing-default;
-  word-break: keep-all;
+  line-height: $lh-base;
 
   @if $type == 'display' {
     @include font-weight('bold');
+    letter-spacing: $letter-spacing-default;
+    -webkit-text-stroke-width: $font-stroke-heavy;
 
     @if $size == 'xl' {
       font-size: $typo-display-xl;
       line-height: $lh-display-xl;
-      // @include tablet() {
-      // font-size: $typo-display-xl-dt;
-      // line-height: $lh-display-xl-dt;
-      // }
     } @else if $size == 'lg' {
       font-size: $typo-display-lg;
-      line-height: $lh-display-lg;
-      // @include tablet() {
-      // font-size: $typo-display-lg-dt;
-      // line-height: $lh-display-lg-dt;
-      // }
     } @else if $size == 'md' {
       font-size: $typo-display-md;
-      line-height: $lh-display-md;
-      // @include tablet() {
-      // font-size: $typo-display-md-dt;
-      // line-height: $lh-display-md-dt;
-      // }
     } @else if $size == 'sm' {
       font-size: $typo-display-sm;
-      line-height: $lh-display-sm;
-      // @include tablet() {
-      // font-size: $typo-display-sm-dt;
-      // line-height: $lh-display-sm-dt;
-      // }
     }
   } @else if $type == 'title' {
     @include font-weight('semiBold');
+    letter-spacing: $letter-spacing-tight;
 
     @if $size == 'xl' {
       font-size: $typo-title-xl;
-      line-height: $lh-title-xl;
-      // @include tablet() {
-      // font-size: $typo-title-xl-dt;
-      // line-height: $lh-title-xl-dt;
-      // }
     } @else if $size == 'lg' {
       font-size: $typo-title-lg;
-      line-height: $lh-title-lg;
-      // @include tablet() {
-      // font-size: $typo-title-lg-dt;
-      // line-height: $lh-title-lg-dt;
-      // }
     } @else if $size == 'md' {
       font-size: $typo-title-md;
-      line-height: $lh-title-md;
-      // @include tablet() {
-      // font-size: $typo-title-md-dt;
-      // line-height: $lh-title-md-dt;
-      // }
+      line-height: $lh-snug;
     } @else if $size == 'sm' {
       font-size: $typo-title-sm;
-      line-height: $lh-title-sm;
-      // @include tablet() {
-      // font-size: $typo-title-sm-dt;
-      // line-height: $lh-title-sm-dt;
-      // }
     }
   } @else if $type == 'body' {
     @include font-weight('regular');
+    letter-spacing: $letter-spacing-narrow;
 
     @if $size == 'lg' {
       font-size: $typo-body-lg;
-      line-height: $lh-body-lg;
-      // @include tablet() {
-      // font-size: $typo-body-lg-dt;
-      // line-height: $lh-body-lg-dt;
-      // }
     } @else if $size == 'md' {
       font-size: $typo-body-md;
-      line-height: $lh-body-md;
-      // @include tablet() {
-      // font-size: $typo-body-md-dt;
-      // line-height: $lh-body-md-dt;
-      // }
     } @else if $size == 'sm' {
       font-size: $typo-body-sm;
-      line-height: $lh-body-sm;
-      // @include tablet() {
-      // font-size: $typo-body-sm-dt;
-      // line-height: $lh-body-sm-dt;
-      // }
     } @else if $size == 'xs' {
       font-size: $typo-body-xs;
-      line-height: $lh-body-xs;
-      // @include tablet() {
-      // font-size: $typo-body-xs-dt;
-      // line-height: $lh-body-xs-dt;
-      // }
     }
   } @else if $type == 'label' {
+    font-family: $font-label;
     @include font-weight('medium');
 
     @if $size == 'lg' {
       font-size: $typo-label-lg;
-      line-height: $lh-label-lg;
-      // @include tablet() {
-      // font-size: $typo-label-lg-dt;
-      // line-height: $lh-label-lg-dt;
-      // }
+      line-height: $lh-snug;
+      letter-spacing: $letter-spacing-default;
     } @else if $size == 'md' {
       font-size: $typo-label-md;
-      line-height: $lh-label-md;
-      // @include tablet() {
-      // font-size: $typo-label-md-dt;
-      // line-height: $lh-label-md-dt;
-      // }
+      letter-spacing: $letter-spacing-tight;
     } @else if $size == 'sm' {
       font-size: $typo-label-sm;
-      line-height: $lh-label-sm;
-      // @include tablet() {
-      // font-size: $typo-label-sm-dt;
-      // line-height: $lh-label-sm-dt;
-      // }
+      letter-spacing: $letter-spacing-tight;
     } @else if $size == 'xs' {
       font-size: $typo-label-xs;
       line-height: $lh-label-xs;
-      // @include tablet() {
-      // font-size: $typo-label-xs-dt;
-      // line-height: $lh-label-xs-dt;
-      // }
+      letter-spacing: $letter-spacing-narrow;
     }
   }
 }
