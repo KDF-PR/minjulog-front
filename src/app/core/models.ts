@@ -85,10 +85,6 @@ export interface SpaceContent {
   viewPoints?: SpaceViewPoint[];
   /** 이곳의 이야기 아래 외부 링크. 없으면 숨긴다 */
   storyLink?: SpaceLink;
-  /** 「자세히 둘러보면 좋을 곳」 — 그 장소 안에서 눈여겨볼 지점. 없으면 절을 통째로 숨긴다 */
-  viewPoints?: SpaceViewPoint[];
-  /** 이곳의 이야기 아래 외부 링크. 없으면 숨긴다 */
-  storyLink?: SpaceLink;
   /** 대표 사진. `/assets/images/spaces/<slug>.jpg` */
   heroImage?: string;
   /** 예시 인증 사진. `/assets/images/spaces/<slug>-example.jpg` */
@@ -122,20 +118,6 @@ export interface NearbySpace {
   slug: SpaceSlug;
   /** 도보 소요 분 */
   walkMinutes: number;
-}
-
-/** 장소 안에서 눈여겨볼 지점. 다른 장소가 아니라 그 장소의 일부다 */
-export interface SpaceViewPoint {
-  /** 예: `M2(대공분실) 509호` */
-  name: string;
-  /** 왜 볼 만한지 한 줄 */
-  desc: string;
-}
-
-/** 바깥으로 나가는 링크 */
-export interface SpaceLink {
-  label: string;
-  url: string;
 }
 
 /** 장소 안에서 눈여겨볼 지점. 다른 장소가 아니라 그 장소의 일부다 */
