@@ -1,0 +1,63 @@
+<section class="photo-capture" aria-labelledby="photo-capture-title">
+  <h2 class="a11y-hidden" id="photo-capture-title">사진으로 방문 인증하기</h2>
+
+  <div class="capture-stage">
+    @if (step() === 'preview') {
+      <!-- playsinline 이 없으면 iOS Safari 가 전체화면으로 튄다 -->
+      <video
+        #video
+        class="capture-video"
+        playsinline
+        muted
+        autoplay
+        aria-label="카메라 미리보기"
+      ></video>
+
+      @if (fileError()) {
+        <p class="capture-message" role="alert">{{ fileError() }}</p>
+      } @else if (stateMessage()) {
+        <p class="capture-message" role="status">{{ stateMessage() }}</p>
+      }
+    } @else {
+      <img class="capture-shot" [src]="previewUrl()" alt="방금 찍은 사진" />
+    }
+  </div>
+
+  @if (guide() && step() === 'preview') {
+    <p class="capture-guide">{{ guide() }}</p>
+  }
+
+  <div class="capture-actions">
+    @if (step() === 'preview') {
+      @if (usesFile()) {
+        <label class="capture-file">
+          사진 고르기
+          <input
+            class="a11y-hidden"
+            type="file"
+            accept="image/*"
+            (change)="onFileSelect($event)"
+          />
+        </label>
+      } @else {
+        <button
+          type="button"
+          class="capture-shutter"
+          [disabled]="cameraState() !== 'live'"
+          (click)="onShutter()"
+        >
+          <span class="a11y-hidden">촬영</span>
+        </button>
+      }
+
+      <button type="button" class="capture-cancel" (click)="onCancel()">그만두기</button>
+    } @else {
+      <div class="btn-container">
+        <button type="button" (click)="onRetake()" [disabled]="uploading()">다시 찍기</button>
+        <button type="button" class="is-primary" (click)="onConfirm()" [disabled]="uploading()">
+          {{ uploading() ? '올리는 중' : '이 사진으로 인증' }}
+        </button>
+      </div>
+    }
+  </div>
+</section>
