@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { PageHeader } from '../../shared/page-header/page-header';
 import { TabBar } from '../../shared/tab-bar/tab-bar';
@@ -21,7 +21,7 @@ import { LoadState, REWARD_TIERS } from '../../core/models';
  */
 @Component({
   selector: 'app-my-log',
-  imports: [PageHeader, TabBar, IntroDialog, RewardNotice],
+  imports: [RouterLink, PageHeader, TabBar, IntroDialog, RewardNotice],
   templateUrl: './my-log.html',
   styleUrl: './my-log.scss',
 })
@@ -56,6 +56,16 @@ export class MyLog implements OnInit {
   protected readonly hasClaimableReward = computed(
     () => this.rewards.eligibleTiers().length > this.rewards.claimedTiers().length,
   );
+
+  /** 상단 안내 문구. 시작 전 · 진행 중 · 완주 세 가지로 갈린다 */
+  protected readonly introDesc = computed(() => {
+    if (this.visitedCount() === 0) return '아래 장소를 방문하고 사진으로 인증해 보세요.';
+
+    const remaining = this.remainingToReward();
+    return remaining > 0
+      ? `${remaining}곳 더 방문하고 다음 선물도 받아요.`
+      : '여섯 곳을 모두 방문했어요.';
+  });
 
   ngOnInit(): void {
     requestAnimationFrame(() => this.ready.set(true));

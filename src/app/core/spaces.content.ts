@@ -42,6 +42,18 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     photoGuide: '기념관 입구나 상징 조형물이 보이게 한 장 담아 주세요.',
     courseOrder: 1,
     markColor: 'pink', // 확정 — 시안 `02 내 방문기록`
+    // 아래 두 항목은 시안 `space-detail` 에 적힌 문구를 그대로 옮겼다.
+    // 나머지 다섯 곳은 시안에 없어 비워 두고, 화면은 없으면 그 절을 숨긴다.
+    viewPoints: [
+      {
+        name: 'M2(대공분실) 509호',
+        desc: '박종철 열사가 마지막으로 머물렀던 조사실',
+      },
+      {
+        name: 'E(교육동) 4층 민주마루 발코니',
+        desc: '대공분실과 남영역 일대를 한눈에 내려다볼 수 있는 전망 공간',
+      },
+    ],
     // 관람 시간·휴관일은 공식 안내를 받아 채운다 — 지금은 비워 둔다
     nearby: [],
   },
@@ -56,7 +68,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     description: '북한산 자락에 있어 도심에서 잠시 벗어나 쉬어 갈 수 있는 곳이에요.',
     photoGuide: '건물 외관이나 안내 표지가 보이게 찍어 주세요.',
     courseOrder: 2,
-    markColor: 'skyblue', // 임시 — 시안에 방문 완료 상태가 없어 색을 못 봤다
+    markColor: 'lemon', // 확정 — 겹치지 않는 브랜드 색으로 배정
   },
   {
     slug: 'myeongdong-cathedral',
@@ -71,7 +83,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '지금도 미사가 열리는 공간이라 방문 전에 시간을 확인하면 좋아요.',
     photoGuide: '성당 전경이나 정문이 보이게 담아 주세요. 미사 중에는 조용히 부탁드려요.',
     courseOrder: 3,
-    markColor: 'orange', // 임시 — 시안에 방문 완료 상태가 없어 색을 못 봤다
+    markColor: 'lime', // 확정 — 겹치지 않는 브랜드 색으로 배정
     // v3 `09 장소 상세 · 방문 완료` 시안 문구
     visitInfo: {
       openingHours: '방문 전 미사 시간 확인',
@@ -119,7 +131,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '다리 위에 그를 기리는 동상과 동판이 있어요.',
     photoGuide: '전태일 동상이나 다리 이름 표지가 보이게 찍어 주세요.',
     courseOrder: 5,
-    markColor: 'pink', // 임시 — 시안에 방문 완료 상태가 없어 색을 못 봤다
+    markColor: 'green', // 확정 — 겹치지 않는 브랜드 색으로 배정
   },
   {
     slug: 'gwanghwamun-square',

@@ -1,5 +1,10 @@
 // space-detail.scss — 03 방문할 곳 상세.
-// 대표 이미지 → 요약 → 구분 밴드 → 운영 정보 → 이야기 순서로 쌓는다.
+//
+// 위에서 아래로 대표 이미지 → 이름·주소 → 절 세 개 순서다.
+// 절(.content)은 「찾아가는 길」·「이곳의 이야기」·「자세히 둘러보면 좋을 곳」이 같은
+// 골격을 쓴다 — 제목 묶음(.content-header) · 본문(.content-body) · 링크(.content-footer).
+//
+// 하단은 탭바가 아니라 뒤로 가기 + 인증 버튼이고 스크롤과 무관하게 고정한다.
 
 @use 'utils' as *;
 
@@ -15,138 +20,171 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    padding-bottom: $space-24;
   }
 
-  .space-detail-state {
-    padding: $space-48 $page-x;
-    color: $color-text-muted;
-    @include typo-ds('body', 'sm');
-    text-align: center;
-  }
-
-  .space-hero {
-    width: 100%;
-    aspect-ratio: 3 / 2;
+  // 대표 이미지 영역. 초록 바탕 위에 정사각 사진이 얹히고 마커가 모서리에 걸친다.
+  .detail-hero {
+    position: relative;
     @include flexCenter();
-    margin: $spacing-page-y-mobile 0 $space-20;
-    padding: 0 $page-x;
+    padding: $spacing-page-y-mobile $page-x;
+    background-color: $color-action-brand;
+  }
+
+  .detail-hero-figure {
+    border-radius: $radius-lg;
+    width: $detail-hero-size;
+    height: $detail-hero-size;
+    overflow: hidden;
+    @include flexCenter();
     background-color: $color-bg-subtle;
 
     img {
-      @include objectFit('horizontal', cover);
+      width: 100%;
       height: 100%;
+      object-fit: cover;
     }
   }
 
-  .space-hero-caption {
+  .detail-hero-caption {
     color: $color-text-muted;
-    @include typo-ds('body', 'sm');
+    @include typo-ds('label', 'xs');
+  }
+
+  // 원형·글자는 전역 .stamp-mark 가 맡고 여기서는 위치만 잡는다.
+  // 사진 오른쪽 위 모서리에 절반쯤 걸치게 둔다.
+  .detail-hero-mark {
+    z-index: 1;
+    position: absolute;
+    top: $space-16;
+    right: calc(50% - #{$detail-hero-size} / 2 - #{$space-16});
+  }
+
+  .detail-head {
+    @include flex(column, flex-start, center);
+    gap: $space-8;
+    padding: $spacing-page-y-mobile $page-x;
     text-align: center;
   }
 
-  .space-summary {
-    @include flex(column);
-    gap: $space-8;
-    padding: 0 $page-x $space-24;
-  }
-
-  .space-name {
-    @include flex(row, flex-start, center);
-    gap: $space-8;
-    flex-wrap: wrap;
+  .detail-title {
     @include typo-ds('title', 'lg');
-    @include font-weight('bold');
   }
 
-  // 받기 전에는 외곽선, 받은 뒤에는 검정 배경으로 반전한다
-  .space-status {
-    border: 1px solid $color-border;
-    border-radius: $radius-sm;
-    padding: $space-2 $space-8;
+  .detail-subtitle {
+    color: $color-text-sub;
+    @include typo-ds('body', 'md');
+  }
+
+  .detail-address {
+    @include flex(row, center, center);
+    gap: $space-4;
     color: $color-text-muted;
     @include typo-ds('label', 'sm');
+  }
 
-    &.is-visited {
-      border-color: $chip-border-selected;
-      background-color: $chip-bg-selected;
-      color: $chip-text-selected;
+  .detail-address-icon {
+    flex: 0 0 auto;
+    width: $icon-sm;
+    height: $icon-sm;
+  }
+
+  // 제목 묶음은 가운데 정렬이지만 요약 문단만 왼쪽으로 되돌린다.
+  .detail-summary {
+    margin-top: $space-8;
+    text-align: left;
+  }
+
+  // 세 절이 같은 골격을 쓴다. 제목은 가운데, 본문은 왼쪽 정렬이다.
+  .content {
+    @include flex(column);
+    gap: $space-16;
+    padding: $spacing-page-y-mobile $page-x;
+
+    & + .content {
+      border-top: 1px solid $color-border-subtle;
     }
   }
 
-  .space-address {
-    color: $color-text-muted;
-    @include typo-ds('body', 'md');
-  }
-
-  .space-highlights {
-    @include flex(row);
+  .content-header {
+    @include flex(column, flex-start, center);
     gap: $space-8;
-    flex-wrap: wrap;
   }
 
-  .space-highlight {
-    border: 1px solid $color-border-subtle;
-    border-radius: $radius-sm;
-    padding: $space-4 $space-8;
-    color: $color-text-muted;
-    @include typo-ds('label', 'sm');
-  }
-
-  .space-desc {
-    margin-top: $space-4;
-    @include typo-ds('body', 'md');
-  }
-
-  .section-band {
-    height: $section-band-height;
+  // 절 아이콘 자산 미수령 — 자리만 잡아 둔다.
+  .content-icon {
+    border-radius: $radius-full;
+    width: $icon-lg;
+    height: $icon-lg;
     background-color: $color-bg-muted;
   }
 
-  .space-facts,
-  .space-guide {
+  .content-title {
+    @include typo-ds('title', 'md');
+  }
+
+  .content-body {
     @include flex(column);
-    gap: $spacing-content-gap-md;
-    padding: $spacing-page-y-mobile $page-x;
+    gap: $space-12;
   }
 
-  .space-facts-title,
-  .space-guide-title {
-    @include typo-ds('label', 'md');
-    @include font-weight('bold');
+  .content-text {
+    @include typo-ds('body', 'sm');
   }
 
-  .space-fact-list {
-    @include flex(column);
+  .content-footer {
+    text-align: center;
   }
 
-  .space-fact {
-    border-bottom: 1px solid $color-border-subtle;
-    @include flex(row, flex-start, baseline);
+  // 밑줄은 전역 .link 가 맡는다 (base/_typography.scss).
+  .content-link {
+    color: $color-text-sub;
+    @include typo-ds('label', 'sm');
+  }
+
+  .record-list {
     gap: $space-16;
-    padding: $space-12 0;
-
-    &:last-child {
-      border-bottom: 0;
-    }
   }
 
-  .space-fact-term {
-    flex-shrink: 0;
-    width: 30%;
-    color: $color-text-muted;
-    @include typo-ds('body', 'sm');
+  .record {
+    @include flex(column);
+    gap: $space-4;
   }
 
-  .space-fact-value {
-    min-width: 0;
-    @include typo-ds('body', 'sm');
-    @include font-weight('bold');
-    overflow-wrap: anywhere;
+  .record-title {
+    @include flex(row, flex-start, center);
+    gap: $space-8;
+    @include typo-ds('label', 'md');
   }
 
-  .space-guide-text {
+  .record-icon {
+    color: $color-action-brand;
+  }
+
+  .record-summary {
     color: $color-text-sub;
     @include typo-ds('body', 'sm');
+  }
+
+  // 하단 고정 영역. 인증 버튼 자체는 전역 .btn-container 가 그린다 (templates/_step.scss).
+  // 여기서는 뒤로 가기 버튼을 왼쪽에 붙이고 바깥 여백만 잡는다.
+  .detail-actions {
+    flex-shrink: 0;
+    border-top: 1px solid $color-border-subtle;
+    @include flex(row, flex-start, center);
+    padding-left: $page-x;
+    background-color: $color-bg;
+  }
+
+  .detail-back {
+    flex: 0 0 auto;
+    border-radius: $radius-full;
+    width: $control-sm;
+    height: $control-sm;
+    @include flexCenter();
+    @include typo-ds('title', 'md');
+
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
   }
 }

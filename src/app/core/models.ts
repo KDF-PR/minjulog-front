@@ -41,8 +41,15 @@ export const REWARD_TIERS: readonly RewardTier[] = [3, 6] as const;
  * 색 값은 `utils/_colors.scss` 의 `$stamp-mark-*` 가 들고 있다. 여기에는 이름만 둔다 —
  * 색 자체가 오면 화면 코드가 색을 아는 자리가 된다.
  */
-export type StampMark = 'pink' | 'skyblue' | 'orange';
-export const STAMP_MARKS: readonly StampMark[] = ['pink', 'skyblue', 'orange'] as const;
+export type StampMark = 'pink' | 'skyblue' | 'orange' | 'lemon' | 'lime' | 'green';
+export const STAMP_MARKS: readonly StampMark[] = [
+  'pink',
+  'skyblue',
+  'orange',
+  'lemon',
+  'lime',
+  'green',
+] as const;
 
 // ── ① 고정 콘텐츠 — 프론트 소유 ────────────────────────────────────
 
@@ -74,6 +81,14 @@ export interface SpaceContent {
   // ── 선택 항목 ─────────────────────────────────────────────
   // 공식 콘텐츠를 못 받아 비어 있는 장소가 있다. **없으면 그 영역을 통째로 숨긴다.**
 
+  /** 「자세히 둘러보면 좋을 곳」 — 그 장소 안에서 눈여겨볼 지점. 없으면 절을 통째로 숨긴다 */
+  viewPoints?: SpaceViewPoint[];
+  /** 이곳의 이야기 아래 외부 링크. 없으면 숨긴다 */
+  storyLink?: SpaceLink;
+  /** 「자세히 둘러보면 좋을 곳」 — 그 장소 안에서 눈여겨볼 지점. 없으면 절을 통째로 숨긴다 */
+  viewPoints?: SpaceViewPoint[];
+  /** 이곳의 이야기 아래 외부 링크. 없으면 숨긴다 */
+  storyLink?: SpaceLink;
   /** 대표 사진. `/assets/images/spaces/<slug>.jpg` */
   heroImage?: string;
   /** 예시 인증 사진. `/assets/images/spaces/<slug>-example.jpg` */
@@ -107,6 +122,34 @@ export interface NearbySpace {
   slug: SpaceSlug;
   /** 도보 소요 분 */
   walkMinutes: number;
+}
+
+/** 장소 안에서 눈여겨볼 지점. 다른 장소가 아니라 그 장소의 일부다 */
+export interface SpaceViewPoint {
+  /** 예: `M2(대공분실) 509호` */
+  name: string;
+  /** 왜 볼 만한지 한 줄 */
+  desc: string;
+}
+
+/** 바깥으로 나가는 링크 */
+export interface SpaceLink {
+  label: string;
+  url: string;
+}
+
+/** 장소 안에서 눈여겨볼 지점. 다른 장소가 아니라 그 장소의 일부다 */
+export interface SpaceViewPoint {
+  /** 예: `M2(대공분실) 509호` */
+  name: string;
+  /** 왜 볼 만한지 한 줄 */
+  desc: string;
+}
+
+/** 바깥으로 나가는 링크 */
+export interface SpaceLink {
+  label: string;
+  url: string;
 }
 
 // ── ② 장소 고정 정보 — 사용자와 무관 ────────────────────────────────

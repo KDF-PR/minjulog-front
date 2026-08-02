@@ -202,7 +202,10 @@ $container-max: rem(1440px);
 // 디자인 시스템에 없는 값이다. 시안(360×640) 실측을 8배수로 정렬했다.
 // 라이브러리 승격은 별도 트랙 — docs/ui-cleanup/02-review.md 3-2.
 
-$page-x: $space-32; // 화면 좌우 여백 (실측 31px)
+// 본문 좌우 여백은 24px 다. 새 시안이 제목·목록·카드·절 본문에서 모두 x=24 로 맞춰져 있다.
+// 상단 헤더와 하단 버튼 바만 16px 로 더 붙는다 — 바는 본문보다 화면 가장자리에 가깝다.
+$page-x: $space-24;
+$app-bar-x: $space-16;
 $content-max-width: rem(296px); // 360 - 좌우 여백 32×2
 $app-header-height: rem(44px); // 상단 헤더 (실측 42px)
 $app-tabbar-height: rem(56px); // 하단 탭바

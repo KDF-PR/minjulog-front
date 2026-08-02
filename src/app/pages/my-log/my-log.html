@@ -2,12 +2,17 @@
   <app-page-header (introSelect)="openIntro()" />
 
   <div class="my-log-scroll">
-    <section class="progress motion-fade-in" aria-labelledby="my-log-progress-title">
+    <div class="my-log-intro motion-fade-in">
+      <h2 class="my-log-title">내 방문기록</h2>
+      <p class="my-log-desc">{{ introDesc() }}</p>
+    </div>
+
+    <section class="my-log-progress motion-fade-in" aria-labelledby="my-log-progress-label">
       <div class="progress-head">
-        <h2 class="progress-title" id="my-log-progress-title">내 스탬프</h2>
+        <h3 class="progress-label" id="my-log-progress-label">방문한 곳</h3>
         <p class="progress-count">
           <strong class="progress-count-current">{{ visitedCount() }}</strong>
-          <span class="progress-count-total">/ {{ totalCount() }}개</span>
+          <span class="progress-count-total">/ {{ totalCount() }}곳</span>
         </p>
       </div>
 
@@ -21,53 +26,67 @@
         <span class="progress-bar-fill" [style.width.%]="progressPercent()"></span>
       </div>
 
-      @if (remainingToReward() > 0) {
-        <!-- 선물 이름 미확정 — 시안의 자리 문구를 그대로 둔다 -->
-        <p class="progress-next">
-          다음 선물 <span class="progress-next-name">○○○○</span> 까지
-          <strong>{{ remainingToReward() }}개</strong>
-        </p>
-      }
-
       @if (hasClaimableReward()) {
         <app-reward-notice (linkSelect)="goReward()" />
       }
     </section>
 
-    <div class="section-band" aria-hidden="true"></div>
-
-    <section class="stamps motion-fade-in motion-delay-1" aria-labelledby="my-log-stamps-title">
-      <h2 class="stamps-title" id="my-log-stamps-title">방문하면 스탬프를 받아요</h2>
+    <section class="my-log-logs motion-fade-in motion-delay-1" aria-labelledby="my-log-logs-label">
+      <h3 class="a11y-hidden" id="my-log-logs-label">장소별 방문 기록</h3>
 
       @if (loadState() === 'loading') {
-        <p class="stamps-state" role="status">스탬프를 불러오는 중이에요</p>
+        <p class="page-state" role="status">방문 기록을 불러오는 중이에요</p>
       } @else if (loadState() === 'error') {
-        <p class="stamps-state" role="alert">스탬프를 불러오지 못했어요</p>
+        <p class="page-state" role="alert">방문 기록을 불러오지 못했어요</p>
       } @else {
-        <ul class="stamp-grid">
+        <ul class="log-list">
           @for (item of spaceVisits(); track item.space.slug) {
-            <li class="stamp-item">
-              <span
-                class="stamp-circle"
-                [class.is-mark-pink]="item.visit !== null && item.space.markColor === 'pink'"
-                [class.is-mark-skyblue]="item.visit !== null && item.space.markColor === 'skyblue'"
-                [class.is-mark-orange]="item.visit !== null && item.space.markColor === 'orange'"
-              >
-                @if (item.visit !== null) {
-                  <!-- 체크 아이콘 자산 미수령 — 임시 SVG -->
-                  <svg
-                    class="stamp-check"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12.5 10 17.5 19 7" />
-                  </svg>
+            <li class="log-item" [class.is-visited]="item.visit !== null">
+              <a class="log-link" [routerLink]="['/spaces', item.space.slug]">
+                <span class="log-thumb">
+                  @if (item.visit !== null) {
+                    <img [src]="item.visit.photoUrl" [alt]="item.space.shortName + ' 인증 사진'" />
+                  } @else {
+                    <!-- 카메라 아이콘 자산 미수령 — 임시 SVG -->
+                    <svg
+                      class="log-thumb-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 8h3l1.5-2h7L17 8h3v11H4z" />
+                      <circle cx="12" cy="13.5" r="3.5" />
+                    </svg>
+                  }
+                </span>
+
+                @if (item.space.isRequired) {
+                  <span class="log-required">필수</span>
                 }
-              </span>
-              <span class="stamp-label">{{ item.space.shortName }}</span>
+
+                @if (item.visit !== null) {
+                  <span
+                    class="log-mark stamp-mark"
+                    [class.is-mark-pink]="item.space.markColor === 'pink'"
+                    [class.is-mark-skyblue]="item.space.markColor === 'skyblue'"
+                    [class.is-mark-orange]="item.space.markColor === 'orange'"
+                    [class.is-mark-lemon]="item.space.markColor === 'lemon'"
+                    [class.is-mark-lime]="item.space.markColor === 'lime'"
+                    [class.is-mark-green]="item.space.markColor === 'green'"
+                  >
+                    방문 완료
+                  </span>
+                }
+
+                <span class="log-text">
+                  <strong class="log-name">{{ item.space.shortName }}</strong>
+                  @if (item.visit === null) {
+                    <span class="log-guide">사진으로 인증하기</span>
+                  }
+                </span>
+              </a>
             </li>
           }
         </ul>

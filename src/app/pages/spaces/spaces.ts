@@ -1,9 +1,10 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { PageHeader } from '../../shared/page-header/page-header';
 import { TabBar } from '../../shared/tab-bar/tab-bar';
 import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
+import { MapLinks } from '../../shared/map-links/map-links';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState } from '../../core/models';
@@ -16,7 +17,7 @@ import { LoadState } from '../../core/models';
  */
 @Component({
   selector: 'app-spaces',
-  imports: [PageHeader, TabBar, IntroDialog, RouterLink],
+  imports: [PageHeader, TabBar, IntroDialog, MapLinks, RouterLink],
   templateUrl: './spaces.html',
   styleUrl: './spaces.scss',
 })
@@ -31,6 +32,14 @@ export class Spaces implements OnInit {
 
   protected readonly spaceVisits = this.spaces.spaceVisits;
   protected readonly totalCount = this.spaces.totalCount;
+
+  /**
+   * 하단 「지도 앱에서 모아보기」 검색어.
+   *
+   * 여섯 곳을 한 번에 띄우려면 지도 앱마다 미리 만든 목록 주소가 필요한데 아직 없다.
+   * 그때까지는 첫 장소 이름으로 검색을 연다 — `docs/할일.md` D-2.
+   */
+  protected readonly mapQuery = computed(() => this.spaceVisits()[0]?.space.name ?? '민주로그');
 
   ngOnInit(): void {
     requestAnimationFrame(() => this.ready.set(true));
