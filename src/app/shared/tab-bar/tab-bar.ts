@@ -8,7 +8,7 @@ interface TabItem {
 }
 
 /**
- * 하단 탭바 — 내 스탬프 · 방문할 곳 · 리워드.
+ * 하단 탭바 — 내 방문 기록 · 방문할 곳 · 참여 선물.
  *
  * 활성 표시는 색 반전이 아니라 **검정 pill** 이다. `routerLinkActive` 가 붙이는
  * `.is-active` 로만 상태를 가른다 — 화면이 현재 탭을 따로 넘겨주면 주소와 표시가
@@ -23,8 +23,8 @@ interface TabItem {
 })
 export class TabBar {
   protected readonly tabs: readonly TabItem[] = [
-    { path: '/my-log', label: '내 스탬프' },
+    { path: '/my-log', label: '내 방문 기록' },
     { path: '/spaces', label: '방문할 곳' },
-    { path: '/reward', label: '리워드' },
+    { path: '/reward', label: '참여 선물' },
   ];
 }

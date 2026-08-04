@@ -1,0 +1,30 @@
+// lazy-load-img.scss — 지연 로딩 이미지.
+//
+// :host 는 `display: contents` 라 레이아웃에 끼지 않는다. 부모가 보기에 이 컴포넌트가
+// 없는 것처럼 img 가 바로 자식 자리에 놓인다.
+//
+// 다만 이건 레이아웃 이야기이고, **스타일 캡슐화는 그대로 남는다.**
+// 부모 SCSS 의 `img { … }` 규칙은 여기 img 까지 닿지 않는다 — 두 컴포넌트의 표식이
+// 달라 선택자가 어긋나기 때문이다. 그래서 부모가 정해야 하는 값은 CSS 변수로 연다.
+// (같은 방식을 wave-divider 가 쓴다)
+//
+// 바꿀 수 있는 값
+//   --lazy-img-width   가로       기본 100%
+//   --lazy-img-height  세로       기본 auto
+//   --lazy-img-fit     맞춤 방식   기본 contain
+//
+// 라이브러리가 상태에 따라 클래스를 붙인다. 필요하면 부모가 이 이름으로 잡는다.
+//   .ng-lazyloading  불러오는 중
+//   .ng-lazyloaded   완료
+//   .ng-failed-lazyloaded  실패
+
+:host {
+  display: contents;
+}
+
+img {
+  width: var(--lazy-img-width, 100%);
+  max-width: 100%;
+  height: var(--lazy-img-height, auto);
+  object-fit: var(--lazy-img-fit, contain);
+}

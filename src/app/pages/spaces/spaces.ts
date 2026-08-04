@@ -2,12 +2,15 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { PageHeader } from '../../shared/page-header/page-header';
+import { WaveDivider } from '../../shared/wave-divider/wave-divider';
 import { TabBar } from '../../shared/tab-bar/tab-bar';
 import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
 import { MapLinks } from '../../shared/map-links/map-links';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState, SPACE_SLUGS } from '../../core/models';
+import { ScrollTopDirective } from '../../utils/scroll-top.directive';
+import { LazyLoadImg } from '../../shared/lazy-load-img/lazy-load-img';
 
 /**
  * 03 방문할 곳 — 참여 기관 목록.
@@ -17,7 +20,16 @@ import { LoadState, SPACE_SLUGS } from '../../core/models';
  */
 @Component({
   selector: 'app-spaces',
-  imports: [PageHeader, TabBar, IntroDialog, MapLinks, RouterLink],
+  imports: [
+    PageHeader,
+    TabBar,
+    IntroDialog,
+    MapLinks,
+    RouterLink,
+    ScrollTopDirective,
+    LazyLoadImg,
+    WaveDivider,
+  ],
   templateUrl: './spaces.html',
   styleUrl: './spaces.scss',
 })

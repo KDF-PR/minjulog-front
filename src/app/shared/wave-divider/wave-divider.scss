@@ -9,6 +9,10 @@
 // 시안 실측(Figma wave_bar 379×29): 한 마디 20.3px · 골과 마루 차 3.6px ·
 // 선 1.5px · 물결 중심선이 위에서 20px 지점. 위쪽은 비어 있어(투명) 부모 배경이 비친다.
 //
+// 시안의 가로 폭(360)은 따라가지 않는다. 물결은 부모 너비를 그대로 채우고(width: 100%)
+// 높이만 29px 로 고정한다. 마디를 늘이는 게 아니라 마디 수가 늘어나므로
+// 화면이 넓어져도 물결 모양이 변하지 않는다.
+//
 // 바꿀 수 있는 값
 //   --wave-top-color       물결 위쪽 색            기본 transparent (부모 배경이 비침)
 //   --wave-bottom-color    물결 아래쪽 색          기본 $color-bg
@@ -35,6 +39,7 @@ $wave-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' 
 
 :host {
   position: relative;
+  width: 100%;
   height: var(--wave-divider-height, 29px);
   overflow: hidden;
   display: block;

@@ -1,31 +1,18 @@
 // main.scss — 01 메인.
 // 워드마크·안내 카드·CTA 를 세로로 쌓고 가운데 정렬한다.
-// 하단 버튼 영역은 templates/_step.scss 의 .btn-container 를 그대로 쓴다.
+// 하단 버튼은 templates/_step.scss 의 .btn-container 를 그대로 쓴다.
 //
-// **스크롤하지 않는 화면이다.** 한 눈에 들어와야 하는 진입 화면이라 넘치면 잘라낸다.
-// 배경 그래픽이 프레임보다 넓어(720) 가로도 함께 막는다.
-// 그래픽이 화면 아래에 붙도록 .main 이 위치 기준을 잡는다 — position 이 없으면
-// 모바일에서는 뷰포트, 태블릿에서는 .contents-wrapper 에 붙어 기준이 달라진다.
-//
-// 물결 외곽선(wavy-border)은 이 화면에만 쓴다. 다른 화면에서 필요해지면
-// utils/_mixins.scss 로 올린다 — 지금 올려두면 쓰지도 않는 규칙이 공용에 남는다.
+// 스크롤하지 않는 진입 화면이라 넘치는 부분은 잘라낸다.
+// .main 이 위치 기준을 잡아야 배경 그래픽이 프레임 아래에 붙는다.
 
 @use 'sass:meta';
 @use 'sass:string';
 @use 'utils' as *;
 
-// 물결 외곽선
-//
-// border-image 로 만든다. 배경 이미지로 깔면 폭이 292 를 벗어나는 순간 물결이
-// 가로로 늘어난다. border-image-repeat: round 는 물결 하나의 크기를 지키고
-// 개수만 폭에 맞춰 바꾼다.
-//
-// $width 는 물결이 차지하는 띠의 두께다. 글자까지의 거리를 맞추려면
-// 이 값에 padding 을 더한 값이 시안 인셋과 같아야 한다.
-//
-// $fill 은 물결 띠 **안쪽**을 채우는 색이다. background-color 는 padding 상자까지만
-// 칠해서 띠 영역이 비고, 그 사이로 화면 배경(레몬)이 비쳐 보인다. 카드가 흰 종이로
-// 보이려면 여기서도 같은 색으로 채워야 한다.
+// 물결 외곽선. 이 화면에만 쓰고, 다른 화면에도 필요해지면 utils/_mixins.scss 로 올린다.
+// border-image 로 그린다 — 배경 이미지로 깔면 폭이 늘 때 물결까지 늘어난다.
+// $width 는 물결 띠의 두께, $fill 은 띠 안쪽 색이다.
+// background-color 는 padding 상자까지만 칠해서 띠 영역이 비므로 여기서도 채운다.
 
 @mixin wavy-border($color, $width, $stroke-width: 1.5, $fill: #fff) {
   border: #{$width} solid transparent;
@@ -45,12 +32,11 @@
   @return $value;
 }
 
-// 안내 카드 — 시안 실측
-// 물결 띠 16 + 안쪽 여백 8 = 좌우 인셋 24, 위아래는 16 + 5 = 21
+// 안내 카드 — 시안 실측. 띠 16 + 여백 8 = 좌우 인셋 24, 위아래는 16 + 5 = 21
 $main-info-band: rem(16px);
-$main-info-line: #000; // 물결 선. 시안 실측이 순수 검정이라 토큰을 쓰지 않는다
-$main-info-tape-width: rem(87px);
-$main-info-tape-height: rem(31px);
+$main-info-line: #000; // 시안 실측이 순수 검정이라 토큰을 쓰지 않는다
+$main-info-tape-width: rem(88px);
+$main-info-tape-height: rem(32px);
 $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
 
 .main {
@@ -58,28 +44,35 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
   width: 100%;
   height: 100%;
   overflow: hidden;
-  @include flex(column, center, center);
+  @include flex(column, flex-start, center);
   gap: $space-24;
-  padding: $spacing-page-y-mobile $page-x;
+
+  padding: $space-40 $spacing-page-x-mobile;
   background-color: $color-bg-brand-lemon;
   color: $color-text;
   text-align: center;
 
-  .main-intro {
+  .main-header,
+  .main-info,
+  .btn-container {
+    z-index: 1;
+  }
+
+  .main-header {
     @include flex(column);
     gap: $space-8;
 
-    .main-wordmark {
-      @include typo-ds('display', 'sm');
+    .main-title {
+      @include typo-ds('display', 'xl');
     }
 
     .main-subtitle {
       color: $color-text-sub;
-      @include typo-ds('title', 'sm');
+      @include typo-ds('title', 'md');
     }
   }
 
-  // 테이프가 위로 나오는 만큼 자리를 비운다. margin 으로 밀어야 위 요소와 겹치지 않는다.
+  // 테이프가 위로 나온 만큼 margin 으로 밀어야 위 요소와 겹치지 않는다
   .main-info {
     position: relative;
     @include wavy-border($main-info-line, $main-info-band, $fill: $color-bg);
@@ -89,14 +82,13 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
     gap: $space-12;
     margin-top: $main-info-tape-rise;
     padding: rem(5px) $space-8;
-    // 배경은 기본적으로 테두리 상자까지 칠해진다. 물결 띠는 파도 바깥이 비어 있어
-    // 그대로 두면 흰색이 물결 밖으로 네모나게 삐져나온다.
-    // padding-box 로 끊고, 띠 안쪽은 SVG 의 fill 이 이어받는다.
+
+    // padding-box 로 끊지 않으면 흰 배경이 물결 밖으로 네모나게 삐져나온다
     background-clip: padding-box;
     background-color: $color-bg;
 
     // 자산이 오면 배경 이미지만 넣는다. 지금은 자리만 잡아 아무것도 보이지 않는다.
-    .main-info-tape {
+    .is-tape {
       z-index: 1;
       position: absolute;
       top: calc(-1 * (#{$main-info-tape-rise} + #{$main-info-band}));
@@ -117,11 +109,13 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
   }
 
   .main-graphic {
+    // @include testBg();
+    z-index: 0;
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
-    border: 1px solid $color-border-subtle;
+    @include translate(-50%, 0);
+    // border: 1px solid $color-border-subtle;
     width: 720px;
     height: 320px;
     
@@ -129,7 +123,7 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
     @include flexCenter();
 
     img {
-      @include objectFit();
+      @include objectFit('vertical');
     }
     
 
@@ -141,15 +135,19 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
 
 
   .btn-container {
+    position: fixed;
+    bottom: $space-24;
+    left: 50%;
+    @include translate(-50%, 0);
+
     width: 100%;
-    @include flex(column);
+    @include flex(row, center, center);
     gap: $space-16;
 
     a {
-      border-radius: $radius-full;
+      @include border-radius($radius-full);
       width: 100%;
       max-width: $main-cta-width;
-      font-family: $font-primary;
     }
   }
 }

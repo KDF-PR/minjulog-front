@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { OPERATION_PERIOD } from '../../core/spaces.content';
+import { ScrollTopDirective } from '../../utils/scroll-top.directive';
 
 /**
  * 01 메인 — 투어 소개와 시작 지점.
@@ -10,7 +11,7 @@ import { OPERATION_PERIOD } from '../../core/spaces.content';
  */
 @Component({
   selector: 'app-main',
-  imports: [RouterLink],
+  imports: [RouterLink, ScrollTopDirective],
   templateUrl: './main.html',
   styleUrl: './main.scss',
 })

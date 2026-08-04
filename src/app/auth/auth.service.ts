@@ -51,8 +51,20 @@ export class AuthService {
   pendingIdentifier: string | null = null;
   pendingMethod: AuthMethod | null = null;
 
-  /** mock 전용 — 세션 쿠키 대신 로그인 여부를 기억한다 */
-  private mockSignedIn = false;
+  /**
+   * mock 전용 — 세션 쿠키 대신 로그인 여부를 기억한다.
+   *
+   * **처음부터 로그인된 상태로 둔다.** 그래야 `authGuard` 가 붙은 대시보드를
+   * 매번 로그인 절차 없이 열어 화면을 확인할 수 있다.
+   * 가드에는 mock 분기를 넣지 않는다 — mock/실제 전환은 서비스 안에서만 가른다.
+   *
+   * 로그아웃 상태를 확인하려면 이 값을 `false` 로 되돌린다.
+   * 게이트·로그인·인증 세 화면은 가드가 없어 주소로 직접 열 수 있으므로,
+   * 이 값이 `true` 라도 로그인 흐름 자체는 그대로 확인된다.
+   *
+   * `useMockApi = false` 로 바꾸면 이 값은 쓰이지 않는다.
+   */
+  private mockSignedIn = environment.useMockApi;
 
   /**
    * 식별자 정규화 — 발송과 검증이 **같은 문자열**을 보내게 만든다.

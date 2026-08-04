@@ -1,11 +1,14 @@
 <section class="spaces" [class.is-ready]="ready()">
   <app-page-header (introSelect)="openIntro()" />
 
-  <div class="spaces-scroll">
+  <div class="spaces-scroll" appScrollTop>
     <div class="spaces-intro motion-fade-in">
       <h2 class="spaces-title">방문할 곳</h2>
-      <p class="spaces-desc">각 장소에 담긴 민주화 운동의 의미를 살펴보고, 원하는 곳부터 방문해보세요.</p>
+      <p class="spaces-desc">
+        각 장소에 담긴 민주화 운동의 의미를 살펴보고, 원하는 곳부터 방문해보세요.
+      </p>
     </div>
+    <app-wave-divider class="my-log-wave motion-fade-in" />
 
     @if (loadState() === 'loading') {
       <!-- 실제 행과 같은 높이로 자리를 잡아 데이터가 와도 화면이 튀지 않게 한다 -->
@@ -47,7 +50,10 @@
               </span>
 
               <span class="a11y-hidden">{{ item.visit !== null ? '방문 완료' : '방문 전' }}</span>
-              <span class="space-arrow" aria-hidden="true">→</span>
+
+              <span class="space-arrow" aria-hidden="true">
+                <lazyLoadImg [src]="'/assets/images/ui/icons/arrow_right'" />
+              </span>
             </a>
           </li>
         }

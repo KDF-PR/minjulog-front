@@ -5,10 +5,13 @@ import { PageHeader } from '../../shared/page-header/page-header';
 import { TabBar } from '../../shared/tab-bar/tab-bar';
 import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
 import { RewardNotice } from '../../shared/reward-notice/reward-notice';
+import { WaveDivider } from '../../shared/wave-divider/wave-divider';
+import { LazyLoadImg } from '../../shared/lazy-load-img/lazy-load-img';
 import { PhotoService } from '../../core/photo.service';
 import { RewardService } from '../../core/reward.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState, REWARD_TIERS, SPACE_SLUGS } from '../../core/models';
+import { ScrollTopDirective } from '../../utils/scroll-top.directive';
 
 /**
  * 02 내 스탬프 — 진행률과 스탬프 그리드.
@@ -21,7 +24,7 @@ import { LoadState, REWARD_TIERS, SPACE_SLUGS } from '../../core/models';
  */
 @Component({
   selector: 'app-my-log',
-  imports: [RouterLink, PageHeader, TabBar, IntroDialog, RewardNotice],
+  imports: [RouterLink, PageHeader, TabBar, IntroDialog, RewardNotice, WaveDivider, LazyLoadImg, ScrollTopDirective],
   templateUrl: './my-log.html',
   styleUrl: './my-log.scss',
 })

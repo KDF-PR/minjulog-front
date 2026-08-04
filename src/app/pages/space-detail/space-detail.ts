@@ -8,6 +8,7 @@ import { MapLinks } from '../../shared/map-links/map-links';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState } from '../../core/models';
+import { ScrollTopDirective } from '../../utils/scroll-top.directive';
 
 /**
  * 03 방문할 곳 상세.
@@ -21,7 +22,7 @@ import { LoadState } from '../../core/models';
  */
 @Component({
   selector: 'app-space-detail',
-  imports: [PageHeader, IntroDialog, MapLinks, RouterLink],
+  imports: [PageHeader, IntroDialog, MapLinks, RouterLink, ScrollTopDirective],
   templateUrl: './space-detail.html',
   styleUrl: './space-detail.scss',
 })

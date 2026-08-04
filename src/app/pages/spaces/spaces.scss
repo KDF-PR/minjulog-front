@@ -72,7 +72,7 @@
 
       // 글자가 없는 빈 칸은 높이가 0 이라 줄 크기를 직접 준다
       .space-name {
-        @include typo-ds('label', 'md');
+        @include typo-ds('label', 'xl');
 
         &.is-skeleton {
           border-radius: $radius-sm;
@@ -82,8 +82,8 @@
       }
 
       .space-region {
-        color: $color-text-muted;
-        @include typo-ds('label', 'xs');
+        color: $color-text-sub;
+        @include typo-ds('label', 'sm');
 
         &.is-skeleton {
           border-radius: $radius-sm;
@@ -94,8 +94,15 @@
     }
 
     .space-arrow {
-      flex: 0 0 auto;
-      @include typo-ds('title', 'md');
+      width: $icon-xl;
+      height: $icon-xl;
+      @include flexCenter();
+
+      img {
+        @include objectFit();
+      }
+      // flex: 0 0 auto;
+      // @include typo-ds('title', 'md');
     }
   }
 

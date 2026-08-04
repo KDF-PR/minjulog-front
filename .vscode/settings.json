@@ -1,0 +1,21 @@
+{
+  // Format Document 를 Prettier 로 보낸다.
+  // VS Code 기본 HTML 포맷터는 Angular @if / @for 블록 안쪽을 들여쓰지 못한다.
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 저장소에 설치된 prettier 3.8 을 쓴다. 전역 버전과 결과가 갈리지 않게.
+  "prettier.prettierPath": "./node_modules/prettier",
+  "prettier.requireConfig": true
+}
