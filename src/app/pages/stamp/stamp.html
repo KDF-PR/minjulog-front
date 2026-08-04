@@ -1,20 +1,18 @@
 <div class="stamp" [class.is-ready]="ready()">
-  @if (capturing()) {
+  @if (status(); as result) {
+    <app-stamp-result
+      [status]="result"
+      [stampCount]="stampCount()"
+      [totalCount]="totalCount()"
+      [remainingToReward]="remainingToReward()"
+      (actionSelect)="onAction($event)"
+    />
+  } @else {
     <app-photo-capture
       [guide]="photoGuide()"
       [uploading]="isUploading()"
       (photoConfirm)="onPhotoConfirm($event)"
       (cancel)="onCaptureCancel()"
-    />
-  } @else {
-    <app-stamp-result
-      [status]="status()"
-      [spaceName]="spaceName()"
-      [spaceSummary]="spaceSummary()"
-      [stampCount]="stampCount()"
-      [totalCount]="totalCount()"
-      [remainingToReward]="remainingToReward()"
-      (actionSelect)="onAction($event)"
     />
   }
 </div>

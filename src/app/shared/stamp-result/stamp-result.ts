@@ -2,23 +2,21 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { RewardNotice } from '../reward-notice/reward-notice';
 
 /**
- * QR 진입·적립 결과 화면의 상태.
+ * 사진을 올린 뒤 보여주는 결과 화면의 상태.
  *
- * 시안 `07` 과 `08` 계열 5장은 **원형 그래픽 → 제목 → 보조 문구 → CTA 1~2개** 로
- * 골격이 같고 문구와 CTA 개수만 다르다. 화면을 6개 만들면 여백·타이포·버튼 폭을
- * 여섯 곳에서 맞춰야 해 한 컴포넌트로 묶고 이 값으로만 가른다.
+ * 시안 `08` 계열 5장은 **원형 그래픽 → 제목 → 보조 문구 → CTA 1~2개** 로
+ * 골격이 같고 문구와 CTA 개수만 다르다. 화면을 다섯 개 만들면 여백·타이포·버튼 폭을
+ * 다섯 곳에서 맞춰야 해 한 컴포넌트로 묶고 이 값으로만 가른다.
  */
 export type StampResultStatus =
-  | 'entry' // 07 QR 진입 — 아직 받기 전
   | 'success' // 08 정상 적립
   | 'reward' // 08 적립 + 받을 수 있는 리워드 있음
-  | 'already' // 08b 이미 받은 스탬프
+  | 'already' // 08b 이미 인증한 장소
   | 'closed' // 08c 운영 기간 아님
-  | 'invalid' // 08c 확인할 수 없는 QR
+  | 'invalid' // 08c 확인할 수 없는 주소
   | 'failed'; // 08d 저장 실패
 
 export const STAMP_RESULT_STATUSES: readonly StampResultStatus[] = [
-  'entry',
   'success',
   'reward',
   'already',
@@ -29,7 +27,6 @@ export const STAMP_RESULT_STATUSES: readonly StampResultStatus[] = [
 
 /** CTA 를 눌렀을 때 부모가 받는 신호. 이동·재시도는 화면이 정한다 */
 export type StampResultAction =
-  | 'claimStamp'
   | 'viewStamps'
   | 'viewRewards'
   | 'viewHelp'
@@ -45,8 +42,6 @@ interface ResultAction {
 
 /** 상태에서 계산한 표시 내용. 템플릿은 이 값만 읽는다 */
 interface ResultView {
-  /** `stamp` 둥근 사각형 자리표시자 · `circle` 원형 */
-  graphic: 'stamp' | 'circle';
   /** 원형 안에 넣는 기호. 없으면 비운다 */
   mark: string;
   title: string;
@@ -69,11 +64,6 @@ interface ResultView {
 export class StampResult {
   readonly status = input.required<StampResultStatus>();
 
-  /** `entry` 제목에 쓰는 기관 이름 */
-  readonly spaceName = input('');
-  /** `entry` 보조 문구에 쓰는 기관 한 줄 설명 */
-  readonly spaceSummary = input('');
-
   readonly stampCount = input(0);
   readonly totalCount = input(0);
   /** 다음 리워드까지 남은 개수. 0 이면 문구를 내리지 않는다 */
@@ -85,7 +75,6 @@ export class StampResult {
 
   private buildView(): ResultView {
     const base: ResultView = {
-      graphic: 'circle',
       mark: '',
       title: '',
       descriptions: [],
@@ -95,15 +84,6 @@ export class StampResult {
     };
 
     switch (this.status()) {
-      case 'entry':
-        return {
-          ...base,
-          graphic: 'stamp',
-          title: this.spaceName(),
-          descriptions: this.spaceSummary() ? [this.spaceSummary()] : [],
-          actions: [{ action: 'claimStamp', label: '스탬프 받기', variant: 'primary' }],
-        };
-
       case 'success':
         return {
           ...base,
@@ -125,8 +105,8 @@ export class StampResult {
         return {
           ...base,
           mark: '!',
-          title: '이미 받은 스탬프예요',
-          descriptions: ['같은 기관의 QR은 한 번만 적립됩니다.'],
+          title: '이미 인증한 장소예요',
+          descriptions: ['한 장소는 한 번만 적립됩니다.'],
           actions: [{ action: 'viewStamps', label: '내 스탬프 현황 보기', variant: 'primary' }],
         };
 
@@ -143,8 +123,8 @@ export class StampResult {
         return {
           ...base,
           mark: '–',
-          title: '확인할 수 없는 QR이에요',
-          boxedDescription: '존재하지 않는 기관 링크이거나 잘못된 QR일 수 있어요.',
+          title: '확인할 수 없는 장소예요',
+          boxedDescription: '존재하지 않는 장소이거나 주소가 잘못됐을 수 있어요.',
           actions: [
             { action: 'goMain', label: '메인으로 이동', variant: 'primary' },
             { action: 'viewHelp', label: '도움말 보기', variant: 'secondary' },

@@ -1,9 +1,6 @@
 <section class="stamp-result">
-  <div class="stamp-result-graphic motion-fade-in" [class.is-stamp]="view().graphic === 'stamp'">
-    @if (view().graphic === 'stamp') {
-      <!-- 스탬프 그래픽 자산 미수령 — 시안과 같은 문구 자리표시자 -->
-      <span class="stamp-result-placeholder">스탬프</span>
-    } @else if (view().mark) {
+  <div class="stamp-result-graphic motion-fade-in">
+    @if (view().mark) {
       <span class="stamp-result-mark" aria-hidden="true">{{ view().mark }}</span>
     }
   </div>
