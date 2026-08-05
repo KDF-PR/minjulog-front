@@ -1,5 +1,9 @@
 // space-detail.scss — 03 방문할 곳 상세.
 //
+// 3단 골격(.step · .step-scroll · .step-body)은 templates/_step.scss 가 맡는다.
+// 이 화면은 제목 묶음이 스크롤 맨 위가 아니라 대표 이미지 아래 가운데 정렬로 놓여
+// .step-header 대신 화면 전용 .detail-head 를 쓴다.
+//
 // 위에서 아래로 대표 이미지 → 이름·주소 → 절 세 개 순서다.
 // 절(.content)은 「찾아가는 길」·「이곳의 이야기」·「자세히 둘러보면 좋을 곳」이 같은
 // 골격을 쓴다 — 제목 묶음(.content-header) · 본문(.content-body) · 링크(.content-footer).
@@ -8,19 +12,12 @@
 
 @use 'utils' as *;
 
+// 골격 값은 .step 이 들고 있고 여기서는 색만 얹는다.
 .space-detail {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  @include flex(column, flex-start, stretch);
   background-color: $color-bg-brand-lemon;
-  color: $color-text;
 
-  // 헤더 뒤는 레몬이고 본문은 흰색이다. 스크롤 영역이 흰 바탕을 맡는다
-  .space-detail-scroll {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
+  // 상단 바 뒤는 레몬이고 본문은 흰색이다. 스크롤 칸이 흰 바탕을 맡는다
+  .step-scroll {
     background-color: $color-bg;
   }
 
@@ -51,8 +48,8 @@
         font-size: $typo-label-xs;
       }
 
-      // 원형·글자는 전역 .stamp-mark 가 맡고 여기서는 위치와 크기만 잡는다.
-      // 사진 안쪽 오른쪽 위에 놓인다 (시안 실측 상 6 · 우 6).
+      // 모양과 색은 app-stamp-badge 가 맡고 여기서는 위치와 크기만 잡는다.
+      // 기본 48px 보다 커서 크기를 덮어쓴다. 사진 안쪽 오른쪽 위 (시안 실측 상 6 · 우 6).
       .detail-hero-mark {
         z-index: 1;
         position: absolute;

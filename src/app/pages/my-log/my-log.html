@@ -1,125 +1,101 @@
-<section class="my-log" [class.is-ready]="ready()">
+<section class="step my-log" [class.is-ready]="ready()">
   <app-page-header (introSelect)="openIntro()" />
 
-  <div class="my-log-scroll" appScrollTop>
-    <div class="my-log-intro motion-fade-in">
-      <h2 class="my-log-title">내 방문기록</h2>
-      <p class="my-log-desc">{{ introDesc() }}</p>
+  <div class="step-scroll" appScrollTop>
+    <div class="step-header motion-fade-in">
+      <h2 class="step-title">내 방문기록</h2>
+      <p class="step-subtitle">{{ introDesc() }}</p>
     </div>
 
-    <!-- 레몬 밴드와 흰 바탕의 경계. 좌우 여백이 없는 .my-log-scroll 바로 아래 두어야
+    <!-- 레몬 밴드와 흰 바탕의 경계. 좌우 여백이 없는 .step-scroll 바로 아래 두어야
          프레임 너비를 그대로 채운다 — 진행률 절 안에 넣으면 $page-x 만큼 잘린다. -->
     <app-wave-divider class="my-log-wave motion-fade-in" />
 
-    <section class="my-log-progress motion-fade-in" aria-labelledby="my-log-progress-label">
-      <div class="progress-head">
-        <h3 class="progress-label" id="my-log-progress-label">방문한 곳</h3>
-        <p class="progress-count">
-          <strong class="progress-count-current">{{ visitedCount() }}</strong>
-          <span class="progress-count-total">/ {{ totalCount() }}곳</span>
-        </p>
-      </div>
+    <div class="step-body">
+      <section class="my-log-progress motion-fade-in" aria-labelledby="my-log-progress-label">
+        <div class="progress-head">
+          <h3 class="progress-label" id="my-log-progress-label">방문한 곳</h3>
+          <p class="progress-count">
+            <strong class="progress-count-current">{{ visitedCount() }}</strong>
+            <span class="progress-count-total">/ {{ totalCount() }}곳</span>
+          </p>
+        </div>
 
-      <div
-        class="progress-bar"
-        role="progressbar"
-        [attr.aria-valuenow]="visitedCount()"
-        aria-valuemin="0"
-        [attr.aria-valuemax]="totalCount()"
+        <div
+          class="progress-bar"
+          role="progressbar"
+          [attr.aria-valuenow]="visitedCount()"
+          aria-valuemin="0"
+          [attr.aria-valuemax]="totalCount()"
+        >
+          <span class="progress-bar-fill" [style.width.%]="progressPercent()"></span>
+        </div>
+
+        @if (hasClaimableReward()) {
+          <app-reward-notice (linkSelect)="goReward()" />
+        }
+      </section>
+
+      <section
+        class="my-log-logs motion-fade-in motion-delay-1"
+        aria-labelledby="my-log-logs-label"
       >
-        <span class="progress-bar-fill" [style.width.%]="progressPercent()"></span>
-      </div>
+        <h3 class="a11y-hidden" id="my-log-logs-label">장소별 방문 기록</h3>
 
-      @if (hasClaimableReward()) {
-        <app-reward-notice (linkSelect)="goReward()" />
-      }
-    </section>
+        @if (loadState() === 'loading') {
+          <!-- 실제 카드와 같은 크기로 설정하여 로딩 전 자리 확보 -->
+          <ul class="log-list" aria-hidden="true">
+            @for (slug of placeholderSlugs; track slug) {
+              <li class="log-item">
+                <span class="log-link is-skeleton"></span>
+              </li>
+            }
+          </ul>
+          <p class="a11y-hidden" role="status">방문 기록을 불러오는 중이에요</p>
+        } @else if (loadState() === 'error') {
+          <p class="page-state" role="alert">방문 기록을 불러오지 못했어요</p>
+        } @else {
+          <ul class="log-list">
+            @for (item of spaceVisits(); track item.space.slug) {
+              <li class="log-item" [class.is-visited]="item.visit !== null">
+                <a class="log-link" [routerLink]="['/spaces', item.space.slug]">
+                  <!-- 장소 썸네일 -->
+                  <span class="log-thumb">
+                    <lazyLoadImg [src]="'/assets/images/spaces/' + item.space.slug + '/thumb'" />
+                  </span>
+                  <!-- 장소 정보 (인증 상태별) -->
+                  <span class="log-info">
+                    <!-- 필수 뱃지 표시(민주화운동기념관 only) -->
+                    @if (item.space.isRequired) {
+                      <span class="log-required">필수</span>
+                    }
+                    @if (item.visit !== null) {
+                      <!-- 인증 완료 도장. 색은 장소마다 다르고 자리만 이 화면이 정한다 -->
+                      <app-stamp-badge class="log-mark" [mark]="item.space.markColor" />
+                      <span class="log-text">
+                        <strong class="log-name">{{ item.space.shortName }}</strong>
+                      </span>
+                    } @else {
+                      <!-- 인증 전 표시 정보 : 아이콘, 장소 이름, 텍스트 -->
+                      <span class="icon-container">
+                        <img src="/assets/images/ui/icons/camera@2x.png" alt="" />
+                      </span>
 
-    <section class="my-log-logs motion-fade-in motion-delay-1" aria-labelledby="my-log-logs-label">
-      <h3 class="a11y-hidden" id="my-log-logs-label">장소별 방문 기록</h3>
-
-      @if (loadState() === 'loading') {
-        <!-- 실제 카드와 같은 크기로 자리를 잡아 데이터가 와도 화면이 튀지 않게 한다 -->
-        <ul class="log-list" aria-hidden="true">
-          @for (slug of placeholderSlugs; track slug) {
-            <li class="log-item">
-              <span class="log-link is-skeleton"></span>
-            </li>
-          }
-        </ul>
-        <p class="a11y-hidden" role="status">방문 기록을 불러오는 중이에요</p>
-      } @else if (loadState() === 'error') {
-        <p class="page-state" role="alert">방문 기록을 불러오지 못했어요</p>
-      } @else {
-        <ul class="log-list">
-          @for (item of spaceVisits(); track item.space.slug) {
-            <li class="log-item" [class.is-visited]="item.visit !== null">
-              <a class="log-link" [routerLink]="['/spaces', item.space.slug]">
-                <!-- 장소 썸네일 -->
-                <span class="log-thumb">
-                  <lazyLoadImg [src]="'/assets/images/spaces/' + item.space.slug + '/thumb'" />
-                </span>
-                <!-- 장소 정보 (인증 상태별) -->
-                <span class="log-info">
-                  <!-- 필수 뱃지 표시(민주화운동기념관 only) -->
-                  @if (item.space.isRequired) {
-                    <span class="log-required">필수</span>
-                  }
-                  @if (item.visit !== null) {
-                    <!-- 인증 완료 뱃지. 「방문완료」 글자와 외곽선이 그림 안에 들어 있어
-                         장소마다 달라지는 것은 본체 색 하나뿐이다. fill="currentColor" 로 두고
-                         data-mark 값에 따라 SCSS 가 color 를 정한다.
-                         원본은 assets/images/ui/graphics/badge_visited.svg. -->
-                    <svg
-                      class="log-mark"
-                      [attr.data-mark]="item.space.markColor"
-                      viewBox="0 0 48 48"
-                      fill="none"
-                      role="img"
-                      aria-label="방문 완료"
-                    >
-                      <mask id="badge-visited-mask" fill="#fff">
-                        <path
-                          d="M23.929 0C30.442 0 35.78 5.035 36.29 11.437c6.528.36 11.71 5.783 11.71 12.42 0 6.63-5.172 12.047-11.69 12.417C35.94 42.812 30.54 48 23.929 48c-6.565 0-11.938-5.117-12.373-11.59C5.1 35.972 0 30.584 0 24s5.101-11.974 11.556-12.41C11.99 5.116 17.364 0 23.929 0"
-                        />
-                      </mask>
-                      <path
-                        fill="currentColor"
-                        d="M23.929 0C30.442 0 35.78 5.035 36.29 11.437c6.528.36 11.71 5.783 11.71 12.42 0 6.63-5.172 12.047-11.69 12.417C35.94 42.812 30.54 48 23.929 48c-6.565 0-11.938-5.117-12.373-11.59C5.1 35.972 0 30.584 0 24s5.101-11.974 11.556-12.41C11.99 5.116 17.364 0 23.929 0"
-                      />
-                      <path
-                        fill="#000"
-                        mask="url(#badge-visited-mask)"
-                        d="M23.929 0v-1zM36.29 11.437l-.997.079.07.87.872.049zM48 23.857h1zM36.31 36.273l-.057-.998-.892.05-.05.892zM23.929 48v1zM11.556 36.41l.997-.068-.058-.872-.872-.059zM0 24h-1zm11.556-12.41.067.998.872-.06.058-.871zM23.929 0v1c5.984 0 10.896 4.628 11.364 10.516l.997-.08.997-.079C36.737 4.443 30.97-1 23.929-1zM36.29 11.437l-.055.998C42.233 12.766 47 17.751 47 23.856h2c0-7.168-5.598-13.029-12.655-13.418zM48 23.857h-1c0 6.099-4.758 11.079-10.747 11.419l.057.998.056.999C43.413 36.873 49 31.018 49 23.856zM36.31 36.273l-.999-.056C34.971 42.232 30.003 47 23.93 47v2c7.147 0 12.98-5.608 13.379-12.67zM23.929 48v-1c-6.033 0-10.976-4.703-11.376-10.658l-.997.067-.998.067C11.028 43.47 16.83 49 23.928 49zM11.556 36.41l.067-.998C5.693 35.01 1 30.056 1 24h-2c0 7.112 5.51 12.935 12.488 13.407zM0 24h1c0-6.057 4.692-11.011 10.623-11.412l-.067-.998-.068-.998C4.51 11.064-1 16.888-1 24zm11.556-12.41.997.067C12.953 5.702 17.896 1 23.93 1v-2c-7.098 0-12.9 5.53-13.371 12.523z"
-                      />
-                      <path
-                        fill="#000"
-                        d="M20.552 19.912c1.472 0 2.384.512 2.384 1.368 0 .864-.912 1.368-2.384 1.368-1.464 0-2.384-.504-2.384-1.368 0-.856.92-1.368 2.384-1.368m0 .704c-.968 0-1.512.232-1.512.664 0 .448.544.68 1.512.68.96 0 1.512-.232 1.512-.68 0-.432-.552-.664-1.512-.664m1.424-5.088h.88v1.704h.984v.728h-.984v1.792h-.88zm-4.448.448h.872v.952h1.632v-.952h.864v3.32h-3.368zm.872 1.64v.992h1.632v-.992zm5.864 1.48h6.448v.696H28v1.296h-.88v-1.296h-2.856zm.808-3.256h4.816v2.592h-4.816zm3.952.688h-3.088v1.2h3.088zm-3.984 3.92h.88v1.36H30v.704h-4.96zm-5.624 4.376c1.024 0 1.76.576 1.76 1.432 0 .72-.528 1.24-1.312 1.384v.592a19 19 0 0 0 1.728-.168l.064.632c-1.456.272-3.096.288-4.296.288l-.104-.696c.512 0 1.104 0 1.728-.024v-.616c-.8-.144-1.336-.664-1.336-1.392 0-.856.736-1.432 1.768-1.432m0 .664c-.568 0-.952.296-.952.768 0 .48.384.768.952.768.56 0 .944-.288.944-.768 0-.472-.384-.768-.944-.768m2.576-.96h.88v2.296h.96v.72h-.96v2.416h-.88zm-3.768 4.968h.888v1.296h4.008v.712h-4.896zm6.048.608h1.696v-1.192h-.928v-2.32h4.056v-.888h-4.072v-.696h4.944v2.272h-4.064v.928h4.224v.704h-1.04v1.192h1.632v.712h-6.448zm2.56 0h1.4v-1.192h-1.4z"
-                      />
-                    </svg>
-                    <span class="log-text">
-                      <strong class="log-name">{{ item.space.shortName }}</strong>
-                    </span>
-                  } @else {
-                    <!-- 인증 전 표시 정보 : 아이콘, 장소 이름, 텍스트 -->
-                    <span class="icon-container">
-                      <img src="/assets/images/ui/icons/camera@2x.png" alt="" />
-                    </span>
-
-                    <span class="log-text">
-                      <strong class="log-name">{{ item.space.shortName }}</strong>
-                      @if (item.visit === null) {
-                        <span class="log-guide">사진으로 인증하기</span>
-                      }
-                    </span>
-                  }
-                </span>
-              </a>
-            </li>
-          }
-        </ul>
-      }
-    </section>
+                      <span class="log-text">
+                        <strong class="log-name">{{ item.space.shortName }}</strong>
+                        @if (item.visit === null) {
+                          <span class="log-guide">사진으로 인증하기</span>
+                        }
+                      </span>
+                    }
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
   </div>
 
   <app-tab-bar />

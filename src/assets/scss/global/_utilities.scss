@@ -158,50 +158,8 @@
   }
 }
 
-// 스탬프 마커
+// 스탬프 마커는 여기 없다.
 //
-// `내 방문기록` 카드와 장소 상세가 같은 원형을 쓴다. 배경색은 아래 .is-mark-* 가 덮고,
-// 색 클래스가 붙지 않으면 방문 전 회색으로 남는다.
-// 위치와 크기는 화면마다 달라 붙는 쪽에서 정한다. 여기 크기는 카드용 기본값이다.
-
-.stamp-mark {
-  border-radius: $radius-full;
-  width: $stamp-mark-sm;
-  height: $stamp-mark-sm;
-  @include flexCenter();
-  background-color: $color-bg-subtle;
-  color: $stamp-mark-text;
-  @include typo-ds('label', 'xs');
-  text-align: center;
-}
-
-// 스탬프 마커 색
-//
-// 장소마다 색이 다르고 `내 방문기록` · `방문할 곳` · 장소 상세가 같은 색을 쓴다.
-// 컴포넌트마다 여섯 줄을 다시 방출하면 스타일 예산을 넘겨 여기서 한 번만 내보낸다.
-// 어느 장소가 어느 색인지는 core/spaces.content.ts 의 markColor 가 정한다.
-// .stamp-mark 보다 뒤에 와야 배경색을 덮는다.
-
-.is-mark-pink {
-  background-color: $stamp-mark-pink;
-}
-
-.is-mark-skyblue {
-  background-color: $stamp-mark-skyblue;
-}
-
-.is-mark-orange {
-  background-color: $stamp-mark-orange;
-}
-
-.is-mark-lemon {
-  background-color: $stamp-mark-lemon;
-}
-
-.is-mark-lime {
-  background-color: $stamp-mark-lime;
-}
-
-.is-mark-green {
-  background-color: $stamp-mark-green;
-}
+// 글자와 배경을 CSS 로 그리던 원형이었는데, 사용자 글꼴 크기에 따라 문구와 여백이
+// 흔들려 그림으로 바꿨다. 지금은 shared/stamp-badge 와 spaces.html 의 인라인 SVG 가 그린다.
+// 색은 그림 안의 fill="currentColor" 가 받아 가므로 배경색 클래스가 필요 없다.

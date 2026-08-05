@@ -20,7 +20,7 @@ import { filter } from 'rxjs/operators';
  * 새 요소를 만들지 않으니 스크롤 위치가 그대로 남는다.
  *
  * 사용 — 스크롤하는 요소에 붙인다.
- *   <div class="my-log-scroll" appScrollTop>
+ *   <div class="step-scroll" appScrollTop>
  */
 @Directive({
   selector: '[appScrollTop]',

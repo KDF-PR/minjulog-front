@@ -1,107 +1,109 @@
-<section class="space-detail" [class.is-ready]="ready()">
+<section class="step space-detail" [class.is-ready]="ready()">
   <app-page-header (introSelect)="openIntro()" />
 
-  <div class="space-detail-scroll" appScrollTop>
-    @if (loadState() === 'loading') {
-      <p class="page-state" role="status">장소 정보를 불러오는 중이에요</p>
-    } @else if (loadState() === 'error') {
-      <p class="page-state" role="alert">장소 정보를 불러오지 못했어요</p>
-    } @else if (spaceVisit(); as item) {
-      <div class="detail-hero motion-fade-in">
-        <figure class="detail-hero-figure">
-          @if (item.space.heroImage) {
-            <img [src]="item.space.heroImage" [alt]="item.space.name + ' 대표 이미지'" />
-          } @else {
-            <!-- 대표 이미지 자산 미수령 — 자리표시자 -->
-            <figcaption class="detail-hero-caption">대표 이미지</figcaption>
-          }
+  <div class="step-scroll" appScrollTop>
+    <div class="step-body">
+      @if (loadState() === 'loading') {
+        <p class="page-state" role="status">장소 정보를 불러오는 중이에요</p>
+      } @else if (loadState() === 'error') {
+        <p class="page-state" role="alert">장소 정보를 불러오지 못했어요</p>
+      } @else if (spaceVisit(); as item) {
+        <div class="detail-hero motion-fade-in">
+          <figure class="detail-hero-figure">
+            @if (item.space.heroImage) {
+              <img [src]="item.space.heroImage" [alt]="item.space.name + ' 대표 이미지'" />
+            } @else {
+              <!-- 대표 이미지 자산 미수령 — 자리표시자 -->
+              <figcaption class="detail-hero-caption">대표 이미지</figcaption>
+            }
 
-          <span
-            class="detail-hero-mark stamp-mark"
-            [class.is-mark-pink]="isVisited() && item.space.markColor === 'pink'"
-            [class.is-mark-skyblue]="isVisited() && item.space.markColor === 'skyblue'"
-            [class.is-mark-orange]="isVisited() && item.space.markColor === 'orange'"
-            [class.is-mark-lemon]="isVisited() && item.space.markColor === 'lemon'"
-            [class.is-mark-lime]="isVisited() && item.space.markColor === 'lime'"
-            [class.is-mark-green]="isVisited() && item.space.markColor === 'green'"
-          >
-            {{ isVisited() ? '방문 완료' : '방문 전' }}
-          </span>
-        </figure>
-      </div>
-
-      <div class="detail-head motion-fade-in motion-delay-1">
-        <h2 class="detail-title">{{ item.space.name }}</h2>
-        <p class="detail-subtitle">{{ item.space.category }}</p>
-
-        <p class="detail-address">
-          <span class="detail-address-icon" aria-hidden="true">
-            <!-- 위치 아이콘 자산 미수령 — 임시 SVG -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-              <path d="M12 21c4-4.5 6-7.6 6-10.2A6 6 0 0 0 6 10.8C6 13.4 8 16.5 12 21Z" />
-              <circle cx="12" cy="10.5" r="2.2" />
-            </svg>
-          </span>
-          {{ item.space.address }}
-        </p>
-
-        <p class="detail-summary">{{ item.space.summary }}</p>
-      </div>
-
-      <section class="content motion-fade-in motion-delay-2" aria-labelledby="detail-way-title">
-        <div class="content-header">
-          <span class="content-icon" aria-hidden="true"></span>
-          <h3 class="content-title" id="detail-way-title">찾아가는 길</h3>
+            <!-- 방문 전에는 「방문 전」 도장으로 바뀐다. 자리와 크기만 이 화면이 정한다 -->
+            <app-stamp-badge
+              class="detail-hero-mark"
+              [mark]="item.space.markColor"
+              [visited]="isVisited()"
+            />
+          </figure>
         </div>
 
-        <div class="content-body">
-          <p class="content-text">{{ item.space.address }}</p>
-          <app-map-links [query]="item.space.address" />
+        <div class="detail-head motion-fade-in motion-delay-1">
+          <h2 class="detail-title">{{ item.space.name }}</h2>
+          <p class="detail-subtitle">{{ item.space.category }}</p>
+
+          <p class="detail-address">
+            <span class="detail-address-icon" aria-hidden="true">
+              <!-- 위치 아이콘 자산 미수령 — 임시 SVG -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M12 21c4-4.5 6-7.6 6-10.2A6 6 0 0 0 6 10.8C6 13.4 8 16.5 12 21Z" />
+                <circle cx="12" cy="10.5" r="2.2" />
+              </svg>
+            </span>
+            {{ item.space.address }}
+          </p>
+
+          <p class="detail-summary">{{ item.space.summary }}</p>
         </div>
-      </section>
 
-      <section class="content" aria-labelledby="detail-story-title">
-        <div class="content-header">
-          <span class="content-icon" aria-hidden="true"></span>
-          <h3 class="content-title" id="detail-story-title">이곳의 이야기</h3>
-        </div>
-
-        <div class="content-body">
-          <p class="content-text">{{ item.space.description }}</p>
-        </div>
-
-        @if (item.space.storyLink; as link) {
-          <div class="content-footer">
-            <a class="content-link link" [href]="link.url" target="_blank" rel="noopener noreferrer">
-              {{ link.label }} <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-        }
-      </section>
-
-      @if (item.space.viewPoints; as viewPoints) {
-        <section class="content" aria-labelledby="detail-points-title">
+        <section class="content motion-fade-in motion-delay-2" aria-labelledby="detail-way-title">
           <div class="content-header">
             <span class="content-icon" aria-hidden="true"></span>
-            <h3 class="content-title" id="detail-points-title">자세히 둘러보면 좋을 곳</h3>
+            <h3 class="content-title" id="detail-way-title">찾아가는 길</h3>
           </div>
 
-          <ul class="content-body record-list">
-            @for (point of viewPoints; track point.name) {
-              <li class="record">
-                <h4 class="record-title">
-                  <span class="record-icon" aria-hidden="true">◇</span>
-                  {{ point.name }}
-                </h4>
-                <p class="record-summary">{{ point.desc }}</p>
-              </li>
-            }
-          </ul>
+          <div class="content-body">
+            <p class="content-text">{{ item.space.address }}</p>
+            <app-map-links [query]="item.space.address" />
+          </div>
         </section>
+
+        <section class="content" aria-labelledby="detail-story-title">
+          <div class="content-header">
+            <span class="content-icon" aria-hidden="true"></span>
+            <h3 class="content-title" id="detail-story-title">이곳의 이야기</h3>
+          </div>
+
+          <div class="content-body">
+            <p class="content-text">{{ item.space.description }}</p>
+          </div>
+
+          @if (item.space.storyLink; as link) {
+            <div class="content-footer">
+              <a
+                class="content-link link"
+                [href]="link.url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {{ link.label }} <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          }
+        </section>
+
+        @if (item.space.viewPoints; as viewPoints) {
+          <section class="content" aria-labelledby="detail-points-title">
+            <div class="content-header">
+              <span class="content-icon" aria-hidden="true"></span>
+              <h3 class="content-title" id="detail-points-title">자세히 둘러보면 좋을 곳</h3>
+            </div>
+
+            <ul class="content-body record-list">
+              @for (point of viewPoints; track point.name) {
+                <li class="record">
+                  <h4 class="record-title">
+                    <span class="record-icon" aria-hidden="true">◇</span>
+                    {{ point.name }}
+                  </h4>
+                  <p class="record-summary">{{ point.desc }}</p>
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      } @else {
+        <p class="page-state" role="alert">찾을 수 없는 장소예요</p>
       }
-    } @else {
-      <p class="page-state" role="alert">찾을 수 없는 장소예요</p>
-    }
+    </div>
   </div>
 
   @if (spaceVisit(); as item) {

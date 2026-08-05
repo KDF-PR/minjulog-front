@@ -1,4 +1,24 @@
-// _step.scss — 단계형 화면 골격(.step)과 하단 버튼 영역(.btn-container). CSS 방출, 전역 1회.
+// _step.scss — 화면 골격(.step)과 하단 버튼 영역(.btn-container). CSS 방출, 전역 1회.
+//
+// 화면은 프레임(.contents-wrapper) 안에서 세로 3단으로 나뉜다.
+// 위아래는 제자리에 두고 가운데만 스크롤한다.
+//
+//   .step                프레임 높이를 채우는 틀. 넘치는 부분은 잘라낸다
+//   ├─ app-page-header   상단 바 (배경 없음 — 화면 배경이 뒤까지 이어진다)
+//   ├─ .step-scroll      가운데 칸. 여기만 스크롤한다
+//   │   ├─ .step-header  제목 묶음
+//   │   ├─ (물결 등 전폭 요소)
+//   │   └─ .step-body    본문 묶음
+//   └─ app-tab-bar       하단 탭바
+//
+// 스크롤을 .step 으로 올리면 상단 바와 탭바가 함께 밀려 올라간다. 붙잡으려면
+// 상단 바에 배경을 줘야 하는데, 배경은 화면마다 달라 상단 바가 알면 안 되는 값이다.
+// 그래서 칸을 나눈다.
+//
+// .step-header 는 「제목 묶음」이고 상단 바(app-page-header)와 다른 것이다.
+// 상단 바의 클래스는 컴포넌트 안의 .page-header 라 이름이 부딪히지는 않는다.
+//
+// 배경색은 화면마다 달라 여기에 두지 않는다. 화면 클래스(.my-log 등)가 덮는다.
 
 @use '../utils' as *;
 
@@ -8,49 +28,45 @@
   height: 100%;
   max-height: 100%;
   overflow: hidden;
+  @include flex(column, flex-start, stretch);
   color: $color-text;
 
+  // 가운데 칸. min-height 를 0 으로 풀어야 내용이 길어져도 칸이 늘어나지 않는다 —
+  // flex 아이템의 기본값(auto)은 내용 높이 아래로 줄어들지 않아 스크롤이 생기지 않는다.
+  .step-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  // 제목 묶음. 좌우 여백이 여기서 붙으므로 프레임 전폭을 채워야 하는 것
+  // (물결 구분선·목록)은 이 밖에 둔다.
   .step-header {
     width: 100%;
+    @include flex(column);
+    gap: $space-8;
     padding: $spacing-page-y-mobile $page-x;
   }
 
   .step-title {
     @include typo-ds('title', 'lg');
-    margin-bottom: $space-8;
   }
 
   .step-subtitle {
-    @include typo-ds('title', 'sm');
+    @include typo-ds('body', 'sm');
   }
 
+  // 본문 묶음. 좌우 여백을 두지 않는다 — 프레임 전폭을 채우는 절(목록·색 밴드)이
+  // 섞여 있어 여백은 각 절이 챙긴다.
   .step-body {
     position: relative;
     width: 100%;
-    padding: 0 $page-x;
   }
 
+  // 칸을 나누지 않고 화면 전체가 스크롤하는 경우
   &.is-scrolly {
     overflow-x: hidden;
     overflow-y: scroll;
-  }
-
-  @include xsmallScreen() {
-    .step-header {
-      padding: $space-16;
-
-      .step-title {
-        @include typo-ds('title', 'md');
-      }
-    }
-
-    .step-footer {
-      padding: $space-16;
-
-      button {
-        height: $control-lg;
-      }
-    }
   }
 }
 

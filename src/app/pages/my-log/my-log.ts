@@ -7,6 +7,7 @@ import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
 import { RewardNotice } from '../../shared/reward-notice/reward-notice';
 import { WaveDivider } from '../../shared/wave-divider/wave-divider';
 import { LazyLoadImg } from '../../shared/lazy-load-img/lazy-load-img';
+import { StampBadge } from '../../shared/stamp-badge/stamp-badge';
 import { PhotoService } from '../../core/photo.service';
 import { RewardService } from '../../core/reward.service';
 import { SpaceService } from '../../core/space.service';
@@ -24,7 +25,17 @@ import { ScrollTopDirective } from '../../utils/scroll-top.directive';
  */
 @Component({
   selector: 'app-my-log',
-  imports: [RouterLink, PageHeader, TabBar, IntroDialog, RewardNotice, WaveDivider, LazyLoadImg, ScrollTopDirective],
+  imports: [
+    RouterLink,
+    PageHeader,
+    TabBar,
+    IntroDialog,
+    RewardNotice,
+    WaveDivider,
+    LazyLoadImg,
+    StampBadge,
+    ScrollTopDirective,
+  ],
   templateUrl: './my-log.html',
   styleUrl: './my-log.scss',
 })

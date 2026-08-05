@@ -6,6 +6,7 @@ import { WaveDivider } from '../../shared/wave-divider/wave-divider';
 import { TabBar } from '../../shared/tab-bar/tab-bar';
 import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
 import { MapLinks } from '../../shared/map-links/map-links';
+import { StampBadge } from '../../shared/stamp-badge/stamp-badge';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState, SPACE_SLUGS } from '../../core/models';
@@ -25,6 +26,7 @@ import { LazyLoadImg } from '../../shared/lazy-load-img/lazy-load-img';
     TabBar,
     IntroDialog,
     MapLinks,
+    StampBadge,
     RouterLink,
     ScrollTopDirective,
     LazyLoadImg,

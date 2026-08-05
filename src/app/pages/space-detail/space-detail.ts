@@ -5,6 +5,7 @@ import { switchMap } from 'rxjs';
 import { PageHeader } from '../../shared/page-header/page-header';
 import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
 import { MapLinks } from '../../shared/map-links/map-links';
+import { StampBadge } from '../../shared/stamp-badge/stamp-badge';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState } from '../../core/models';
@@ -22,7 +23,7 @@ import { ScrollTopDirective } from '../../utils/scroll-top.directive';
  */
 @Component({
   selector: 'app-space-detail',
-  imports: [PageHeader, IntroDialog, MapLinks, RouterLink, ScrollTopDirective],
+  imports: [PageHeader, IntroDialog, MapLinks, StampBadge, RouterLink, ScrollTopDirective],
   templateUrl: './space-detail.html',
   styleUrl: './space-detail.scss',
 })

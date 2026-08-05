@@ -1,9 +1,10 @@
 // my-log.scss — 02 내 방문기록.
-// 헤더·탭바는 고정하고 가운데만 스크롤한다. 프레임(.contents-wrapper)이 높이를 잡으므로
-// 이 화면은 그 안에서 세로 3단(header / scroll / tabbar)으로 나눈다.
 //
-// 위에서 아래로 레몬 밴드(헤더 + 제목) · 물결 · 흰 바탕(진행률 + 카드 그리드)이다.
-// 밴드 색은 헤더 뒤까지 이어져야 해서 .my-log 가 깐다 — 헤더는 배경이 없다.
+// 3단 골격(.step · .step-scroll · .step-header)은 templates/_step.scss 가 맡는다.
+// 여기에는 이 화면에만 있는 것만 둔다.
+//
+// 위에서 아래로 레몬 밴드(상단 바 + 제목) · 물결 · 흰 바탕(진행률 + 카드 그리드)이다.
+// 밴드 색은 상단 바 뒤까지 이어져야 해서 .my-log 가 깐다 — 상단 바는 배경이 없다.
 // 그래서 흰색이 필요한 절은 각자 배경을 다시 칠한다.
 //
 // 카드는 두 겹으로 겹친다 — 사진(.log-thumb)이 아래, 글과 표시(.log-info)가 위다.
@@ -18,34 +19,10 @@ $thumb-dim-opacity: 0.25;
 // 방문 전 카메라 아이콘 크기. 시안 실측이라 $icon-* 어느 단계와도 맞지 않는다
 $log-icon-size: rem(22px);
 
+// 골격 값은 .step 이 들고 있고 여기서는 배경색만 얹는다.
+// 제목 묶음(.step-header)에 배경이 없는 것은 이 색이 그대로 비쳐야 해서다.
 .my-log {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  @include flex(column, flex-start, stretch);
   background-color: $color-bg-brand-lemon;
-  color: $color-text;
-
-  .my-log-scroll {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-  }
-
-  // 배경은 .my-log 에서 이어진다
-  .my-log-intro {
-    @include flex(column);
-    gap: $space-8;
-    padding: $spacing-page-y-mobile $page-x;
-
-    .my-log-title {
-      @include typo-ds('title', 'lg');
-    }
-
-    .my-log-desc {
-      @include typo-ds('body', 'sm');
-    }
-  }
 
   // 레몬 밴드와 흰 바탕의 경계. 위아래 색만 지정하고 크기는 건드리지 않는다 —
   // 가로는 컴포넌트가 width: 100% 라 프레임 너비를 그대로 채우고(넓어지면 마디 수만 는다),
@@ -105,156 +82,127 @@ $log-icon-size: rem(22px);
   .my-log-logs {
     padding: 0 $page-x $spacing-page-y-mobile;
     background-color: $color-bg;
-  }
 
-  // 2열 고정 그리드. 열 수가 정해져 있고 행이 이어지는 2차원 구조라 grid 를 쓴다.
-  .log-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: $space-16;
+    // 2열 고정 그리드. 열 수가 정해져 있고 행이 이어지는 2차원 구조라 grid 를 쓴다.
+    .log-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: $space-16;
 
-    // 카드는 두 겹이다 — 사진(.log-thumb)이 아래, 글과 표시(.log-info)가 위.
-    // 방문 여부로 갈리는 것은 사진의 투명도 하나뿐이라 여기서만 상태를 나눈다.
-    .log-item {
-      &.is-visited {
-        .log-thumb {
-          opacity: 1;
-        }
+      // 카드는 두 겹이다 — 사진(.log-thumb)이 아래, 글과 표시(.log-info)가 위.
+      // 방문 여부로 갈리는 것은 사진의 투명도 하나뿐이라 여기서만 상태를 나눈다.
+      .log-item {
+        &.is-visited {
+          .log-thumb {
+            opacity: 1;
+          }
 
-        // 방문 완료는 사진이 카드를 채우고 이름 밴드만 그 위에 얹는다.
-        // .log-info 가 가운데 정렬이라 가로는 여기서 따로 늘린다.
-        .log-text {
-          align-self: stretch;
-          margin-top: auto;
-          background-color: $stamp-name-bg;
+          // 방문 완료는 사진이 카드를 채우고 이름 밴드만 그 위에 얹는다.
+          // .log-info 가 가운데 정렬이라 가로는 여기서 따로 늘린다.
+          .log-text {
+            align-self: stretch;
+            margin-top: auto;
+            background-color: $stamp-name-bg;
+          }
         }
       }
-    }
 
-    .log-link {
-      position: relative;
-      @include border-radius($radius-lg);
-      border: 1px solid $btn-primary-border;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      @include flex(column);
-      background-color: $color-bg-overlay-disabled;
-      // reset 이 a 에 black 을 박아둬서(base/_reset.scss) 토큰으로 되돌린다
-      color: $color-text;
-
-      &:focus-visible {
-        @include a11yFocusStyle();
-      }
-    }
-
-    // 사진 층. 방문 전에도 자리를 지키고 흐리게만 남는다 —
-    // 카드 크기가 상태에 따라 달라지지 않아 목록이 흔들리지 않는다.
-    .log-thumb {
-      position: absolute;
-      inset: 0;
-      opacity: $thumb-dim-opacity;
-      transition: opacity 0.3s ease;
-
-      // lazyLoadImg 가 자기 template 안에서 img 를 그린다. 스타일 표식이 달라
-      // `.log-thumb img` 로는 닿지 않아 경계를 넘는 선택자를 쓴다.
-      // 범위를 .log-thumb 안으로 묶어 다른 화면까지 새지 않게 한다.
-      ::ng-deep img {
+      .log-link {
+        position: relative;
+        @include border-radius($radius-lg);
+        border: 1px solid $btn-primary-border;
         width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        @include flex(column);
+        background-color: $color-bg-overlay-disabled;
+        // reset 이 a 에 black 을 박아둬서(base/_reset.scss) 토큰으로 되돌린다
+        color: $color-text;
 
-    // 글과 표시 층. 사진 위에 겹치고 카드 전체를 덮는다 —
-    // 안쪽 요소가 카드 모서리를 기준으로 자리를 잡아야 해서 크기를 꽉 채운다.
-    .log-info {
-      z-index: 1;
-      position: relative;
-      flex: 1;
-      @include flex(column, center, center);
-      gap: $space-8;
-    }
-
-    // 필수 방문 장소 표시. 리워드 1차 조건이라 카드 위에 항상 띄운다.
-    .log-required {
-      @include border-radius($radius-lg);
-      position: absolute;
-      top: $space-8;
-      left: $space-8;
-      padding: $space-8 $space-12;
-      background-color: $color-bg-inverse;
-      color: $color-text-inverse;
-      @include typo-ds('label', 'xs');
-    }
-
-    // 방문 완료 뱃지. 모양과 「방문완료」 글자는 인라인 SVG 가 들고 있고
-    // 여기서는 자리·크기·본체 색만 정한다. 카드 오른쪽 위 안쪽 (시안 실측 상 5 · 우 4).
-    //
-    // 색은 SVG 안에서 fill="currentColor" 로 받아 가므로 color 로 넘긴다 —
-    // background-color 를 칠하는 전역 .is-mark-* 를 쓰면 꽃 모양 뒤에 네모가 깔린다.
-    .log-mark {
-      position: absolute;
-      top: $space-4;
-      right: $space-4;
-      width: $stamp-mark-sm;
-      height: $stamp-mark-sm;
-
-      &[data-mark='pink'] {
-        color: $stamp-mark-pink;
+        &:focus-visible {
+          @include a11yFocusStyle();
+        }
       }
 
-      &[data-mark='skyblue'] {
-        color: $stamp-mark-skyblue;
+      // 사진 층. 방문 전에도 자리를 지키고 흐리게만 남는다 —
+      // 카드 크기가 상태에 따라 달라지지 않아 목록이 흔들리지 않는다.
+      .log-thumb {
+        position: absolute;
+        inset: 0;
+        opacity: $thumb-dim-opacity;
+        transition: opacity 0.3s ease;
+
+        // lazyLoadImg 가 자기 template 안에서 img 를 그린다. 스타일 표식이 달라
+        // `.log-thumb img` 로는 닿지 않아 경계를 넘는 선택자를 쓴다.
+        // 범위를 .log-thumb 안으로 묶어 다른 화면까지 새지 않게 한다.
+        ::ng-deep img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
       }
 
-      &[data-mark='orange'] {
-        color: $stamp-mark-orange;
+      // 글과 표시 층. 사진 위에 겹치고 카드 전체를 덮는다 —
+      // 안쪽 요소가 카드 모서리를 기준으로 자리를 잡아야 해서 크기를 꽉 채운다.
+      .log-info {
+        z-index: 1;
+        position: relative;
+        flex: 1;
+        @include flex(column, center, center);
+        gap: $space-8;
       }
 
-      &[data-mark='lemon'] {
-        color: $stamp-mark-lemon;
-      }
-
-      &[data-mark='lime'] {
-        color: $stamp-mark-lime;
-      }
-
-      &[data-mark='green'] {
-        color: $stamp-mark-green;
-      }
-    }
-
-    // 방문 전 카메라 아이콘. @2x 이미지라 컨테이너가 크기를 정하고 img 는 채운다
-    .icon-container {
-      @include border-radius($radius-lg);
-      width: $control-md;
-      height: $control-md;
-      @include flexCenter();
-
-      background-color: $color-bg;
-      border: 1px solid $color-border-subtle;
-
-      img {
-        width: $log-icon-size;
-        height: $log-icon-size;
-        @include objectFit();
-      }
-    }
-
-    .log-text {
-      @include flex(column);
-      gap: $space-2;
-      padding: $space-8;
-      text-align: center;
-
-      .log-name {
-        @include typo-ds('label', 'md');
-      }
-
-      .log-guide {
-        color: $color-text-muted;
+      // 필수 방문 장소 표시. 리워드 1차 조건이라 카드 위에 항상 띄운다.
+      .log-required {
+        @include border-radius($radius-lg);
+        position: absolute;
+        top: $space-8;
+        left: $space-8;
+        padding: $space-8 $space-12;
+        background-color: $color-bg-inverse;
+        color: $color-text-inverse;
         @include typo-ds('label', 'xs');
+      }
+
+      // 방문 완료 도장. 모양·크기·색은 app-stamp-badge 가 들고 있고
+      // 여기서는 자리만 정한다. 카드 오른쪽 위 안쪽 (시안 실측 상 5 · 우 4).
+      .log-mark {
+        position: absolute;
+        top: $space-4;
+        right: $space-4;
+      }
+
+      // 방문 전 카메라 아이콘. @2x 이미지라 컨테이너가 크기를 정하고 img 는 채운다
+      .icon-container {
+        @include border-radius($radius-lg);
+        width: $control-md;
+        height: $control-md;
+        @include flexCenter();
+
+        background-color: $color-bg;
+        border: 1px solid $color-border-subtle;
+
+        img {
+          width: $log-icon-size;
+          height: $log-icon-size;
+          @include objectFit();
+        }
+      }
+
+      .log-text {
+        @include flex(column);
+        gap: $space-2;
+        padding: $space-8;
+        text-align: center;
+
+        .log-name {
+          @include typo-ds('label', 'md');
+        }
+
+        .log-guide {
+          color: $color-text-muted;
+          @include typo-ds('label', 'xs');
+        }
       }
     }
   }

@@ -186,7 +186,9 @@ $stamp-mark-lemon: $brand-lemon;
 $stamp-mark-lime: $brand-lime;
 $stamp-mark-green: $brand-green;
 
-$stamp-mark-text: $color-text; // 마커 안 「방문 완료」 글자
+// 마커 안 「방문 완료」 글자 색은 여기 없다. 글자가 그림에 패스로 들어 있어
+// 그림 안의 색이 됐다 — 일러스트 색은 토큰으로 만들지 않는다.
+
 $stamp-name-bg: $color-bg-brand-light; // 완료 카드의 장소 이름 밴드
 $stamp-name-text: $color-text;
 $stamp-label: $color-text-sub;

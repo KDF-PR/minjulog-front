@@ -1,72 +1,79 @@
-<section class="reward" [class.is-ready]="ready()">
+<section class="step reward" [class.is-ready]="ready()">
   <app-page-header (introSelect)="openIntro()" />
 
-  <div class="reward-scroll" appScrollTop>
-    <div class="reward-intro motion-fade-in">
-      <h2 class="reward-title">참여 선물</h2>
+  <div class="step-scroll" appScrollTop>
+    <div class="step-header motion-fade-in">
+      <h2 class="step-title">참여 선물</h2>
 
       @if (remainingToReward() > 0) {
-      <p class="reward-desc">{{ remainingToReward() }}개 더 모으면 다음 선물을 받을 수 있어요.</p>
+        <p class="step-subtitle">
+          {{ remainingToReward() }}개 더 모으면 다음 선물을 받을 수 있어요.
+        </p>
       } @else {
-      <p class="reward-desc">받을 수 있는 선물을 확인해보세요.</p>
+        <p class="step-subtitle">받을 수 있는 선물을 확인해보세요.</p>
       }
 
-      <p class="reward-intro-period">{{ periodLabel }}</p>
+      <p class="reward-period">{{ periodLabel }}</p>
     </div>
 
-    <!-- 하늘색 밴드와 흰 바탕의 경계. 좌우 여백이 없는 .reward-scroll 바로 아래 두어야
+    <!-- 하늘색 밴드와 흰 바탕의 경계. 좌우 여백이 없는 .step-scroll 바로 아래 두어야
          프레임 너비를 그대로 채운다 — 안쪽 절에 넣으면 $page-x 만큼 잘린다. -->
     <app-wave-divider class="reward-wave motion-fade-in" />
 
-    <div class="reward-body">
+    <div class="step-body">
       @if (loadState() === 'loading') {
-      <p class="page-state" role="status">리워드를 불러오는 중이에요</p>
+        <p class="page-state" role="status">리워드를 불러오는 중이에요</p>
       } @else if (loadState() === 'error') {
-      <p class="page-state" role="alert">리워드를 불러오지 못했어요</p>
+        <p class="page-state" role="alert">리워드를 불러오지 못했어요</p>
       } @else {
-
-     
-        
-      @for (item of rewardItems(); track item.tier) {
-      <section class="content motion-fade-in motion-delay-1" 
-        [attr.aria-labelledby]="'reward-' + item.tier + '-title'">
-        <div class="content-header">
-          <h3 class="content-title" [id]="'reward-' + item.tier + '-title'">{{ item.order }}</h3>
-          <p class="content-condition">{{ item.condition }}</p>
-        </div>
-
-        <div class="content-body">
-          <div class="record">
-            <!-- 선물 사진 자산 미수령 — 시안과 같은 문구 자리표시자 -->
-            <figure class="record-img">
-              <figcaption>사진</figcaption>
-            </figure>
-
-            <div class="record-body">
-              <h4 class="record-title">{{ item.name }}</h4>
-              <p class="record-summary">{{ item.description }}</p>
+        @for (item of rewardItems(); track item.tier) {
+          <section
+            class="content motion-fade-in motion-delay-1"
+            [attr.aria-labelledby]="'reward-' + item.tier + '-title'"
+          >
+            <div class="content-header">
+              <h3 class="content-title" [id]="'reward-' + item.tier + '-title'">
+                {{ item.order }}
+              </h3>
+              <p class="content-condition">{{ item.condition }}</p>
             </div>
-          </div>
 
-          <!-- 아직 못 받는 단계도 같은 버튼으로 둔다. 남은 곳 수를 문구로 알리고
+            <div class="content-body">
+              <div class="record">
+                <!-- 선물 사진 자산 미수령 — 시안과 같은 문구 자리표시자 -->
+                <figure class="record-img">
+                  <figcaption>사진</figcaption>
+                </figure>
+
+                <div class="record-body">
+                  <h4 class="record-title">{{ item.name }}</h4>
+                  <p class="record-summary">{{ item.description }}</p>
+                </div>
+              </div>
+
+              <!-- 아직 못 받는 단계도 같은 버튼으로 둔다. 남은 곳 수를 문구로 알리고
                disabled 로 잠가야 보조기기에도 「지금은 누를 수 없다」가 전해진다. -->
-          <button type="button" class="record-cta" [disabled]="!item.claimable || claimingTier() !== null"
-            (click)="claim(item.tier)">
-            {{ item.ctaLabel }}
-          </button>
-        </div>
-      </section>
-      }
+              <button
+                type="button"
+                class="record-cta"
+                [disabled]="!item.claimable || claimingTier() !== null"
+                (click)="claim(item.tier)"
+              >
+                {{ item.ctaLabel }}
+              </button>
+            </div>
+          </section>
+        }
 
-      @if (issuedCode(); as code) {
-      <p class="reward-code" role="status" animate.enter="motion-fade-enter">
-        리워드 코드 <strong>{{ code }}</strong>
-      </p>
-      }
+        @if (issuedCode(); as code) {
+          <p class="reward-code" role="status" animate.enter="motion-fade-enter">
+            리워드 코드 <strong>{{ code }}</strong>
+          </p>
+        }
 
-      @if (claimError(); as message) {
-      <p class="page-state" role="alert" animate.enter="motion-fade-enter">{{ message }}</p>
-      }
+        @if (claimError(); as message) {
+          <p class="page-state" role="alert" animate.enter="motion-fade-enter">{{ message }}</p>
+        }
       }
     </div>
   </div>

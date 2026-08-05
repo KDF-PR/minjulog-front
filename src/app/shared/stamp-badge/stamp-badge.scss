@@ -1,0 +1,52 @@
+// stamp-badge.scss — 방문 여부를 알리는 배지.
+//
+// 그림 안의 본체가 fill="currentColor" 라 색을 color 로 넘긴다.
+// 외곽선과 글자의 검정, 방문 전 꽃의 회색은 그림 안의 색이라 토큰으로 빼지 않고
+// SVG 에 그대로 둔다.
+//
+// 크기는 그림 종류마다 시안 실측을 기본으로 두고, 다르게 쓰는 화면이 붙는 쪽에서 덮는다.
+
+@use 'utils' as *;
+
+:host {
+  display: block;
+  width: $stamp-mark-sm;
+  height: $stamp-mark-sm;
+  // 색이 배정되지 않은 장소가 생겨도 그림이 사라지지 않게 남기는 기본값.
+  // 방문 전 그림은 두 종류 모두 회색이 그림 안에 있어 이 값을 쓰지 않는다.
+  color: $color-bg-subtle;
+}
+
+:host([data-variant='flower']) {
+  width: $icon-lg;
+  height: $icon-lg;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+}
+
+:host([data-mark='pink']) {
+  color: $stamp-mark-pink;
+}
+
+:host([data-mark='skyblue']) {
+  color: $stamp-mark-skyblue;
+}
+
+:host([data-mark='orange']) {
+  color: $stamp-mark-orange;
+}
+
+:host([data-mark='lemon']) {
+  color: $stamp-mark-lemon;
+}
+
+:host([data-mark='lime']) {
+  color: $stamp-mark-lime;
+}
+
+:host([data-mark='green']) {
+  color: $stamp-mark-green;
+}

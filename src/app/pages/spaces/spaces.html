@@ -1,71 +1,74 @@
-<section class="spaces" [class.is-ready]="ready()">
+<section class="step spaces" [class.is-ready]="ready()">
   <app-page-header (introSelect)="openIntro()" />
 
-  <div class="spaces-scroll" appScrollTop>
-    <div class="spaces-intro motion-fade-in">
-      <h2 class="spaces-title">방문할 곳</h2>
-      <p class="spaces-desc">
+  <div class="step-scroll" appScrollTop>
+    <div class="step-header motion-fade-in">
+      <h2 class="step-title">방문할 곳</h2>
+      <p class="step-subtitle">
         각 장소에 담긴 민주화 운동의 의미를 살펴보고, 원하는 곳부터 방문해보세요.
       </p>
     </div>
-    <app-wave-divider class="my-log-wave motion-fade-in" />
+    <app-wave-divider class="spaces-wave motion-fade-in" />
 
-    @if (loadState() === 'loading') {
-      <!-- 실제 행과 같은 높이로 자리를 잡아 데이터가 와도 화면이 튀지 않게 한다 -->
-      <ul class="space-list" aria-hidden="true">
-        @for (slug of placeholderSlugs; track slug) {
-          <li class="space-row">
-            <span class="space-link">
-              <span class="space-mark is-skeleton"></span>
-              <span class="space-text">
-                <span class="space-name is-skeleton"></span>
-                <span class="space-region is-skeleton"></span>
+    <div class="step-body">
+      @if (loadState() === 'loading') {
+        <!-- 실제 행과 같은 높이로 자리를 잡아 데이터가 와도 화면이 튀지 않게 한다 -->
+        <ul class="space-list" aria-hidden="true">
+          @for (slug of placeholderSlugs; track slug) {
+            <li class="space-row">
+              <span class="space-link">
+                <span class="space-mark is-skeleton"></span>
+                <span class="space-text">
+                  <span class="space-name is-skeleton"></span>
+                  <span class="space-region is-skeleton"></span>
+                </span>
               </span>
-            </span>
-          </li>
-        }
-      </ul>
-      <p class="a11y-hidden" role="status">장소 목록을 불러오는 중이에요</p>
-    } @else if (loadState() === 'error') {
-      <p class="page-state" role="alert">장소 목록을 불러오지 못했어요</p>
-    } @else {
-      <ul class="space-list motion-fade-in motion-delay-1">
-        @for (item of spaceVisits(); track item.space.slug) {
-          <li class="space-row" [class.is-visited]="item.visit !== null">
-            <a class="space-link" [routerLink]="['/spaces', item.space.slug]">
-              <span
-                class="space-mark"
-                [class.is-mark-pink]="item.visit !== null && item.space.markColor === 'pink'"
-                [class.is-mark-skyblue]="item.visit !== null && item.space.markColor === 'skyblue'"
-                [class.is-mark-orange]="item.visit !== null && item.space.markColor === 'orange'"
-                [class.is-mark-lemon]="item.visit !== null && item.space.markColor === 'lemon'"
-                [class.is-mark-lime]="item.visit !== null && item.space.markColor === 'lime'"
-                [class.is-mark-green]="item.visit !== null && item.space.markColor === 'green'"
-                aria-hidden="true"
-              ></span>
+            </li>
+          }
+        </ul>
+        <p class="a11y-hidden" role="status">장소 목록을 불러오는 중이에요</p>
+      } @else if (loadState() === 'error') {
+        <p class="page-state" role="alert">장소 목록을 불러오지 못했어요</p>
+      } @else {
+        <ul class="space-list motion-fade-in motion-delay-1">
+          @for (item of spaceVisits(); track item.space.slug) {
+            <li class="space-row" [class.is-visited]="item.visit !== null">
+              <a class="space-link" [routerLink]="['/spaces', item.space.slug]">
+                <!-- 진행 표식. 방문 여부는 아래 .a11y-hidden 이 이미 알리므로 그림은 감춘다 -->
+                <app-stamp-badge
+                  class="space-mark"
+                  variant="flower"
+                  [mark]="item.space.markColor"
+                  [visited]="item.visit !== null"
+                  aria-hidden="true"
+                />
 
-              <span class="space-text">
-                <strong class="space-name">{{ item.space.shortName }}</strong>
-                <span class="space-region">서울 {{ item.space.region }}</span>
-              </span>
+                <span class="space-text">
+                  <strong class="space-name">{{ item.space.shortName }}</strong>
+                  <span class="space-region">서울 {{ item.space.region }}</span>
+                </span>
 
-              <span class="a11y-hidden">{{ item.visit !== null ? '방문 완료' : '방문 전' }}</span>
+                <span class="a11y-hidden">{{ item.visit !== null ? '방문 완료' : '방문 전' }}</span>
 
-              <span class="space-arrow" aria-hidden="true">
-                <lazyLoadImg [src]="'/assets/images/ui/icons/arrow_right'" />
-              </span>
-            </a>
-          </li>
-        }
-      </ul>
+                <span class="space-arrow" aria-hidden="true">
+                  <lazyLoadImg [src]="'/assets/images/ui/icons/arrow_right'" />
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
 
-      <section class="spaces-map motion-fade-in motion-delay-2" aria-labelledby="spaces-map-title">
-        <div class="spaces-map-card">
-          <h3 class="spaces-map-title" id="spaces-map-title">방문할 곳 지도 앱에서 모아보기</h3>
-          <app-map-links [query]="mapQuery()" />
-        </div>
-      </section>
-    }
+        <section
+          class="spaces-map motion-fade-in motion-delay-2"
+          aria-labelledby="spaces-map-title"
+        >
+          <div class="spaces-map-card">
+            <h3 class="spaces-map-title" id="spaces-map-title">방문할 곳 지도 앱에서 모아보기</h3>
+            <app-map-links [query]="mapQuery()" />
+          </div>
+        </section>
+      }
+    </div>
   </div>
 
   <app-tab-bar />
