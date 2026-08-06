@@ -4,8 +4,9 @@
 // 정해 CSS 변수로 인스턴스마다 다르게 칠하고, <pattern> 이 없어 id 충돌도 없다.
 // 화면이 넓어지면 마디 수만 늘어나 물결 모양이 변하지 않는다.
 //
-// 시안 실측(Figma wave_bar 379×29): 한 마디 20.3px · 골과 마루 차 3.6px ·
-// 선 1.5px · 물결 중심선이 위에서 20px 지점.
+// 시안 실측(Figma `bg_green` 289:3374): 한 마디 20.35px · 골과 마루 차 3.8px · 선 1px ·
+// 물결 중심선이 위에서 20px 지점. 곡선은 사인이 아니라 마루와 골이 평평하게 머무는
+// 스무스스텝이다 — 양 끝 접선이 수평인 cubic 두 개가 한 마디를 이룬다.
 //
 // 바꿀 수 있는 값
 //   --wave-top-color       물결 위쪽 색            기본 transparent (부모 배경이 비침)
@@ -20,15 +21,15 @@
 @use 'utils' as *;
 
 // 물결 한 마디의 크기. 아래 두 SVG 의 viewBox(0 0 20 6) 와 반드시 같아야 한다.
-// 6px 은 골-마루(3.6px)에 선 두께(1.5px)를 더한 세로 폭이다.
+// 마루 1.1 · 골 4.9 로 중심을 3 에 맞춰야 --wave-top-height(중심선까지의 거리) 계산이 유지된다.
 $wave-period: 20px;
 $wave-band: 6px;
 
 // 물결 아래쪽을 채우는 실루엣
-$wave-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3Q5 6.6 10 3T20 3V6H0Z' fill='black'/%3E%3C/svg%3E");
+$wave-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 6' preserveAspectRatio='none'%3E%3Cpath d='M0 1.1C5 1.1 5 4.9 10 4.9C15 4.9 15 1.1 20 1.1V6H0Z' fill='black'/%3E%3C/svg%3E");
 
 // 물결 선
-$wave-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3Q5 6.6 10 3T20 3' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+$wave-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 6' preserveAspectRatio='none'%3E%3Cpath d='M0 1.1C5 1.1 5 4.9 10 4.9C15 4.9 15 1.1 20 1.1' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
 
 :host {
   position: relative;

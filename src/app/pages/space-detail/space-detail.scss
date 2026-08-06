@@ -18,8 +18,6 @@
     height: 324px;
 
     @include flexCenter();
-    // padding: $space-40 $page-x;
-    // background-color: $color-action-brand;
 
     // 위로 튕기는 스크롤(overscroll) 때 .step-scroll 의 흰 배경이 드러난다.
     // 같은 초록을 화면 높이만큼 위로 늘려 그 틈을 가린다.
@@ -37,12 +35,13 @@
     .detail-hero-figure {
       z-index: 1;
       position: relative;
-      border-radius: $radius-lg;
+      @include border-radius($radius-lg);
 
       width: $detail-hero-size;
       height: $detail-hero-size;
-      border: 2px solid $neutral-900;
+      border: 1px solid $neutral-900;
       overflow: hidden;
+
       @include flexCenter();
       background-color: $color-bg-subtle;
 
@@ -64,6 +63,19 @@
       }
     }
 
+    .detail-hero-overlay-graphic {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      @include translate(-50%, 0);
+      z-index: 2;
+      pointer-events: none;
+      width: 424px;
+      height: 324px;
+      img {
+        @include objectFit();
+      }
+    }
     .detail-hero-bg-graphic {
       position: absolute;
       width: 100%;
@@ -151,7 +163,7 @@
 
       // 절 아이콘 자산 미수령 — 자리만 잡아 둔다.
       .content-icon {
-        border-radius: $radius-full;
+        @include border-radius($radius-full);
         width: $icon-lg;
         height: $icon-lg;
         background-color: $color-bg-muted;
@@ -223,24 +235,25 @@
   // 하단 고정 영역. 버튼은 전역 .btn-container 가 그린다 (templates/_step.scss). 좌우 16 · 높이 68.
   // .btn-container 기본값은 중앙 고정폭이라 여기서 전폭으로 되돌린다.
   .detail-actions {
-    border-top: 1px solid $color-border-subtle;
-    height: $app-bar-height;
+    border-top: 1px solid $color-border;
+    // height: $app-bar-height;
 
     width: 100%;
     @include flex(row, center, center);
     gap: $space-24;
-    padding: 0 $app-bar-x;
+    padding: $space-12 $app-bar-x;
     @include tablet() {
       @include flex(row, space-between, center);
-      padding: 0 $space-24;
+      padding: $space-12 $space-24;
     }
 
     background-color: $tabbar-bg;
 
     .detail-back {
-      @include border-radius($radius-full);
+      @include border-radius($radius-sm);
       width: $icon-xl;
       height: $icon-xl;
+      flex-shrink: 0;
       @include flexCenter();
 
       &:focus-visible {
@@ -249,7 +262,7 @@
     }
 
     .detail-photo {
-      @include border-radius($radius-lg);
+      @include border-radius($radius-md);
       width: 100%;
       // max-width: 264px;
       padding: $space-16;

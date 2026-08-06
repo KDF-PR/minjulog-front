@@ -95,6 +95,7 @@ export class SpaceDetail implements OnInit {
     this.router.navigate(['/stamp', this.slug()]);
   }
 
+  /** 콘텐츠는 프론트가 들고 있어 바로 그린다. 여기서 기다리는 것은 방문 여부 하나다 */
   private load(): void {
     this.loadState.set('loading');
     this.spaces

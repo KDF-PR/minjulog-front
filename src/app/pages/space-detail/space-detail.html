@@ -3,11 +3,13 @@
 
   <div class="step-scroll" appScrollTop>
     <div class="step-body">
-      @if (loadState() === 'loading') {
-        <p class="page-state" role="status">장소 정보를 불러오는 중이에요</p>
-      } @else if (loadState() === 'error') {
-        <p class="page-state" role="alert">장소 정보를 불러오지 못했어요</p>
-      } @else if (spaceVisit(); as item) {
+      <!-- 콘텐츠는 프론트가 들고 있어 응답을 기다리지 않는다. 서버가 주는 것은 방문 여부뿐이라
+           오류여도 화면은 남긴다 -->
+      @if (loadState() === 'error') {
+        <p class="page-state" role="alert">방문 기록을 불러오지 못했어요</p>
+      }
+
+      @if (spaceVisit(); as item) {
         <div class="detail-hero">
           <figure class="detail-hero-figure">
             @if (item.space.heroImage) {
@@ -25,21 +27,35 @@
               />
             }
 
-            <!-- 방문 전에는 「방문 전」 도장으로 바뀐다. 자리와 크기만 이 화면이 정한다 -->
-            <app-stamp-badge
-              class="detail-hero-mark"
-              [mark]="item.space.markColor"
-              [visited]="isVisited()"
-            />
+            <!-- 방문 전에는 「방문 전」 도장으로 바뀐다. 자리와 크기만 이 화면이 정한다.
+                 방문 여부는 서버 응답이 정하므로 응답 전에는 그리지 않는다 —
+                 「방문 전」을 먼저 찍었다가 완료로 뒤집으면 도장이 깜빡인다 -->
+            @if (loadState() === 'ready') {
+              <app-stamp-badge
+                class="detail-hero-mark"
+                [mark]="item.space.markColor"
+                [visited]="isVisited()"
+              />
+            }
           </figure>
           <div class="detail-hero-bg-graphic">
             <app-wave-divider class="hero-wave" />
           </div>
+          <!-- 방문 완료 축하 그래픽 — 방문 전에는 그리지 않는다 -->
+          @if (isVisited()) {
+            <div class="detail-hero-overlay-graphic">
+              <lazyLoadImg
+                class="detail-hero-overlay-img"
+                [src]="'/assets/images/space-detail/hero-complete'"
+                alt=""
+              />
+            </div>
+          }
         </div>
         <app-wave-divider class="detail-wave" />
         <div class="detail-header">
           <h2 class="detail-title">{{ item.space.name }}</h2>
-          <!-- <p class="detail-subtitle">{{ item.space.category }}</p> -->
+          <p class="detail-subtitle">{{ item.space.tagline }}</p>
 
           <p class="detail-address">
             <span class="icon-container" aria-hidden="true">
