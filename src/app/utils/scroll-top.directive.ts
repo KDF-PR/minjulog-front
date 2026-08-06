@@ -4,23 +4,11 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 /**
- * 화면에 들어올 때 스크롤을 맨 위로 되돌린다.
+ * 화면에 들어올 때 스크롤을 맨 위로 되돌린다. 스크롤하는 요소에 직접 붙인다 —
+ * 창이 아니라 화면 안쪽 div 가 스크롤해 라우터의 `scrollPositionRestoration` 이 닿지 않는다.
  *
- * 이 앱은 창이 아니라 **화면 안쪽 div 가 스크롤한다**(`.contents-wrapper` 가
- * `overflow: hidden` 이라 창은 움직이지 않는다). 그래서 라우터의
- * `scrollPositionRestoration` 은 여기까지 닿지 않는다 — 그건 창을 움직이는 기능이다.
- * 스크롤하는 요소에 직접 붙여야 한다.
- *
- * 두 시점에 되돌린다.
- * - 첫 렌더 뒤 (`afterNextRender`)
- * - 이후의 모든 화면 전환 (`NavigationEnd`)
- *
- * 둘째가 필요한 이유는 **주소만 바뀌고 컴포넌트가 그대로 남는 경우**가 있어서다.
- * `/spaces/a` 에서 `/spaces/b` 로 가면 라우터가 같은 컴포넌트를 다시 쓰고,
- * 새 요소를 만들지 않으니 스크롤 위치가 그대로 남는다.
- *
- * 사용 — 스크롤하는 요소에 붙인다.
- *   <div class="step-scroll" appScrollTop>
+ * 첫 렌더 뒤와 `NavigationEnd` 두 시점에 되돌린다. 둘째가 필요한 이유는
+ * `/spaces/a` → `/spaces/b` 처럼 컴포넌트가 재사용되면 스크롤이 그대로 남아서다.
  */
 @Directive({
   selector: '[appScrollTop]',

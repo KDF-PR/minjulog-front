@@ -1,0 +1,49 @@
+@use 'utils' as *;
+
+// 개발 전용 플로팅 도구. 화면 흐름 밖이라 fixed 로 띄우고 탭바 위에 얹는다.
+// dialog dim(1000)보다는 아래 — 소개 dialog 를 가리지 않는다.
+.dev-scenario {
+  z-index: $z-index-5;
+  position: fixed;
+  right: $space-16;
+  bottom: calc($app-bar-height + $space-16);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: $space-8;
+
+  .dev-scenario-panel {
+    border-radius: $radius-lg;
+    border: 1px solid $color-border-subtle;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    padding: $space-8;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
+    background-color: $color-bg;
+
+    .dev-scenario-item {
+      border-radius: $radius-full;
+      padding: $space-6 $space-12;
+      color: $color-text-sub;
+      font-size: $typo-label-sm;
+      text-align: left;
+      cursor: pointer;
+
+      &.is-active {
+        background-color: $color-text;
+        color: $color-bg;
+      }
+    }
+  }
+
+  .dev-scenario-toggle {
+    border-radius: $radius-full;
+    padding: $space-6 $space-12;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
+    background-color: $color-text;
+    color: $color-bg;
+    font-size: $typo-label-sm;
+    cursor: pointer;
+  }
+}

@@ -1,36 +1,50 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { PageHeader } from '../../shared/page-header/page-header';
 import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
 import { MapLinks } from '../../shared/map-links/map-links';
 import { StampBadge } from '../../shared/stamp-badge/stamp-badge';
+import { LazyLoadImg } from '../../shared/lazy-load-img/lazy-load-img';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
-import { LoadState } from '../../core/models';
+import { LoadState, SpaceSectionType } from '../../core/models';
 import { ScrollTopDirective } from '../../utils/scroll-top.directive';
+import { PhotoGuideSheet } from './photo-guide-sheet/photo-guide-sheet';
+import { WaveDivider } from '../../shared/wave-divider/wave-divider';
+
+/** 섹션 종류별 기본 제목·아이콘. 데이터의 `title` 이 있으면 그쪽이 이긴다 */
+const SECTION_DEFAULTS: Record<SpaceSectionType, { title: string; icon: string }> = {
+  map: { title: '찾아가는 길', icon: 'map' },
+  story: { title: '이곳의 이야기', icon: 'letter' },
+  viewPoints: { title: '자세히 둘러보면 좋을 곳', icon: 'flower' },
+  visitInfo: { title: '관람 정보', icon: 'letter' }, // 전용 아이콘 자산 미수령
+};
 
 /**
  * 03 방문할 곳 상세.
  *
- * 콘텐츠(주소·설명·둘러볼 곳)는 프론트가 들고 있고 방문 여부만 사용자 상태다.
- * 선택 항목이 비어 있는 장소가 있어 **없으면 그 영역을 통째로 숨긴다** — 빈 값을 그리면
- * 라벨만 남은 줄이 생긴다.
- *
- * 하단은 탭바가 아니라 뒤로 가기 + 인증 버튼이다. 목록에서 들어와 사진을 올리고
- * 돌아가는 흐름이라 탭 이동을 걸어두면 흐름이 끊긴다.
+ * 선택 항목이 비어 있는 장소가 있어 없으면 영역을 통째로 숨긴다 — 빈 값을 그리면 라벨만 남는다.
+ * 하단은 탭바가 아니라 목록으로 가기 + 인증 버튼이다. 탭 이동을 걸어두면 인증 흐름이 끊긴다.
  */
 @Component({
   selector: 'app-space-detail',
-  imports: [PageHeader, IntroDialog, MapLinks, StampBadge, RouterLink, ScrollTopDirective],
+  imports: [
+    PageHeader,
+    IntroDialog,
+    MapLinks,
+    StampBadge,
+    LazyLoadImg,
+    ScrollTopDirective,
+    PhotoGuideSheet,
+    WaveDivider,
+  ],
   templateUrl: './space-detail.html',
   styleUrl: './space-detail.scss',
 })
 export class SpaceDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private location = inject(Location);
   private spaces = inject(SpaceService);
   private photos = inject(PhotoService);
 
@@ -38,6 +52,10 @@ export class SpaceDetail implements OnInit {
   protected readonly ready = signal(false);
   protected readonly loadState = signal<LoadState>('idle');
   protected readonly introOpen = signal(false);
+  /** P1 안내 시트. 인증 버튼이 열고, 「확인했어요」가 촬영으로 잇는다 */
+  protected readonly guideOpen = signal(false);
+
+  protected readonly sectionDefaults = SECTION_DEFAULTS;
 
   private readonly slug = signal('');
 
@@ -58,14 +76,23 @@ export class SpaceDetail implements OnInit {
     this.introOpen.set(false);
   }
 
-  /** 목록에서 들어온 경우가 대부분이라 히스토리를 되돌린다. 진입 기록이 없으면 목록으로 보낸다 */
-  protected goBack(): void {
-    if (window.history.length > 1) {
-      this.location.back();
-      return;
-    }
-
+  /** 히스토리를 되돌리면 카메라(`/stamp/:slug`)로 돌아갈 수 있어 항상 목록으로 보낸다 */
+  protected goToList(): void {
     this.router.navigate(['/spaces']);
+  }
+
+  protected openGuide(): void {
+    this.guideOpen.set(true);
+  }
+
+  protected closeGuide(): void {
+    this.guideOpen.set(false);
+  }
+
+  /** 안내 시트의 「확인했어요」 — 시트를 닫고 촬영 화면으로 보낸다 */
+  protected startCapture(): void {
+    this.guideOpen.set(false);
+    this.router.navigate(['/stamp', this.slug()]);
   }
 
   private load(): void {

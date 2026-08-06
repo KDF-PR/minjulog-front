@@ -2,7 +2,7 @@
   <app-page-header (introSelect)="openIntro()" />
 
   <div class="step-scroll" appScrollTop>
-    <div class="step-header motion-fade-in">
+    <div class="step-header">
       <h2 class="step-title">참여 선물</h2>
 
       @if (remainingToReward() > 0) {
@@ -16,9 +16,8 @@
       <p class="reward-period">{{ periodLabel }}</p>
     </div>
 
-    <!-- 하늘색 밴드와 흰 바탕의 경계. 좌우 여백이 없는 .step-scroll 바로 아래 두어야
-         프레임 너비를 그대로 채운다 — 안쪽 절에 넣으면 $page-x 만큼 잘린다. -->
-    <app-wave-divider class="reward-wave motion-fade-in" />
+    <!-- 좌우 여백이 없는 .step-scroll 바로 아래 두어야 전폭을 채운다 — 안쪽 절에 넣으면 $page-x 만큼 잘린다 -->
+    <app-wave-divider class="reward-wave" />
 
     <div class="step-body">
       @if (loadState() === 'loading') {
@@ -28,7 +27,7 @@
       } @else {
         @for (item of rewardItems(); track item.tier) {
           <section
-            class="content motion-fade-in motion-delay-1"
+            class="content"
             [attr.aria-labelledby]="'reward-' + item.tier + '-title'"
           >
             <div class="content-header">
@@ -51,8 +50,7 @@
                 </div>
               </div>
 
-              <!-- 아직 못 받는 단계도 같은 버튼으로 둔다. 남은 곳 수를 문구로 알리고
-               disabled 로 잠가야 보조기기에도 「지금은 누를 수 없다」가 전해진다. -->
+              <!-- 잠긴 단계도 같은 버튼이다. disabled 로 잠가야 보조기기에도 「지금은 누를 수 없다」가 전해진다 -->
               <button
                 type="button"
                 class="record-cta"
@@ -66,13 +64,13 @@
         }
 
         @if (issuedCode(); as code) {
-          <p class="reward-code" role="status" animate.enter="motion-fade-enter">
+          <p class="reward-code" role="status">
             리워드 코드 <strong>{{ code }}</strong>
           </p>
         }
 
         @if (claimError(); as message) {
-          <p class="page-state" role="alert" animate.enter="motion-fade-enter">{{ message }}</p>
+          <p class="page-state" role="alert">{{ message }}</p>
         }
       }
     </div>

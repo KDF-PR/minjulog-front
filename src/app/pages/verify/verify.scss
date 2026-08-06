@@ -1,6 +1,4 @@
-// verify.scss — 인증코드 입력 화면 스타일.
-// 상태 표시는 모션이 아니라 상태 클래스로 다룬다 — 재전송 60초 대기(버튼 비활성),
-// 검증 대기 중(is-loading), 오류·성공 문구.
+// verify.scss — 인증코드 입력 화면.
 
 @use 'utils' as *;
 
@@ -62,8 +60,7 @@
       border-top: 1px solid $color-border-subtle;
       padding-top: $spacing-content-gap-md;
 
-      // 코드 유효시간 — 재전송 버튼 위에 남은 시간을 보여준다.
-      // 재전송 대기(버튼 라벨)와 뜻이 다르므로 두 값을 나란히 두지 않는다.
+      // 코드 유효시간. 재전송 대기와 뜻이 달라 두 값을 나란히 두지 않는다.
       .verify-expiry {
         @include flex(row, center, center);
         gap: $space-4;

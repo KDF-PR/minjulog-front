@@ -1,6 +1,5 @@
 // photo-capture.scss — 사진 인증 촬영기.
-// 미리보기와 찍은 사진이 같은 자리를 쓰도록 정사각 무대(.capture-stage)를 고정한다.
-// 두 단계에서 높이가 달라지면 셔터 위치가 흔들린다.
+// 무대(.capture-stage)는 정사각 고정 — 두 단계의 높이가 달라지면 셔터 위치가 흔들린다.
 
 @use 'utils' as *;
 
@@ -44,7 +43,6 @@
     @include flex(column, center, center);
     gap: $space-12;
 
-    // 셔터는 원형 한 겹 안에 채움 원이 든 형태다.
     .capture-shutter {
       border: 3px solid $color-action;
       border-radius: $radius-full;

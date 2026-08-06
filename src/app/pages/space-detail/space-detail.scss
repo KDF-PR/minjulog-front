@@ -1,55 +1,59 @@
 // space-detail.scss — 03 방문할 곳 상세.
-//
-// 3단 골격(.step · .step-scroll · .step-body)은 templates/_step.scss 가 맡는다.
-// 이 화면은 제목 묶음이 스크롤 맨 위가 아니라 대표 이미지 아래 가운데 정렬로 놓여
-// .step-header 대신 화면 전용 .detail-head 를 쓴다.
-//
-// 위에서 아래로 대표 이미지 → 이름·주소 → 절 세 개 순서다.
-// 절(.content)은 「찾아가는 길」·「이곳의 이야기」·「자세히 둘러보면 좋을 곳」이 같은
-// 골격을 쓴다 — 제목 묶음(.content-header) · 본문(.content-body) · 링크(.content-footer).
-//
-// 하단은 탭바가 아니라 뒤로 가기 + 인증 버튼이고 스크롤과 무관하게 고정한다.
+// 골격은 templates/_step.scss 가 맡는다. 제목이 대표 이미지 아래라 .step-header 대신 .detail-head 를 쓴다.
 
 @use 'utils' as *;
 
-// 골격 값은 .step 이 들고 있고 여기서는 색만 얹는다.
 .space-detail {
   background-color: $color-bg-brand-lemon;
 
-  // 상단 바 뒤는 레몬이고 본문은 흰색이다. 스크롤 칸이 흰 바탕을 맡는다
-  .step-scroll {
-    background-color: $color-bg;
+  // 물결 경계는 위아래 색만 지정한다 — hero 초록에서 본문 흰색으로 넘어간다.
+  .detail-wave {
+    --wave-top-color: #{$color-action-brand};
+    --wave-bottom-color: #{$color-bg};
   }
 
-  // 대표 이미지 영역. 초록 바탕 위에 정사각 사진이 얹힌다.
-  // 아래 여백이 위보다 넓은 것은 물결 자산이 들어올 자리를 비워 둔 것이다 (시안 실측 44 / 76).
   .detail-hero {
-    @include flexCenter();
-    padding: $space-40 $page-x;
-    background-color: $color-action-brand;
+    position: relative;
+    width: 100%;
+    height: 324px;
 
+    @include flexCenter();
+    // padding: $space-40 $page-x;
+    // background-color: $color-action-brand;
+
+    // 위로 튕기는 스크롤(overscroll) 때 .step-scroll 의 흰 배경이 드러난다.
+    // 같은 초록을 화면 높이만큼 위로 늘려 그 틈을 가린다.
+    &::before {
+      content: '';
+      position: absolute;
+      top: -100vh;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: $color-action-brand;
+    }
+
+    // 대표 이미지. 1:1 비율로 정사각형을 잡고, 안쪽에 이미지를 채운다.
     .detail-hero-figure {
+      z-index: 1;
       position: relative;
       border-radius: $radius-lg;
+
       width: $detail-hero-size;
       height: $detail-hero-size;
+      border: 2px solid $neutral-900;
       overflow: hidden;
       @include flexCenter();
       background-color: $color-bg-subtle;
 
-      img {
+      // lazyLoadImg 내부 img 는 스타일 표식이 달라 ::ng-deep 으로만 닿는다. 범위는 figure 안으로 한정.
+      ::ng-deep img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
 
-      .detail-hero-caption {
-        color: $color-text-muted;
-        font-size: $typo-label-xs;
-      }
-
-      // 모양과 색은 app-stamp-badge 가 맡고 여기서는 위치와 크기만 잡는다.
-      // 기본 48px 보다 커서 크기를 덮어쓴다. 사진 안쪽 오른쪽 위 (시안 실측 상 6 · 우 6).
+      // 모양·색은 app-stamp-badge 가 맡는다. 기본 48px 보다 커서 크기를 덮어쓴다 (시안 실측 상 6 · 우 6).
       .detail-hero-mark {
         z-index: 1;
         position: absolute;
@@ -59,11 +63,26 @@
         height: $stamp-mark-md;
       }
     }
+
+    .detail-hero-bg-graphic {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+      height: 140px;
+
+      background-color: $color-action-brand;
+      .hero-wave {
+        --wave-top-color: #{$color-bg-brand-lemon};
+        --wave-bottom-color: #{$color-action-brand};
+      }
+    }
   }
 
-  .detail-head {
+  .detail-header {
     @include flex(column, flex-start, center);
     padding: $space-32 $page-x $space-48;
+    background-color: $color-bg;
     text-align: center;
 
     .detail-title {
@@ -81,7 +100,10 @@
       margin-top: $space-16;
       color: $color-text-muted;
       @include typo-ds('label', 'sm');
-
+      .icon-container {
+        width: $icon-sm;
+        height: $icon-sm;
+      }
       .detail-address-icon {
         flex: 0 0 auto;
         width: $icon-sm;
@@ -89,7 +111,6 @@
       }
     }
 
-    // 제목 묶음은 가운데 정렬이지만 요약 문단만 왼쪽으로 되돌린다.
     .detail-summary {
       margin-top: $space-24;
       @include typo-ds('body', 'sm');
@@ -97,14 +118,31 @@
     }
   }
 
-  // 세 절이 같은 골격을 쓴다. 제목은 가운데, 본문은 왼쪽 정렬이다.
+  // 세 절이 같은 골격을 쓴다.
   .content {
     @include flex(column);
     gap: $space-32;
     padding: $space-40 $page-x;
+    background-color: $color-bg;
 
     & + .content {
       border-top: 1px solid $color-border-subtle;
+    }
+
+    .img-container {
+      width: 100%;
+
+      &.is-section {
+        width: 64px;
+      }
+      &.is-star {
+        // @include testBg();
+        width: 20px;
+        height: 20px;
+      }
+      img {
+        @include objectFit();
+      }
     }
 
     .content-header {
@@ -131,6 +169,20 @@
       .content-text {
         @include typo-ds('body', 'sm');
       }
+
+      // visitInfo 섹션의 정보 칩 (P1 시안)
+      .content-tags {
+        @include flex(row, center, center);
+        flex-wrap: wrap;
+        gap: $space-8;
+
+        .content-tag {
+          border: 1px solid $color-border-subtle;
+          padding: $space-4;
+          color: $color-text-muted;
+          @include typo-ds('label', 'xs');
+        }
+      }
     }
 
     .content-footer {
@@ -152,8 +204,8 @@
 
         .record-title {
           @include flex(row, flex-start, center);
-          gap: $space-8;
-          @include typo-ds('label', 'md');
+          gap: $space-4;
+          @include typo-ds('title', 'sm');
 
           .record-icon {
             color: $color-action-brand;
@@ -168,39 +220,47 @@
     }
   }
 
-  // 하단 고정 영역. 인증 버튼 자체는 전역 .btn-container 가 그린다 (templates/_step.scss).
-  // 바는 본문(24)보다 가장자리에 붙어 좌우 16 이고, 높이 68 안에서 세로 가운데다.
+  // 하단 고정 영역. 버튼은 전역 .btn-container 가 그린다 (templates/_step.scss). 좌우 16 · 높이 68.
   // .btn-container 기본값은 중앙 고정폭이라 여기서 전폭으로 되돌린다.
   .detail-actions {
-    flex-shrink: 0;
     border-top: 1px solid $color-border-subtle;
     height: $app-bar-height;
-    @include flex(row, flex-start, center);
-    gap: $space-20;
+
+    width: 100%;
+    @include flex(row, center, center);
+    gap: $space-24;
     padding: 0 $app-bar-x;
-    background-color: $color-bg;
+    @include tablet() {
+      @include flex(row, space-between, center);
+      padding: 0 $space-24;
+    }
+
+    background-color: $tabbar-bg;
 
     .detail-back {
-      flex: 0 0 auto;
-      border-radius: $radius-full;
-      width: $icon-lg;
-      height: $icon-lg;
+      @include border-radius($radius-full);
+      width: $icon-xl;
+      height: $icon-xl;
       @include flexCenter();
-      font-size: $typo-title-md;
 
       &:focus-visible {
         @include a11yFocusStyle();
       }
     }
 
-    .btn-container {
-      flex: 1 1 0;
-      padding: 0;
+    .detail-photo {
+      @include border-radius($radius-lg);
+      width: 100%;
+      // max-width: 264px;
+      padding: $space-16;
 
-      a {
-        flex: 1 1 0;
-        min-width: 0;
-        height: $control-md;
+      @include flexCenter();
+
+      background-color: $btn-primary-bg;
+      color: $btn-primary-text;
+
+      &:focus-visible {
+        @include a11yFocusStyle();
       }
     }
   }

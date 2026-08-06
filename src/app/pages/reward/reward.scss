@@ -1,12 +1,8 @@
 // reward.scss — 04 리워드.
-//
-// 3단 골격(.step · .step-scroll · .step-header · .step-body)은 templates/_step.scss 가 맡는다.
-// 제목 묶음이 골격 기본값과 달라 몇 가지를 덮는다 — 줄 간격 12 · 제목 bold · 설명 body md.
-// 선물 한 단계가 한 절이다. 절 안에서 제목 → 선물 카드 → CTA 를 세로로 잇는다.
+// 골격은 templates/_step.scss 가 맡는다. 선물 한 단계가 한 절이고 제목 → 카드 → CTA 를 세로로 잇는다.
 
 @use 'utils' as *;
 
-// 골격 값은 .step 이 들고 있고 여기서는 배경색만 얹는다.
 .reward {
   background-color: $color-bg-brand-sky;
 
@@ -32,22 +28,17 @@
     }
   }
 
-  // 하늘색 밴드와 흰 바탕의 경계. 위아래 색만 지정하고 크기는 건드리지 않는다 —
-  // 가로는 컴포넌트가 width: 100% 라 프레임 너비를 그대로 채우고,
-  // 높이는 시안대로 29px 로 고정된다.
+  // 밴드 경계 물결. 색만 지정한다 — 가로는 컴포넌트가 전폭을 채우고 높이는 시안대로 29px 고정이다.
   .reward-wave {
     --wave-top-color: #{$color-bg-brand-sky};
     --wave-bottom-color: #{$color-bg};
   }
 
-  // 물결 아래는 어느 상태에서든 흰 바탕이다. 불러오는 중·실패에도 색이 이어져야
-  // 물결의 아래쪽 면이 떠 보이지 않는다 — 그래서 흰색을 절이 아니라 여기서 깐다.
+  // 물결 아래는 어느 상태에서든 흰 바탕이어야 해 흰색을 절이 아니라 여기서 깐다.
   .step-body {
     padding-bottom: $space-24;
     background-color: $color-bg;
 
-    // 선물 한 단계가 한 절이다. 제목 → 선물 카드 → CTA 를 세로로 잇고
-    // 절 사이는 선으로만 나눈다.
     .content {
       @include flex(column);
       padding: $page-x;
@@ -78,8 +69,8 @@
           padding: $space-12;
           background-color: $color-bg-subtle;
 
-          // 사진 자산 미수령. 시안은 선물마다 배경색이 다른데(#dfdfdf · #ffecec)
-          // 그림 안의 색이라 토큰으로 빼지 않는다 — 사진이 오면 배경째 교체한다.
+          // 사진 자산 미수령 — 오면 배경째 교체한다.
+          // 시안 배경색(#dfdfdf · #ffecec)은 그림 안의 색이라 토큰으로 빼지 않는다.
           .record-img {
             border-radius: $radius-md;
             width: rem(96px); // 시안 실측. $thumb-sm(64)과 $thumb-md(128) 사이라 토큰이 없다
@@ -110,7 +101,7 @@
           }
         }
 
-        // 시안의 외곽선 상자가 곧 CTA 다. 잠긴 단계에서는 남은 곳 수가 문구로 들어온다.
+        // 시안의 외곽선 상자가 곧 CTA 다.
         .record-cta {
           @include button('secondary', 'md');
           border-color: $color-border-strong; // 시안 #6c6c6c — 카드보다 진한 선
@@ -134,7 +125,6 @@
       }
     }
 
-    // 발급된 리워드 코드
     .reward-code {
       margin: $space-16 $page-x 0;
       border: 1px solid $color-border-subtle;

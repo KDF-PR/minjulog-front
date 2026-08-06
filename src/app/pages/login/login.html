@@ -1,10 +1,10 @@
 <section class="login" [class.is-ready]="ready()">
-  <header class="login-header motion-fade-in">
+  <header class="login-header">
     <h2 class="login-title">로그인</h2>
     <p class="login-desc">인증코드를 받아 시작하세요</p>
   </header>
 
-  <div class="content motion-fade-in motion-delay-1">
+  <div class="content">
     <div class="content-header">
       <p class="method-label" id="login-method-label">인증 방식</p>
 
@@ -31,8 +31,7 @@
       </div>
     </div>
 
-    <!-- form 으로 감싸 모바일 키보드의 확인 키가 그대로 동작한다.
-         기본 submit 은 페이지를 새로 불러오므로 먼저 막는다. -->
+    <!-- form 이라 모바일 키보드 확인 키가 동작한다. 기본 submit 은 새로고침이라 먼저 막는다. -->
     <form class="content-body" (submit)="$event.preventDefault(); sendOtp(idRef.value)">
       <label class="field-label" for="login-identifier">
         {{ method() === 'email' ? '이메일' : '휴대폰 번호' }}
@@ -50,7 +49,7 @@
       />
 
       @if (error()) {
-        <p class="field-error" id="login-error" role="alert" animate.enter="motion-fade-enter">
+        <p class="field-error" id="login-error" role="alert">
           {{ error() }}
         </p>
       }

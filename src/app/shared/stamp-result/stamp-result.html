@@ -1,11 +1,11 @@
 <section class="stamp-result">
-  <div class="stamp-result-graphic motion-fade-in">
+  <div class="stamp-result-graphic">
     @if (view().mark) {
       <span class="stamp-result-mark" aria-hidden="true">{{ view().mark }}</span>
     }
   </div>
 
-  <div class="stamp-result-body motion-fade-in motion-delay-1">
+  <div class="stamp-result-body">
     <h2 class="stamp-result-title">{{ view().title }}</h2>
 
     @for (description of view().descriptions; track $index) {
@@ -19,7 +19,7 @@
 
   @if (view().showRewardCard) {
     <app-reward-notice
-      class="stamp-result-notice motion-fade-in motion-delay-2"
+      class="stamp-result-notice"
       linkLabel="보러가기"
       (linkSelect)="actionSelect.emit('viewRewards')"
     />

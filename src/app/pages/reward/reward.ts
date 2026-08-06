@@ -47,7 +47,6 @@ interface RewardItem extends RewardContent {
   ctaLabel: string;
 }
 
-/** CTA 문구는 세 갈래다 — 이미 받았는가, 지금 받을 수 있는가, 아직 몇 곳 남았는가 */
 function toCtaLabel(claimed: boolean, claimable: boolean, remaining: number): string {
   if (claimed) return '받은 리워드 확인';
   if (claimable) return '리워드 받기';
@@ -57,15 +56,8 @@ function toCtaLabel(claimed: boolean, claimable: boolean, remaining: number): st
 /**
  * 04 리워드 — 선물 두 단계를 절로 나눠 보여주는 화면.
  *
- * 절마다 「무엇을 받는가(카드)」와 「지금 받을 수 있는가(CTA)」를 세로로 잇는다.
- * 스탬프 목록은 이 화면에 두지 않는다 — 어디를 다녀왔는지는 내 방문기록이 맡는다.
- *
- * **자격 판정은 서버가 한다.** 방문 수로 화면에서 다시 계산하지 않고
- * `RewardService.canClaim()` 을 따른다.
- *
- * **로그인 없이 볼 수 있다.** 어떤 선물이 걸려 있는지는 참여를 정하기 전에 봐야 하는
- * 정보라 가드를 붙이지 않았다. 막는 곳은 「리워드 받기」 한 곳이다 —
- * 코드를 발급받는 순간이 기록을 남기는 순간이다.
+ * 자격 판정은 서버(`RewardService.canClaim()`) 몫이라 방문 수로 다시 계산하지 않는다.
+ * 가드 없이 열리고 로그인은 「리워드 받기」에서만 묻는다.
  */
 @Component({
   selector: 'app-reward',
@@ -134,10 +126,8 @@ export class Reward implements OnInit {
   }
 
   /**
-   * 같은 tier 를 다시 눌러도 코드는 바뀌지 않는다. 자격 미달이면 403 이 온다.
-   *
-   * 여기가 로그인을 묻는 지점이다. 화면은 열어 두고 발급만 막는다 —
-   * 돌아올 자리를 `returnUrl` 로 들려 보낸다.
+   * 같은 tier 를 다시 눌러도 코드는 바뀌지 않고, 자격 미달이면 403 이 온다.
+   * 로그인은 여기서 묻는다 — 돌아올 자리를 `returnUrl` 로 들려 보낸다.
    */
   protected claim(tier: RewardTier): void {
     if (!this.isSignedIn()) {
@@ -162,10 +152,7 @@ export class Reward implements OnInit {
     });
   }
 
-  /**
-   * 가드가 없어 로그인 여부를 아무도 확인해 주지 않는다. 여기서 먼저 물어본다.
-   * 미로그인이면 `fetchUser` 가 `null` 을 돌려주고 오류로 취급하지 않는다.
-   */
+  /** 가드가 없어 `fetchUser` 로 로그인부터 확인한다. 미로그인은 `null` 이고 오류가 아니다 */
   private load(): void {
     this.loadState.set('loading');
     this.auth

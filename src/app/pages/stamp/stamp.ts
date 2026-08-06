@@ -13,20 +13,14 @@ import { RewardService } from '../../core/reward.service';
 import { SpaceService } from '../../core/space.service';
 import { REWARD_TIERS } from '../../core/models';
 
-/** 결과 상태를 주소로 넘길 때 쓰는 쿼리 파라미터 이름 */
 const STATUS_PARAM = 'status';
 
 /**
- * 사진으로 방문을 인증하는 화면 (`/stamp/:slug`).
+ * 사진으로 방문을 인증하는 화면 (`/stamp/:slug`). `status` 가 비면 촬영기, 있으면 결과다.
  *
- * 장소 상세 하단 「사진으로 인증하기」가 여기로 보낸다. 들어오면 카메라가 바로 열리고,
- * 사진을 올리면 같은 자리에 결과가 들어선다. 한 번에 장소 한 곳이 끝난다.
- *
- * **상태가 곧 화면이다.** `status` 가 비어 있으면 촬영기, 값이 있으면 결과 화면이다.
- * 결과 다섯 장은 골격이 같아 `StampResult` 하나가 문구와 CTA 만 바꿔 그린다 —
- * 화면을 다섯 개로 나누면 여백·타이포·버튼 폭을 다섯 곳에서 맞춰야 한다.
- *
- * `status` 쿼리로 결과 화면을 직접 열 수도 있다. 시안 확인용이고 사용자 흐름에는 없다.
+ * 결과 다섯 장은 `StampResult` 하나가 문구와 CTA 만 바꿔 그린다 —
+ * 화면을 나누면 여백·타이포·버튼 폭을 다섯 곳에서 맞춰야 한다.
+ * `status` 쿼리로 결과 화면을 직접 열 수 있다 (시안 확인용).
  */
 @Component({
   selector: 'app-stamp',
@@ -90,8 +84,6 @@ export class Stamp implements OnInit {
   }
 
   /**
-   * 찍은 사진을 올린다.
-   *
    * 자격 판정은 서버 몫이라 업로드 성공 뒤 `RewardService` 를 다시 물어 상태를 정한다.
    * 방문 수로 화면에서 계산하면 서버 재계산과 어긋난다.
    */

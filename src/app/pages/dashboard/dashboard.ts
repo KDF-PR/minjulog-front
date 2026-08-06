@@ -20,7 +20,7 @@ export class Dashboard implements OnInit {
   readonly apiResult = signal<string | null>(null);
 
   ngOnInit(): void {
-    // DOM 을 먼저 그린 다음 프레임에서 모션을 시작한다 (첫 프레임에 붙으면 재생되지 않음)
+    // 첫 프레임에 .is-ready 가 붙으면 모션이 재생되지 않는다
     requestAnimationFrame(() => this.ready.set(true));
   }
 

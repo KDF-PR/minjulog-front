@@ -67,10 +67,10 @@ export interface SpaceContent {
   address: string;
   /** 한 줄 정체성 — 상세 화면 최상단 (예: `공원 · 열린 공간`) */
   category: string;
+  /** 한 줄 소개 — 제목 아래 부제 (예: `민주주의를 기억하는 여행의 출발점`) */
+  tagline: string;
   /** 요약 2~3문장 */
   summary: string;
-  /** 이곳의 이야기 — 접기 영역 */
-  description: string;
   /** 인증 팁 — 어디를 담으면 되는지 */
   photoGuide: string;
   /** 일일 추천 코스 순번. 방문 조건과 무관한 참고값 */
@@ -78,40 +78,63 @@ export interface SpaceContent {
   /** 방문 완료 스탬프 마커 색 */
   markColor: StampMark;
 
+  /** 상세 화면 본문. **배열 순서가 곧 화면 순서다** */
+  sections: SpaceSection[];
+
   // ── 선택 항목 ─────────────────────────────────────────────
   // 공식 콘텐츠를 못 받아 비어 있는 장소가 있다. **없으면 그 영역을 통째로 숨긴다.**
 
-  /** 「자세히 둘러보면 좋을 곳」 — 그 장소 안에서 눈여겨볼 지점. 없으면 절을 통째로 숨긴다 */
-  viewPoints?: SpaceViewPoint[];
-  /** 이곳의 이야기 아래 외부 링크. 없으면 숨긴다 */
-  storyLink?: SpaceLink;
   /** 대표 사진. `/assets/images/spaces/<slug>.jpg` */
   heroImage?: string;
   /** 예시 인증 사진. `/assets/images/spaces/<slug>-example.jpg` */
   photoExample?: string;
-  /** 방문 정보 — 개방시간 · 요금 · 교통 */
-  visitInfo?: SpaceVisitInfo;
   /** 지도 미리보기·길찾기용 좌표 */
   coords?: SpaceCoords;
   /** 가까운 다른 장소. 상세 화면 하단에서 다음 걸음을 잇는다 */
   nearby?: NearbySpace[];
 }
 
-/** 현장에서 필요한 정보만 담는다. 없는 항목은 화면에서 뺀다 */
-export interface SpaceVisitInfo {
-  /** 예: `상시 개방`, `09:30 – 17:30` */
-  openingHours?: string;
-  /** 예: `무료 관람` */
-  admissionFee?: string;
-  /** 예: `혜화역 2번 출구` */
-  transit?: string;
-  /** 휴관일 등 보충 안내 */
-  note?: string;
+/** 상세 화면 섹션 종류. 화면 렌더러(`@switch`)와 1:1 이다 */
+export type SpaceSectionType = 'story' | 'map' | 'viewPoints' | 'visitInfo';
+
+/**
+ * 상세 화면 섹션 하나. `type` 이 정하고, 종류마다 쓰는 필드가 다르다.
+ *
+ * | 종류 | 쓰는 필드 |
+ * | story | paragraphs · link |
+ * | map | mapLinks |
+ * | viewPoints | points |
+ * | visitInfo | paragraphs · tags |
+ *
+ * 제목·아이콘은 종류별 기본값을 화면(`SECTION_DEFAULTS`)이 들고,
+ * `title` 은 덮어쓸 때만 넣는다.
+ */
+export interface SpaceSection {
+  type: SpaceSectionType;
+  /** 기본 제목(「이곳의 이야기」 등)을 덮어쓸 때만 */
+  title?: string;
+  /** 본문 문단. 문단 하나가 배열 원소 하나다 */
+  paragraphs?: string[];
+  /** 본문 아래 외부 링크 */
+  link?: SpaceLink;
+  /** 지도 앱별 확정 주소. 없는 앱은 검색어 링크로 대신한다 */
+  mapLinks?: SpaceMapLinks;
+  /** 둘러볼 지점 목록 */
+  points?: SpaceViewPoint[];
+  /** 정보 칩 (예: `관람 60분`) */
+  tags?: string[];
 }
 
 export interface SpaceCoords {
   lat: number;
   lng: number;
+}
+
+/** 지도 앱별 바로가기 주소. 없는 앱은 검색어로 만든 링크가 대신한다 (`MapLinks`) */
+export interface SpaceMapLinks {
+  naver?: string;
+  kakao?: string;
+  google?: string;
 }
 
 export interface NearbySpace {

@@ -5,9 +5,7 @@ import { ScrollTopDirective } from '../../utils/scroll-top.directive';
 
 /**
  * 01 메인 — 투어 소개와 시작 지점.
- *
- * 운영 기간 문구는 `spaces.content.ts` 의 `OPERATION_PERIOD` 한 곳에서 가져온다.
- * 화면에 직접 적으면 기간이 바뀔 때 콘텐츠와 화면이 어긋난다.
+ * 운영 기간 문구는 `OPERATION_PERIOD` 한 곳에서 가져온다 — 화면에 직접 적으면 기간이 바뀔 때 어긋난다.
  */
 @Component({
   selector: 'app-main',
@@ -26,7 +24,7 @@ export class Main implements OnInit {
   protected readonly periodLabel = OPERATION_PERIOD.label;
 
   ngOnInit(): void {
-    // DOM 을 먼저 그린 다음 프레임에서 모션을 시작한다 (첫 프레임에 붙으면 재생되지 않음)
+    // 첫 프레임에 .is-ready 가 붙으면 모션이 재생되지 않는다
     requestAnimationFrame(() => this.ready.set(true));
   }
 }

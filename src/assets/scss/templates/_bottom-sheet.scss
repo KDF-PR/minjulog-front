@@ -1,0 +1,52 @@
+// _bottom-sheet.scss — bottom sheet 공통 골격 (CSS 방출, 전역 1회).
+//
+// MatBottomSheet 를 쓰지 않는다 — CDK 오버레이는 브라우저 뷰포트 하단에 붙는데,
+// 이 앱은 태블릿 이상에서 화면을 고정 프레임(.contents-wrapper 480×720)으로 잘라
+// 시트가 프레임 밖에 뜬다. Material 에서는 모션 값(utils/_motion.scss)과
+// scrim·라운드 감각만 옮겼고, 포커스 가둠은 CDK cdkTrapFocus 만 쓴다.
+//
+// 딤·시트가 absolute 라 position: relative + overflow: hidden 인 화면 골격(.step)
+// 안에 갇힌다. 내부는 header 고정 / body 스크롤 / footer 고정 3단이다.
+
+@use '../utils' as *;
+
+.bottom-sheet-dim {
+  z-index: $z-index-dim;
+  position: absolute;
+  inset: 0;
+  background-color: $color-dim;
+}
+
+.bottom-sheet {
+  z-index: $z-index-dialog;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid $color-border-subtle;
+  border-top-left-radius: $radius-lg;
+  border-top-right-radius: $radius-lg;
+  max-height: 85%;
+  overflow: hidden; // 시트 전체가 아니라 body 만 스크롤한다
+  overscroll-behavior: contain; // 스크롤이 시트 밖으로 이어지지 않게
+  @include flex(column);
+  background-color: $color-bg;
+  box-shadow: 0 rem(-4px) rem(24px) rgb(0 0 0 / 0.16);
+
+  .bottom-sheet-header {
+    flex: 0 0 auto;
+    padding: $space-24 $space-24 $space-16;
+  }
+
+  // min-height: 0 이 없으면 flex 자식이 내용 높이 아래로 줄지 않아 스크롤이 생기지 않는다
+  .bottom-sheet-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 $space-24 $space-16;
+  }
+
+  .bottom-sheet-footer {
+    flex: 0 0 auto;
+  }
+}

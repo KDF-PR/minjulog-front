@@ -8,13 +8,21 @@
       } @else if (loadState() === 'error') {
         <p class="page-state" role="alert">장소 정보를 불러오지 못했어요</p>
       } @else if (spaceVisit(); as item) {
-        <div class="detail-hero motion-fade-in">
+        <div class="detail-hero">
           <figure class="detail-hero-figure">
             @if (item.space.heroImage) {
-              <img [src]="item.space.heroImage" [alt]="item.space.name + ' 대표 이미지'" />
+              <img
+                class="space-img"
+                [src]="item.space.heroImage"
+                [alt]="item.space.name + ' 대표 이미지'"
+              />
             } @else {
-              <!-- 대표 이미지 자산 미수령 — 자리표시자 -->
-              <figcaption class="detail-hero-caption">대표 이미지</figcaption>
+              <!-- 대표 이미지 자산 미수령 — 수령 전까지 목록과 같은 thumb 를 쓴다 -->
+              <lazyLoadImg
+                class="space-img"
+                [src]="'/assets/images/spaces/' + item.space.slug + '/thumb'"
+                [alt]="item.space.name + ' 대표 이미지'"
+              />
             }
 
             <!-- 방문 전에는 「방문 전」 도장으로 바뀐다. 자리와 크기만 이 화면이 정한다 -->
@@ -24,19 +32,18 @@
               [visited]="isVisited()"
             />
           </figure>
+          <div class="detail-hero-bg-graphic">
+            <app-wave-divider class="hero-wave" />
+          </div>
         </div>
-
-        <div class="detail-head motion-fade-in motion-delay-1">
+        <app-wave-divider class="detail-wave" />
+        <div class="detail-header">
           <h2 class="detail-title">{{ item.space.name }}</h2>
-          <p class="detail-subtitle">{{ item.space.category }}</p>
+          <!-- <p class="detail-subtitle">{{ item.space.category }}</p> -->
 
           <p class="detail-address">
-            <span class="detail-address-icon" aria-hidden="true">
-              <!-- 위치 아이콘 자산 미수령 — 임시 SVG -->
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                <path d="M12 21c4-4.5 6-7.6 6-10.2A6 6 0 0 0 6 10.8C6 13.4 8 16.5 12 21Z" />
-                <circle cx="12" cy="10.5" r="2.2" />
-              </svg>
+            <span class="icon-container" aria-hidden="true">
+              <lazyLoadImg [src]="'/assets/images/ui/icons/marker'" />
             </span>
             {{ item.space.address }}
           </p>
@@ -44,60 +51,86 @@
           <p class="detail-summary">{{ item.space.summary }}</p>
         </div>
 
-        <section class="content motion-fade-in motion-delay-2" aria-labelledby="detail-way-title">
-          <div class="content-header">
-            <span class="content-icon" aria-hidden="true"></span>
-            <h3 class="content-title" id="detail-way-title">찾아가는 길</h3>
-          </div>
-
-          <div class="content-body">
-            <p class="content-text">{{ item.space.address }}</p>
-            <app-map-links [query]="item.space.address" />
-          </div>
-        </section>
-
-        <section class="content" aria-labelledby="detail-story-title">
-          <div class="content-header">
-            <span class="content-icon" aria-hidden="true"></span>
-            <h3 class="content-title" id="detail-story-title">이곳의 이야기</h3>
-          </div>
-
-          <div class="content-body">
-            <p class="content-text">{{ item.space.description }}</p>
-          </div>
-
-          @if (item.space.storyLink; as link) {
-            <div class="content-footer">
-              <a
-                class="content-link link"
-                [href]="link.url"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {{ link.label }} <span aria-hidden="true">↗</span>
-              </a>
-            </div>
-          }
-        </section>
-
-        @if (item.space.viewPoints; as viewPoints) {
-          <section class="content" aria-labelledby="detail-points-title">
+        <!-- 상세 본문. 배열 순서가 곧 화면 순서다 — 종류별 제목·아이콘은 sectionDefaults -->
+        @for (section of item.space.sections; track $index) {
+          <section
+            class="content"
+            [class.is-map]="section.type === 'map'"
+            [attr.aria-labelledby]="'detail-section-title-' + $index"
+          >
             <div class="content-header">
-              <span class="content-icon" aria-hidden="true"></span>
-              <h3 class="content-title" id="detail-points-title">자세히 둘러보면 좋을 곳</h3>
+              <span class="img-container is-section" aria-hidden="true">
+                <lazyLoadImg
+                  [src]="
+                    '/assets/images/space-detail/section/' + sectionDefaults[section.type].icon
+                  "
+                />
+              </span>
+              <h3 class="content-title" [id]="'detail-section-title-' + $index">
+                {{ section.title ?? sectionDefaults[section.type].title }}
+              </h3>
+              @if (section.type === 'map') {
+                <p class="content-text is-text-center">{{ item.space.address }}</p>
+              }
             </div>
 
-            <ul class="content-body record-list">
-              @for (point of viewPoints; track point.name) {
-                <li class="record">
-                  <h4 class="record-title">
-                    <span class="record-icon" aria-hidden="true">◇</span>
-                    {{ point.name }}
-                  </h4>
-                  <p class="record-summary">{{ point.desc }}</p>
-                </li>
+            @switch (section.type) {
+              @case ('map') {
+                <div class="content-body">
+                  <app-map-links [query]="item.space.address" [urls]="section.mapLinks" />
+                </div>
               }
-            </ul>
+              @case ('story') {
+                <div class="content-body">
+                  @for (paragraph of section.paragraphs; track $index) {
+                    <p class="content-text">{{ paragraph }}</p>
+                  }
+                </div>
+
+                @if (section.link; as link) {
+                  <div class="content-footer">
+                    <a
+                      class="content-link link"
+                      [href]="link.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {{ link.label }} <span aria-hidden="true">↗</span>
+                    </a>
+                  </div>
+                }
+              }
+              @case ('viewPoints') {
+                <ul class="content-body record-list">
+                  @for (point of section.points; track point.name) {
+                    <li class="record">
+                      <h4 class="record-title">
+                        <span class="img-container is-star" aria-hidden="true">
+                          <lazyLoadImg [src]="'/assets/images/ui/icons/star'" />
+                        </span>
+                        {{ point.name }}
+                      </h4>
+                      <p class="record-summary">{{ point.desc }}</p>
+                    </li>
+                  }
+                </ul>
+              }
+              @case ('visitInfo') {
+                <div class="content-body">
+                  @for (paragraph of section.paragraphs; track $index) {
+                    <p class="content-text">{{ paragraph }}</p>
+                  }
+
+                  @if (section.tags; as tags) {
+                    <ul class="content-tags">
+                      @for (tag of tags; track tag) {
+                        <li class="content-tag">{{ tag }}</li>
+                      }
+                    </ul>
+                  }
+                </div>
+              }
+            }
           </section>
         }
       } @else {
@@ -108,15 +141,25 @@
 
   @if (spaceVisit(); as item) {
     <div class="detail-actions">
-      <button type="button" class="detail-back" (click)="goBack()" aria-label="뒤로 가기">
-        <span aria-hidden="true">←</span>
+      <button type="button" class="detail-back" (click)="goToList()" aria-label="장소 목록으로">
+        <span class="icon-container">
+          <lazyLoadImg [src]="'/assets/images/ui/icons/prev'" />
+        </span>
+        <!-- <span aria-hidden="true">←</span> -->
       </button>
 
-      <div class="btn-container">
-        <!-- 인증의 시작점은 이 버튼 하나다. 누르면 카메라가 바로 열린다 -->
-        <a class="is-primary" [routerLink]="['/stamp', item.space.slug]">사진으로 방문 인증하기</a>
-      </div>
+      <!-- 인증의 시작점은 이 버튼 하나다. 카메라 전에 안내 시트(P1)를 먼저 연다 -->
+      <button type="button" class="detail-photo is-primary" (click)="openGuide()">
+        사진으로 방문 인증하기
+      </button>
     </div>
+
+    <app-photo-guide-sheet
+      [open]="guideOpen()"
+      [space]="item.space"
+      (close)="closeGuide()"
+      (confirm)="startCapture()"
+    />
   }
 </section>
 

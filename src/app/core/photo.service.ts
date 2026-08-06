@@ -7,12 +7,12 @@
 
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable, delay, finalize, map, of, tap } from 'rxjs';
+import { EMPTY, Observable, delay, finalize, map, of, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { PhotoDto, PhotosResponseDto, UploadPhotoResponseDto } from './api.dto';
 import { toVisit, toVisitFromUpload } from './api.mapper';
 import { Visit } from './models';
-import { VISITS_MOCK } from './mock/visits.mock';
+import { activeMockScenario, buildVisitsMock } from './mock/visits.mock';
 
 /** mock 응답 지연(ms) — 로딩 상태가 화면에 보이도록 */
 const MOCK_LATENCY = 300;
@@ -43,7 +43,7 @@ export class PhotoService {
   loadVisits(): Observable<Visit[]> {
     // mock 전환 지점 — Supabase 준비 후 environment.useMockApi = false
     const source: Observable<PhotoDto[]> = environment.useMockApi
-      ? of(VISITS_MOCK).pipe(delay(MOCK_LATENCY))
+      ? of(buildVisitsMock(activeMockScenario())).pipe(delay(MOCK_LATENCY))
       : this.http.get<PhotosResponseDto>(`${this.base}/api/photos`).pipe(map((res) => res.photos));
 
     return source.pipe(
@@ -61,6 +61,8 @@ export class PhotoService {
    * `Content-Type` 을 직접 넣지 않는다. 브라우저가 boundary 를 포함해 만들어야 파일이 인식된다.
    */
   uploadPhoto(spaceId: string, photo: Blob): Observable<Visit> {
+    // 빈 spaceId 는 SpaceService 의 응답 전 초기값이다 — 서버로 보내지 않고 오류로 돌린다
+    if (!spaceId) return throwError(() => new Error('spaceId 이전에 장소 목록 응답이 필요하다'));
     if (this.uploading()) return EMPTY; // 중복 제출 차단
     this.uploading.set(true);
 

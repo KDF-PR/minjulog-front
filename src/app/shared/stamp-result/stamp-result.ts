@@ -3,10 +3,7 @@ import { RewardNotice } from '../reward-notice/reward-notice';
 
 /**
  * 사진을 올린 뒤 보여주는 결과 화면의 상태.
- *
- * 시안 `08` 계열 5장은 **원형 그래픽 → 제목 → 보조 문구 → CTA 1~2개** 로
- * 골격이 같고 문구와 CTA 개수만 다르다. 화면을 다섯 개 만들면 여백·타이포·버튼 폭을
- * 다섯 곳에서 맞춰야 해 한 컴포넌트로 묶고 이 값으로만 가른다.
+ * 시안 `08` 계열은 골격이 같고 문구·CTA 만 달라 한 컴포넌트로 묶고 이 값으로만 가른다.
  */
 export type StampResultStatus =
   | 'success' // 08 정상 적립
@@ -49,7 +46,6 @@ interface ResultView {
   descriptions: readonly string[];
   /** 테두리 박스로 감싸는 안내 문구 */
   boxedDescription: string;
-  /** 받을 수 있는 리워드 안내 카드 노출 여부 */
   showRewardCard: boolean;
   actions: readonly ResultAction[];
 }

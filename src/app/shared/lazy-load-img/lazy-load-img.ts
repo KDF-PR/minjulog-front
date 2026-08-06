@@ -2,15 +2,8 @@ import { Component, computed, input } from '@angular/core';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 /**
- * 지연 로딩 이미지 — 기본 경로만 넘기면 @0.5x(placeholder) → @2x(실제)로 자동 구성.
- *
- * 사용:
- *   <lazyLoadImg [src]="'assets/images/ui/graphics/result/guest_kya'" alt="MC 김윤아" />
- * 렌더:
- *   <img [defaultImage]="'assets/…/guest_kya@0.5x.png'" [lazyLoad]="'assets/…/guest_kya@2x.png'" alt="MC 김윤아" />
- *
- * `:host { display: contents }` 라 래퍼가 레이아웃에 끼지 않아 기존 img 스타일이 그대로 적용된다.
- * (LazyLoadImageModule은 SHARED_IMPORTS에 있으므로 어느 컴포넌트에서나 사용 가능)
+ * 지연 로딩 이미지. 기본 경로만 넘기면 @0.5x(placeholder) → @2x(실제)로 구성한다.
+ * `:host { display: contents }` 라 래퍼가 레이아웃에 끼지 않는다.
  */
 @Component({
   selector: 'lazyLoadImg',
@@ -30,7 +23,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 export class LazyLoadImg {
   /** 배율·확장자 suffix를 뺀 이미지 기본 경로 */
   readonly src = input.required<string>();
-  /** 대체 텍스트 (선택 — 장식 이미지는 생략하면 빈 alt) */
+  /** 대체 텍스트. 장식 이미지는 생략해 빈 alt 로 둔다 */
   readonly alt = input('');
   /** 확장자 (기본 png) */
   readonly ext = input('png');

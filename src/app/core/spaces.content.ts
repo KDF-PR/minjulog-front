@@ -41,26 +41,37 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '용산구',
     address: '서울 용산구 한강대로71길 37',
     category: '기념관 · 전시',
-    summary: '한국 민주화운동의 역사를 기록하고 전시하는 공간이에요.',
-    description:
-      '옛 남영동 대공분실 자리에 세워졌어요. 고문과 감시가 이뤄지던 건물을 그대로 두고, ' +
-      '그 위에 기억하는 공간을 얹었어요. 여섯 곳 가운데 이곳만 꼭 들러야 해요.',
+    tagline: '민주주의를 기억하는 여행의 출발점', // 시안 — P1 `285:2986`
+    summary:
+      '과거 국가폭력이 자행되던 남영동 대공분실이 민주주의를 배우고 기억하는 기념관이 되었습니다.',
     photoGuide: '기념관 입구나 상징 조형물이 보이게 한 장 담아 주세요.',
     courseOrder: 1,
     markColor: 'pink', // 확정 — 시안 `02 내 방문기록`
-    // 아래 두 항목은 시안 `space-detail` 에 적힌 문구를 그대로 옮겼다.
-    // 나머지 다섯 곳은 시안에 없어 비워 두고, 화면은 없으면 그 절을 숨긴다.
-    viewPoints: [
+    sections: [
+      { type: 'map' },
       {
-        name: 'M2(대공분실) 509호',
-        desc: '박종철 열사가 마지막으로 머물렀던 조사실',
+        // 문구는 시안 `space-detail` 에서 옮겼다
+        type: 'story',
+        paragraphs: [
+          '민주화운동기념관은 과거 국가폭력의 상징이었던 남영동 대공분실 자리에 조성된 공간으로, 독재정권의 어두운 역사와 이를 극복한 민주주의의 이야기를 담고 있습니다.',
+          '김근태, 리영희 선생을 비롯한 수많은 민주화운동가들이 이곳에서 고문을 당했고, 박종철 열사의 죽음은 1987년 6월 민주항쟁의 불씨가 되었습니다.',
+        ],
       },
+      // 관람 시간·휴관일(visitInfo)은 공식 안내를 받아 채운다 — 지금은 두지 않는다
       {
-        name: 'E(교육동) 4층 민주마루 발코니',
-        desc: '대공분실과 남영역 일대를 한눈에 내려다볼 수 있는 전망 공간',
+        type: 'viewPoints',
+        points: [
+          {
+            name: 'M2(대공분실) 509호',
+            desc: '박종철 열사가 마지막으로 머물렀던 조사실',
+          },
+          {
+            name: 'E(교육동) 4층 민주마루 발코니',
+            desc: '대공분실과 남영역 일대를 한눈에 내려다볼 수 있는 전망 공간',
+          },
+        ],
       },
     ],
-    // 관람 시간·휴관일은 공식 안내를 받아 채운다 — 지금은 비워 둔다
     nearby: [],
   },
   {
@@ -70,11 +81,18 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '종로구',
     address: '서울 종로구 신영동 산25-1',
     category: '교류 · 쉼',
+    tagline: '북한산 자락에서 잠시 쉬어 가는 곳', // 임시 — 확정 문구 오면 교체
     summary: '도심 속 청소년과 시민을 위한 숙박·문화 교류 공간이에요.',
-    description: '북한산 자락에 있어 도심에서 잠시 벗어나 쉬어 갈 수 있는 곳이에요.',
     photoGuide: '건물 외관이나 안내 표지가 보이게 찍어 주세요.',
     courseOrder: 2,
     markColor: 'lemon', // 확정 — 겹치지 않는 브랜드 색으로 배정
+    sections: [
+      { type: 'map' },
+      {
+        type: 'story',
+        paragraphs: ['북한산 자락에 있어 도심에서 잠시 벗어나 쉬어 갈 수 있는 곳이에요.'],
+      },
+    ],
   },
   {
     slug: 'myeongdong-cathedral',
@@ -83,18 +101,27 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '중구',
     address: '서울 중구 명동길 74',
     category: '성당 · 상징 공간',
+    tagline: '시민의 목소리가 모여들던 피난처', // 임시 — 확정 문구 오면 교체
     summary: '민주화운동 시기 시민들의 목소리가 모였던 성당이에요.',
-    description:
-      '1970~80년대 농성과 집회가 이어지며 피난처 역할을 했어요. ' +
-      '지금도 미사가 열리는 공간이라 방문 전에 시간을 확인하면 좋아요.',
     photoGuide: '성당 전경이나 정문이 보이게 담아 주세요. 미사 중에는 조용히 부탁드려요.',
     courseOrder: 3,
     markColor: 'lime', // 확정 — 겹치지 않는 브랜드 색으로 배정
-    // v3 `09 장소 상세 · 방문 완료` 시안 문구
-    visitInfo: {
-      openingHours: '방문 전 미사 시간 확인',
-      transit: '명동역 6번 출구',
-    },
+    sections: [
+      { type: 'map' },
+      {
+        type: 'story',
+        paragraphs: [
+          '1970~80년대 농성과 집회가 이어지며 피난처 역할을 했어요.',
+          '지금도 미사가 열리는 공간이라 방문 전에 시간을 확인하면 좋아요.',
+        ],
+      },
+      // v3 `09 장소 상세 · 방문 완료` 시안 문구
+      {
+        type: 'visitInfo',
+        paragraphs: ['방문 전 미사 시간을 확인해 주세요.'],
+        tags: ['명동역 6번 출구'],
+      },
+    ],
     nearby: [
       { slug: 'marronnier-park', walkMinutes: 20 },
       { slug: 'jeon-taeil-bridge', walkMinutes: 10 },
@@ -107,18 +134,25 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '종로구',
     address: '서울 종로구 대학로8길 1',
     category: '공원 · 열린 공간',
+    tagline: '대학로 한복판의 열린 광장', // 임시 — 확정 문구 오면 교체
     summary: '대학로 한복판, 누구에게나 열린 광장이에요.',
-    description:
-      '1980년대부터 시민들이 목소리를 나누고, 공연과 전시가 열리는 열린 마당으로 자리 잡았어요.',
     photoGuide: '마로니에 나무나 상징 조형물이 보이게 한 장 담아 주세요. 구도는 자유롭게요.',
     courseOrder: 4,
     markColor: 'skyblue', // 확정 — 시안 `02 내 방문기록`
-    // v3 `08 장소 상세 · 미방문` 시안 문구
-    visitInfo: {
-      openingHours: '상시 개방',
-      admissionFee: '무료',
-      transit: '혜화역 2번 출구',
-    },
+    sections: [
+      { type: 'map' },
+      {
+        type: 'story',
+        paragraphs: [
+          '1980년대부터 시민들이 목소리를 나누고, 공연과 전시가 열리는 열린 마당으로 자리 잡았어요.',
+        ],
+      },
+      // v3 `08 장소 상세 · 미방문` 시안 문구
+      {
+        type: 'visitInfo',
+        tags: ['상시 개방', '무료', '혜화역 2번 출구'],
+      },
+    ],
     nearby: [
       { slug: 'jeon-taeil-bridge', walkMinutes: 12 },
       { slug: 'myeongdong-cathedral', walkMinutes: 20 },
@@ -131,13 +165,21 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '종로구',
     address: '서울 종로구 청계천로 (버들다리)',
     category: '다리 · 기억 공간',
+    tagline: '스물두 살의 외침을 기억하는 다리', // 임시 — 확정 문구 오면 교체
     summary: '노동운동가 전태일을 기리는 청계천 위 다리예요.',
-    description:
-      '1970년 이곳 평화시장 앞에서 스물두 살 전태일이 노동자의 권리를 외쳤어요. ' +
-      '다리 위에 그를 기리는 동상과 동판이 있어요.',
     photoGuide: '전태일 동상이나 다리 이름 표지가 보이게 찍어 주세요.',
     courseOrder: 5,
     markColor: 'green', // 확정 — 겹치지 않는 브랜드 색으로 배정
+    sections: [
+      { type: 'map' },
+      {
+        type: 'story',
+        paragraphs: [
+          '1970년 이곳 평화시장 앞에서 스물두 살 전태일이 노동자의 권리를 외쳤어요.',
+          '다리 위에 그를 기리는 동상과 동판이 있어요.',
+        ],
+      },
+    ],
   },
   {
     slug: 'gwanghwamun-square',
@@ -146,11 +188,20 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '종로구',
     address: '서울 종로구 세종대로 172',
     category: '광장 · 열린 공간',
+    tagline: '함께 모여 목소리를 내온 서울의 광장', // 임시 — 확정 문구 오면 교체
     summary: '시민들이 모여 목소리를 내온 서울의 대표 광장이에요.',
-    description: '집회와 추모, 축제가 모두 열려온 자리예요. 동선이 넓어 천천히 둘러보기 좋아요.',
     photoGuide: '광장 전경이나 대표 조형물이 보이게 담아 주세요.',
     courseOrder: 6,
     markColor: 'orange', // 확정 — 시안 `02 내 방문기록`
+    sections: [
+      { type: 'map' },
+      {
+        type: 'story',
+        paragraphs: [
+          '집회와 추모, 축제가 모두 열려온 자리예요. 동선이 넓어 천천히 둘러보기 좋아요.',
+        ],
+      },
+    ],
   },
 ] as const;
 

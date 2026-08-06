@@ -5,6 +5,7 @@
  * `04` 는 방문 수만으로 재현되지 않는다 — 3곳이지만 필수(민주화운동기념관)를 빼야 한다.
  */
 
+import { signal } from '@angular/core';
 import { PhotoDto } from '../api.dto';
 import { SpaceSlug } from '../models';
 import { MOCK_SPACE_ID } from './spaces.mock';
@@ -17,8 +18,19 @@ export type MockVisitScenario =
   | 'firstComplete' // 05 · 필수 포함 3곳
   | 'allComplete'; // 06 · 6곳
 
-/** 지금 볼 화면. 개발 중 이 값만 바꾼다 */
+export const MOCK_VISIT_SCENARIOS: MockVisitScenario[] = [
+  'empty',
+  'partial',
+  'requiredMissing',
+  'firstComplete',
+  'allComplete',
+];
+
+/** 앱 시작 시 볼 화면. 실행 중 전환은 `activeMockScenario` 로 한다 */
 export const MOCK_SCENARIO: MockVisitScenario = 'partial';
+
+/** 개발 도구(`DevScenario`)가 실행 중에 바꾼다. 바꾼 뒤 `loadVisits()` 를 다시 불러야 반영된다 */
+export const activeMockScenario = signal<MockVisitScenario>(MOCK_SCENARIO);
 
 const SCENARIO_SLUGS: Record<MockVisitScenario, SpaceSlug[]> = {
   empty: [],
@@ -59,5 +71,3 @@ export function buildVisitsMock(scenario: MockVisitScenario = MOCK_SCENARIO): Ph
     .map(toPhotoDto)
     .sort((a, b) => b.created_at.localeCompare(a.created_at));
 }
-
-export const VISITS_MOCK: PhotoDto[] = buildVisitsMock();

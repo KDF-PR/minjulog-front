@@ -13,7 +13,7 @@ import { environment } from '../../environments/environment';
 import { SpaceDto, SpacesResponseDto } from './api.dto';
 import { toSpace } from './api.mapper';
 import { ProgressState, REWARD_TIERS, Space, SpaceVisit } from './models';
-import { findContentByName } from './spaces.content';
+import { REQUIRED_SPACE_SLUG, SPACES_CONTENT, findContentByName } from './spaces.content';
 import { SPACES_MOCK } from './mock/spaces.mock';
 import { PhotoService } from './photo.service';
 
@@ -23,13 +23,26 @@ const MOCK_LATENCY = 300;
 /** 1차 리워드 기준 방문 수 */
 const FIRST_TIER = REWARD_TIERS[0];
 
+/**
+ * 응답을 받기 전에도 목록을 그릴 초기값.
+ *
+ * 목록 화면이 쓰는 값(이름·지역·마크 색·slug)은 전부 프론트 콘텐츠라 서버를 기다릴 이유가 없다.
+ * 서버만 아는 값은 uuid 하나이고, `spaceId: ''` 는 "아직 서버 값이 아니다"라는 표시다 —
+ * 빈 값이 업로드로 새어 나가지 않도록 `PhotoService.uploadPhoto()` 가 차단한다.
+ */
+const INITIAL_SPACES: Space[] = SPACES_CONTENT.map((content) => ({
+  ...content,
+  spaceId: '',
+  isRequired: content.slug === REQUIRED_SPACE_SLUG,
+})).sort((a, b) => a.courseOrder - b.courseOrder);
+
 @Injectable({ providedIn: 'root' })
 export class SpaceService {
   private http = inject(HttpClient);
   private photos = inject(PhotoService);
   private base = environment.apiBase;
 
-  private readonly spaceList = signal<Space[]>([]);
+  private readonly spaceList = signal<Space[]>(INITIAL_SPACES);
 
   /**
    * 장소 목록 — 고정 정보만. 추천 코스 순번으로 정렬한다.

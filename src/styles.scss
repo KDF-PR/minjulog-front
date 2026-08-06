@@ -23,7 +23,17 @@
 @use 'utils/animations';
 
 // 4) 공용 화면 골격
+@use 'templates/bottom-sheet';
 @use 'templates/contents-wrapper';
 @use 'templates/dialog';
 @use 'templates/form';
 @use 'templates/step';
+
+.ng-lazyloading {
+  opacity: 0.4;
+  filter: blur(4px);
+}
+.ng-lazyloaded {
+  transition: all 0.25s ease-in-out;
+  opacity: 1;
+}

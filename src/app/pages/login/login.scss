@@ -28,7 +28,6 @@
     }
   }
 
-  // 카드 — 인증 방식 선택(content-header) + 입력 폼(content-body)
   .content {
     border: 1px solid $color-border-subtle;
     border-radius: $radius-lg;
@@ -43,7 +42,6 @@
       @include flex(column);
       gap: $spacing-content-gap-sm;
 
-      // 인증 방식 토글
       .method-label {
         color: $color-text-muted;
         @include typo-ds('label', 'sm');

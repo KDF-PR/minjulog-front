@@ -4,12 +4,8 @@ import { AuthService, AuthMethod } from '../../auth/auth.service';
 import { RETURN_URL_PARAM } from '../../auth/auth.guard';
 
 /**
- * L1 · L3 — 로그인 화면. 휴대폰/이메일을 골라 인증코드를 받는다.
- *
- * 두 경로는 입력값만 다르고 흐름이 같아 한 화면으로 둔다.
- *
- * 게이트에서 넘어왔다면 `returnUrl` 을 들고 있다. 여기서 쓰지는 않고
- * verify 까지 그대로 넘긴다 — 복귀는 인증이 끝난 뒤에 일어난다.
+ * L1 · L3 — 로그인 화면. 휴대폰/이메일을 골라 인증코드를 받는다. 두 경로는 흐름이 같아 한 화면이다.
+ * `returnUrl` 은 여기서 쓰지 않고 verify 까지 그대로 넘긴다 — 복귀는 인증이 끝난 뒤에 일어난다.
  */
 @Component({
   selector: 'app-login',
@@ -31,7 +27,7 @@ export class Login implements OnInit {
   private returnUrl: string | null = null;
 
   ngOnInit(): void {
-    // DOM 을 먼저 그린 다음 프레임에서 모션을 시작한다 (첫 프레임에 붙으면 재생되지 않음)
+    // 첫 프레임에 .is-ready 가 붙으면 모션이 재생되지 않는다
     requestAnimationFrame(() => this.ready.set(true));
 
     this.returnUrl = this.route.snapshot.queryParamMap.get(RETURN_URL_PARAM);

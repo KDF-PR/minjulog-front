@@ -2,7 +2,8 @@
   @for (link of links(); track link.label) {
     <li class="map-link-item">
       <a class="map-link" [href]="link.url" target="_blank" rel="noopener noreferrer">
-        {{ link.label }} <span aria-hidden="true">↗</span>
+        {{ link.label }}
+        <!-- <span aria-hidden="true">↗</span> -->
       </a>
     </li>
   }

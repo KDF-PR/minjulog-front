@@ -2,22 +2,21 @@
   <app-page-header (introSelect)="openIntro()" />
 
   <div class="step-scroll" appScrollTop>
-    <div class="step-header motion-fade-in">
+    <div class="step-header">
       <h2 class="step-title">내 방문기록</h2>
       <p class="step-subtitle">{{ introDesc() }}</p>
     </div>
 
-    <!-- 레몬 밴드와 흰 바탕의 경계. 좌우 여백이 없는 .step-scroll 바로 아래 두어야
-         프레임 너비를 그대로 채운다 — 진행률 절 안에 넣으면 $page-x 만큼 잘린다. -->
-    <app-wave-divider class="my-log-wave motion-fade-in" />
+    <!-- 좌우 여백이 없는 .step-scroll 바로 아래 두어야 프레임 너비를 채운다 — 진행률 절 안이면 $page-x 만큼 잘린다 -->
+    <app-wave-divider class="my-log-wave" />
 
     <div class="step-body">
-      <section class="my-log-progress motion-fade-in" aria-labelledby="my-log-progress-label">
+      <section class="my-log-progress" aria-labelledby="my-log-progress-label">
         <div class="progress-head">
-          <h3 class="progress-label" id="my-log-progress-label">방문한 곳</h3>
-          <p class="progress-count">
-            <strong class="progress-count-current">{{ visitedCount() }}</strong>
-            <span class="progress-count-total">/ {{ totalCount() }}곳</span>
+          <h3 id="my-log-progress-label">방문한 곳</h3>
+          <p>
+            <strong>{{ visitedCount() }}</strong>
+            <span>/ {{ totalCount() }}곳</span>
           </p>
         </div>
 
@@ -28,7 +27,7 @@
           aria-valuemin="0"
           [attr.aria-valuemax]="totalCount()"
         >
-          <span class="progress-bar-fill" [style.width.%]="progressPercent()"></span>
+          <span [style.width.%]="progressPercent()"></span>
         </div>
 
         @if (hasClaimableReward()) {
@@ -37,13 +36,13 @@
       </section>
 
       <section
-        class="my-log-logs motion-fade-in motion-delay-1"
+        class="my-log-logs"
         aria-labelledby="my-log-logs-label"
       >
         <h3 class="a11y-hidden" id="my-log-logs-label">장소별 방문 기록</h3>
 
         @if (loadState() === 'loading') {
-          <!-- 실제 카드와 같은 크기로 설정하여 로딩 전 자리 확보 -->
+          <!-- 실제 카드와 같은 크기로 로딩 전 자리를 잡는다 -->
           <ul class="log-list" aria-hidden="true">
             @for (slug of placeholderSlugs; track slug) {
               <li class="log-item">
@@ -59,13 +58,11 @@
             @for (item of spaceVisits(); track item.space.slug) {
               <li class="log-item" [class.is-visited]="item.visit !== null">
                 <a class="log-link" [routerLink]="['/spaces', item.space.slug]">
-                  <!-- 장소 썸네일 -->
                   <span class="log-thumb">
                     <lazyLoadImg [src]="'/assets/images/spaces/' + item.space.slug + '/thumb'" />
                   </span>
-                  <!-- 장소 정보 (인증 상태별) -->
                   <span class="log-info">
-                    <!-- 필수 뱃지 표시(민주화운동기념관 only) -->
+                    <!-- 필수 뱃지 — 민주화운동기념관만 해당 -->
                     @if (item.space.isRequired) {
                       <span class="log-required">필수</span>
                     }
@@ -76,7 +73,6 @@
                         <strong class="log-name">{{ item.space.shortName }}</strong>
                       </span>
                     } @else {
-                      <!-- 인증 전 표시 정보 : 아이콘, 장소 이름, 텍스트 -->
                       <span class="icon-container">
                         <img src="/assets/images/ui/icons/camera@2x.png" alt="" />
                       </span>

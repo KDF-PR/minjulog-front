@@ -12,20 +12,12 @@ import {
 import { createCamera } from '../../core/camera';
 import { toUploadPhoto } from '../../core/image';
 
-/** 촬영 단계. 미리보기와 확인을 한 화면 안에서 오간다 */
 type CaptureStep = 'preview' | 'review';
 
 /**
- * 사진 인증 촬영기.
- *
- * 화면 안에서 카메라를 켜고(`<video>`), 셔터를 누르면 현재 프레임을 JPEG 로 뽑아
- * 확인 단계로 넘긴다. 올리기를 누르면 `photoConfirm` 으로 Blob 을 내보낸다.
- *
- * 카메라를 못 쓰는 경우(권한 거부·기기 없음·HTTPS 아님)에는 파일 선택으로 갈아탄다.
- * 화면을 못 쓰게 두는 것보다 낫고, 데스크톱에서 확인할 때도 이 경로를 탄다.
- *
- * 미리보기 URL 은 `URL.createObjectURL` 로 만들고 교체·소멸 시 반드시 해제한다.
- * 안 하면 다시 찍기를 누를 때마다 메모리에 사진이 쌓인다.
+ * 사진 인증 촬영기. 확인 단계를 거쳐 `photoConfirm` 으로 Blob 을 내보낸다.
+ * 카메라를 못 쓰면(권한 거부·기기 없음·HTTPS 아님) 파일 선택으로 갈아탄다.
+ * 미리보기 URL 은 교체·소멸 시 해제한다 — 안 하면 다시 찍기마다 사진이 메모리에 쌓인다.
  */
 @Component({
   selector: 'app-photo-capture',
@@ -54,7 +46,7 @@ export class PhotoCapture implements OnDestroy {
 
   private captured: Blob | null = null;
 
-  /** 카메라를 못 쓰면 파일 선택으로 간다. 세 가지 실패를 한 갈래로 묶는다 */
+  /** 세 가지 실패를 파일 선택 한 갈래로 묶는다 */
   protected readonly usesFile = computed(() => {
     const state = this.cameraState();
     return state === 'denied' || state === 'unsupported' || state === 'failed';
@@ -76,7 +68,7 @@ export class PhotoCapture implements OnDestroy {
   });
 
   constructor() {
-    // video 요소가 붙는 시점이 렌더 이후라 effect 로 기다린다.
+    // video 요소가 렌더 이후에 붙어 effect 로 기다린다.
     // 확인 단계에서는 미리보기를 멈춰 배터리와 카메라 표시등을 아낀다.
     effect(() => {
       const element = this.video()?.nativeElement;
@@ -106,10 +98,8 @@ export class PhotoCapture implements OnDestroy {
   }
 
   /**
-   * 카메라를 못 쓸 때의 대체 경로.
-   *
-   * 고른 파일을 그대로 넘기지 않는다. 갤러리 원본은 크고, 아이폰 기본 설정은 HEIC 라
-   * 백엔드가 받는 형식이 아니다. 촬영 경로와 같은 규격으로 맞춰서 넘긴다.
+   * 카메라 대체 경로. 갤러리 원본은 크고 아이폰 기본은 HEIC 라
+   * 촬영 경로와 같은 규격으로 변환해 넘긴다.
    */
   protected async onFileSelect(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;

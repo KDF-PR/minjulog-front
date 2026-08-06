@@ -1,12 +1,12 @@
 <section class="gate" [class.is-ready]="ready()">
-  <header class="gate-header motion-fade-in">
+  <header class="gate-header">
     <h2 class="gate-title">로그인이 필요해요</h2>
     <p class="gate-desc">
       방문을 기록하려면 먼저 본인 확인이 필요합니다.<br />확인 후 보던 화면으로 돌아옵니다.
     </p>
   </header>
 
-  <div class="gate-actions motion-fade-in motion-delay-1">
+  <div class="gate-actions">
     <button type="button" class="btn-primary" (click)="startLogin()">시작하기</button>
     <button type="button" class="btn-text" (click)="goBack()">둘러보기로 돌아가기</button>
   </div>

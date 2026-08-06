@@ -73,8 +73,6 @@
     }
   }
 
-  // 로그인 정보 — 이름 열 폭을 고정해 값이 세로로 정렬되게 한다
-
   .dashboard-actions {
     @include flex(column);
     gap: $spacing-content-gap-sm;

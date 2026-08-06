@@ -1,6 +1,5 @@
-<!-- 그림을 <img> 가 아니라 마크업으로 들고 있는 이유는 색 때문이다.
-     불러온 SVG 에는 바깥 스타일이 닿지 않아 장소마다 색을 바꿀 수 없다.
-     원본에서 바꾼 곳은 본체 fill 을 currentColor 로 돌린 것과 mask id 이름뿐이다. -->
+<!-- <img> 가 아니라 인라인 SVG — 불러온 SVG 에는 바깥 스타일이 닿지 않아 장소 색을 못 바꾼다.
+     원본에서 바꾼 곳은 본체 fill 을 currentColor 로 돌린 것과 mask id 뿐이다. -->
 @if (variant() === 'flower') {
   <!-- assets/images/ui/graphics/badge_small(_inactive).svg -->
   <svg viewBox="0 0 32 32" fill="none">
@@ -30,9 +29,7 @@
     }
   </svg>
 } @else if (!visited()) {
-  <!-- assets/images/ui/graphics/badge_inactive.svg
-       방문 전은 「방문 전」 글자까지 들어간 별도 그림이다. 색이 전부 회색으로 고정이라
-       currentColor 가 없다 — 장소 색은 방문한 뒤에만 드러난다. -->
+  <!-- assets/images/ui/graphics/badge_inactive.svg — 회색 고정이라 currentColor 가 없다 -->
   <svg viewBox="0 0 48 48" fill="none">
     <mask id="stamp-badge-inactive-mask" fill="#fff">
       <path

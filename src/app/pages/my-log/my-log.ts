@@ -16,12 +16,8 @@ import { ScrollTopDirective } from '../../utils/scroll-top.directive';
 
 /**
  * 02 내 스탬프 — 진행률과 스탬프 그리드.
- *
- * 개수·진행률은 전부 `SpaceService` 의 computed 에서 파생시킨다. 화면이 따로 세면
- * 목록과 진행률이 어긋난다.
- *
- * 리워드 자격은 서버 판정(`RewardService.eligibleTiers`)을 따른다. 방문 수로 화면에서
- * 다시 계산하지 않는다 (`app.py:540` 재계산이 최종).
+ * 개수·진행률은 `SpaceService` 의 computed 에서만 파생시킨다 — 화면이 따로 세면 어긋난다.
+ * 리워드 자격은 서버 판정(`RewardService.eligibleTiers`)을 따른다 (`app.py:540` 재계산이 최종).
  */
 @Component({
   selector: 'app-my-log',
@@ -81,12 +77,7 @@ export class MyLog implements OnInit {
       : '여섯 곳을 모두 방문했어요.';
   });
 
-  /**
-   * 불러오는 동안 자리를 채울 빈 칸.
-   *
-   * 장소 수는 프론트가 이미 알고 있다 — 방문 여부만 서버에서 온다.
-   * 그래서 응답 전에도 실제와 같은 개수로 높이를 잡아 둘 수 있다.
-   */
+  /** 로딩 중 자리 채움. 장소 수는 프론트가 이미 알아 응답 전에도 실제와 같은 높이를 잡을 수 있다 */
   protected readonly placeholderSlugs = SPACE_SLUGS;
 
   ngOnInit(): void {

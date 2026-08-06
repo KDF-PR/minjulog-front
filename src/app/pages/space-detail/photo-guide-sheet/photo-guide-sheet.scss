@@ -1,0 +1,93 @@
+@use 'utils' as *;
+
+// 골격은 templates/_bottom-sheet.scss 가 맡고 여기는 안내 내용만 입힌다.
+// 래퍼가 레이아웃에 끼지 않아야 딤·시트의 absolute 기준이 화면 골격(.step)이 된다.
+:host {
+  display: contents;
+}
+
+.photo-guide {
+  .guide-header {
+    @include flex(column);
+    gap: $space-4;
+
+    .guide-title {
+      @include typo-ds('title', 'md');
+    }
+
+    .guide-desc {
+      color: $color-text-sub;
+      @include typo-ds('body', 'sm');
+    }
+  }
+
+  .guide-body {
+    @include flex(column);
+    gap: $space-16;
+
+    .guide-example {
+      position: relative;
+      border: 1px solid $color-border-subtle;
+      border-radius: $radius-md;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+
+      // lazyLoadImg 내부 img 는 스타일 표식이 달라 ::ng-deep 으로만 닿는다. 범위는 figure 안으로 한정.
+      ::ng-deep img,
+      .guide-example-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .guide-example-badge {
+        position: absolute;
+        top: $space-8;
+        left: $space-8;
+        border-radius: $radius-full;
+        padding: $space-6 $space-12;
+        background-color: rgba($color-bg, 0.87);
+        color: $color-text-sub;
+        @include typo-ds('label', 'xs');
+        @include font-weight('bold');
+      }
+    }
+
+    .guide-note {
+      border: 1px solid $color-border-subtle;
+      border-radius: $radius-md;
+      padding: $space-16;
+      background-color: $color-bg-subtle;
+      color: $color-text-sub;
+      @include typo-ds('body', 'xs');
+    }
+  }
+
+  .guide-footer {
+    @include flex(row, flex-start, center);
+    gap: $space-8;
+    border-top: 1px solid $color-border-subtle;
+    padding: $space-8 $space-20;
+    background-color: $color-bg-subtle;
+
+    .guide-back {
+      flex: 0 0 auto;
+      border: 1px solid $color-border-subtle;
+      border-radius: $radius-md;
+      width: $control-md;
+      height: $control-md;
+      @include flexCenter();
+      background-color: $color-bg;
+
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
+    }
+
+    .guide-confirm {
+      @include button('primary', 'md');
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+}

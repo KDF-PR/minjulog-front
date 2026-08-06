@@ -1,19 +1,12 @@
-// main.scss — 01 메인.
-// 워드마크·안내 카드·CTA 를 세로로 쌓고 가운데 정렬한다.
-// 하단 버튼은 templates/_step.scss 의 .btn-container 를 그대로 쓴다.
-//
-// 스크롤하지 않는 진입 화면이라 넘치는 부분은 잘라낸다.
-// .main 이 위치 기준을 잡아야 배경 그래픽이 프레임 아래에 붙는다.
+// main.scss — 01 메인. 하단 버튼은 templates/_step.scss 의 .btn-container 를 그대로 쓴다.
+// 스크롤하지 않는 진입 화면이라 넘침은 잘라내고, .main 이 위치 기준을 잡아 배경 그래픽을 프레임 아래에 붙인다.
 
 @use 'sass:meta';
 @use 'sass:string';
 @use 'utils' as *;
 
-// 물결 외곽선. 이 화면에만 쓰고, 다른 화면에도 필요해지면 utils/_mixins.scss 로 올린다.
-// border-image 로 그린다 — 배경 이미지로 깔면 폭이 늘 때 물결까지 늘어난다.
-// $width 는 물결 띠의 두께, $fill 은 띠 안쪽 색이다.
-// background-color 는 padding 상자까지만 칠해서 띠 영역이 비므로 여기서도 채운다.
-
+// 물결 외곽선. 다른 화면에도 필요해지면 utils/_mixins.scss 로 올린다.
+// border-image 로 그린다(배경 이미지면 폭이 늘 때 물결까지 늘어남). $fill 은 background-color 가 못 칠하는 띠 안쪽 색.
 @mixin wavy-border($color, $width, $stroke-width: 1.5, $fill: #fff) {
   border: #{$width} solid transparent;
   border-image-source: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M16,5 Q18.5,2 21,5 Q23.5,8 26,5 Q28.5,2 31,5 Q33.5,8 36,5 Q38.5,2 41,5 Q43.5,8 46,5 Q48.5,2 51,5 Q53.5,8 56,5 Q58.5,2 61,5 Q63.5,8 64,5 Q67,5 75,5 Q75,5 75,16 Q78,18.5 75,21 Q72,23.5 75,26 Q78,28.5 75,31 Q72,33.5 75,36 Q78,38.5 75,41 Q72,43.5 75,46 Q78,48.5 75,51 Q72,53.5 75,56 Q78,58.5 75,61 Q72,63.5 75,64 Q75,67 75,75 Q75,75 64,75 Q63.5,72 61,75 Q58.5,78 56,75 Q53.5,72 51,75 Q48.5,78 46,75 Q43.5,72 41,75 Q38.5,78 36,75 Q33.5,72 31,75 Q28.5,78 26,75 Q23.5,72 21,75 Q18.5,78 16,75 Q13,75 5,75 Q5,75 5,64 Q2,63.5 5,61 Q8,58.5 5,56 Q2,53.5 5,51 Q8,48.5 5,46 Q2,43.5 5,41 Q8,38.5 5,36 Q2,33.5 5,31 Q8,28.5 5,26 Q2,23.5 5,21 Q8,18.5 5,16 Q5,13 5,5 Q5,5 16,5 Z' fill='#{encode-color($fill)}' stroke='#{encode-color($color)}' stroke-width='#{$stroke-width}' stroke-linejoin='round'/%3E%3C/svg%3E");

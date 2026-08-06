@@ -1,10 +1,10 @@
 <section class="verify" [class.is-ready]="ready()">
-  <header class="verify-header motion-fade-in">
+  <header class="verify-header">
     <h2 class="verify-title">인증코드 입력</h2>
     <p class="verify-desc">{{ identifier }} 로 보낸 6자리 코드를 입력하세요</p>
   </header>
 
-  <div class="content motion-fade-in motion-delay-1">
+  <div class="content">
     <form class="content-body" (submit)="$event.preventDefault(); verify(otpRef.value)">
       <label class="field-label" for="verify-code">인증코드</label>
       <input
@@ -21,12 +21,12 @@
       />
 
       @if (error()) {
-        <p class="field-error" id="verify-error" role="alert" animate.enter="motion-fade-enter">
+        <p class="field-error" id="verify-error" role="alert">
           {{ error() }}
         </p>
       }
       @if (success()) {
-        <p class="field-success" role="status" animate.enter="motion-fade-enter">{{ success() }}</p>
+        <p class="field-success" role="status">{{ success() }}</p>
       }
 
       <button
@@ -40,11 +40,7 @@
     </form>
 
     <div class="content-footer">
-      <!--
-        타이머 둘의 뜻이 다르다.
-        · expiresLabel — 코드 유효시간(5분). 0 이 되면 코드가 죽는다
-        · resendWait   — 재전송 대기(60초). 이 안에 누르면 백엔드가 429
-      -->
+      <!-- expiresLabel 은 코드 유효시간(5분), resendWait 는 재전송 대기(60초) — 대기 중 누르면 백엔드가 429 -->
       <p class="verify-expiry" [class.is-expired]="isExpired()" role="status">
         @if (isExpired()) {
           <span class="verify-expiry-time">00:00</span>

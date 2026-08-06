@@ -6,10 +6,8 @@ import { RETURN_URL_PARAM } from '../../auth/auth.guard';
 /**
  * L2 — 인증코드 입력 화면. 6자리 검증 후 원래 자리로 복귀한다.
  *
- * 타이머가 둘인데 뜻이 달라 합칠 수 없다 — `expiresIn` 은 코드가 죽는 시각(`mm:ss` 표시),
- * `resendWait` 는 다시 받기 버튼이 열리는 시각. 둘 다 백엔드가 강제하는 값이라
- * `auth.service.ts` 상수를 그대로 쓴다. 대기(60초)가 유효시간(300초)보다 짧아
- * 만료 시점에는 재전송이 항상 열려 있다.
+ * 타이머 둘은 뜻이 달라 합칠 수 없다 — `expiresIn` 은 코드 만료, `resendWait` 는 재전송 대기.
+ * 둘 다 백엔드가 강제해 `auth.service.ts` 상수를 그대로 쓴다. 대기(60초) < 유효(300초).
  */
 @Component({
   selector: 'app-verify',
@@ -68,7 +66,6 @@ export class Verify implements OnInit, OnDestroy {
       next: () => {
         this.loading.set(false);
         this.stopTicker();
-        // 원래 하려던 일로 돌려보낸다. 게이트를 거치지 않았으면 방문 현황으로.
         const target = this.returnUrl ?? '/my-log';
         this.success.set('인증되었습니다. 이동합니다...');
         setTimeout(() => this.router.navigateByUrl(target), 800);
@@ -99,7 +96,6 @@ export class Verify implements OnInit, OnDestroy {
     });
   }
 
-  /** 1초마다 두 타이머를 함께 줄인다. 유효시간이 다하면 멈춘다. */
   private startTicker(): void {
     this.stopTicker();
     this.ticker = setInterval(() => {

@@ -1,8 +1,6 @@
 @if (open()) {
   <div
     class="dialog-dim"
-    animate.enter="motion-fade-enter"
-    animate.leave="motion-fade-leave"
     (click)="close.emit()"
   >
     <!-- 카드 안쪽 클릭이 딤까지 올라가면 열자마자 닫힌다 -->
