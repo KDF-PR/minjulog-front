@@ -28,7 +28,7 @@
     .guide-example {
       position: relative;
       border: 1px solid $color-border-subtle;
-      border-radius: $radius-md;
+      @include border-radius($radius-md);
       aspect-ratio: 4 / 3;
       overflow: hidden;
 
@@ -44,7 +44,7 @@
         position: absolute;
         top: $space-8;
         left: $space-8;
-        border-radius: $radius-full;
+        @include border-radius($radius-full);
         padding: $space-6 $space-12;
         background-color: rgba($color-bg, 0.87);
         color: $color-text-sub;
@@ -55,7 +55,7 @@
 
     .guide-note {
       border: 1px solid $color-border-subtle;
-      border-radius: $radius-md;
+      @include border-radius($radius-md);
       padding: $space-16;
       background-color: $color-bg-subtle;
       color: $color-text-sub;
@@ -73,7 +73,7 @@
     .guide-back {
       flex: 0 0 auto;
       border: 1px solid $color-border-subtle;
-      border-radius: $radius-md;
+      @include border-radius($radius-md);
       width: $control-md;
       height: $control-md;
       @include flexCenter();

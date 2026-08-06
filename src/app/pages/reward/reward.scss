@@ -63,7 +63,7 @@
         gap: $space-12;
 
         .record {
-          border-radius: $radius-lg;
+          @include border-radius($radius-lg);
           @include flex(row, flex-start, center);
           gap: $space-12;
           padding: $space-12;
@@ -72,7 +72,7 @@
           // 사진 자산 미수령 — 오면 배경째 교체한다.
           // 시안 배경색(#dfdfdf · #ffecec)은 그림 안의 색이라 토큰으로 빼지 않는다.
           .record-img {
-            border-radius: $radius-md;
+            @include border-radius($radius-md);
             width: rem(96px); // 시안 실측. $thumb-sm(64)과 $thumb-md(128) 사이라 토큰이 없다
             height: rem(96px);
             flex-shrink: 0;
@@ -105,7 +105,7 @@
         .record-cta {
           @include button('secondary', 'md');
           border-color: $color-border-strong; // 시안 #6c6c6c — 카드보다 진한 선
-          border-radius: $radius-lg; // 시안 16 (mixin 기본 8)
+          @include border-radius($radius-lg); // 시안 16
           width: 100%;
           background-color: transparent;
 
@@ -128,7 +128,7 @@
     .reward-code {
       margin: $space-16 $page-x 0;
       border: 1px solid $color-border-subtle;
-      border-radius: $radius-md;
+      @include border-radius($radius-md);
       padding: $space-12;
       color: $color-text-sub;
       @include typo-ds('body', 'sm');

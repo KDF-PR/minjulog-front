@@ -17,7 +17,7 @@
   z-index: $z-index-dialog;
   position: relative;
   border: 1px solid $color-border-subtle;
-  border-radius: $radius-lg;
+  @include border-radius($radius-lg);
 
   width: 100%;
   max-width: $content-max-width;
@@ -87,7 +87,7 @@
   // 닫기 버튼 (× 텍스트)
   .btn-close {
     z-index: $z-index-dialog-btn-close;
-    border-radius: $radius-full;
+    @include border-radius($radius-full);
     position: absolute;
     top: $space-12;
     right: $space-12;

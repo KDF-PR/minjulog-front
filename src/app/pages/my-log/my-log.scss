@@ -51,7 +51,7 @@ $log-icon-size: rem(22px);
     }
 
     .progress-bar {
-      border-radius: $radius-full;
+      @include border-radius($radius-full);
       width: 100%;
       height: $progress-bar-height;
       overflow: hidden;

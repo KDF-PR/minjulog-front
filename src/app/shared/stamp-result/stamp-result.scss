@@ -21,7 +21,7 @@
 
   .stamp-result-graphic {
     border: 1px solid $color-border-subtle;
-    border-radius: $radius-full;
+    @include border-radius($radius-full);
     width: $result-graphic-size;
     height: $result-graphic-size;
     flex-shrink: 0;
@@ -52,7 +52,7 @@
 
     .stamp-result-note {
       border: 1px solid $color-border-subtle;
-      border-radius: $radius-sm;
+      @include border-radius($radius-sm);
       padding: $space-8 $space-12;
       color: $color-text-muted;
       @include typo-ds('body', 'sm');

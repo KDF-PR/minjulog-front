@@ -14,7 +14,7 @@
 
 .field-input {
   border: 1px solid $input-border;
-  border-radius: $radius-md;
+  @include border-radius($radius-md);
   width: 100%;
   height: $control-md;
   padding: 0 $spacing-input-x;

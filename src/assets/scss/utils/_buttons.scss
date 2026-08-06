@@ -61,9 +61,9 @@
 @mixin button($variant: 'primary', $size: 'md', $shape: 'rounded') {
   // Sass 의 if() 함수는 deprecated → @if 로 분기한다.
   @if $shape == 'pill' {
-    border-radius: $radius-full;
+    @include border-radius($radius-full);
   } @else {
-    border-radius: $radius-md;
+    @include border-radius($radius-md);
   }
 
   @if $size == 'lg' {
@@ -108,7 +108,7 @@
 
 @mixin chip() {
   border: 1px solid $chip-border;
-  border-radius: $radius-full;
+  @include border-radius($radius-full);
   height: $control-sm;
   @include flexCenter();
   padding: 0 $spacing-chip-x;

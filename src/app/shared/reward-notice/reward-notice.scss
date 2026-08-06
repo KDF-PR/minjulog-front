@@ -9,14 +9,14 @@
 
 .reward-notice {
   border: 1px solid $color-border-subtle;
-  border-radius: $radius-lg;
+  @include border-radius($radius-lg);
   @include flex(row, flex-start, center);
   gap: $space-12;
   padding: $spacing-card-sm;
   background-color: $color-bg-subtle;
 
   .reward-notice-icon {
-    border-radius: $radius-md;
+    @include border-radius($radius-md);
     width: $control-md;
     height: $control-md;
     flex-shrink: 0;

@@ -13,7 +13,7 @@
   gap: $space-8;
 
   .dev-scenario-panel {
-    border-radius: $radius-lg;
+    @include border-radius($radius-lg);
     border: 1px solid $color-border-subtle;
     display: flex;
     flex-direction: column;
@@ -23,7 +23,7 @@
     background-color: $color-bg;
 
     .dev-scenario-item {
-      border-radius: $radius-full;
+      @include border-radius($radius-full);
       padding: $space-6 $space-12;
       color: $color-text-sub;
       font-size: $typo-label-sm;
@@ -38,7 +38,7 @@
   }
 
   .dev-scenario-toggle {
-    border-radius: $radius-full;
+    @include border-radius($radius-full);
     padding: $space-6 $space-12;
     box-shadow: 0 2px 8px rgb(0 0 0 / 0.2);
     background-color: $color-text;

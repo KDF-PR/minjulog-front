@@ -37,7 +37,7 @@
 
   .content {
     border: 1px solid $color-border-subtle;
-    border-radius: $radius-lg;
+    @include border-radius($radius-lg);
     @include flex(column);
     gap: $spacing-content-gap-sm;
     padding: $spacing-card-md;
@@ -87,7 +87,7 @@
     }
 
     .api-result {
-      border-radius: $radius-md;
+      @include border-radius($radius-md);
       max-height: rem(240px);
       overflow: auto;
       padding: $spacing-card-sm;

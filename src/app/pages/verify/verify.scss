@@ -29,7 +29,7 @@
 
   .content {
     border: 1px solid $color-border-subtle;
-    border-radius: $radius-lg;
+    @include border-radius($radius-lg);
     width: 100%;
     max-width: $content-max-width;
     @include flex(column);
