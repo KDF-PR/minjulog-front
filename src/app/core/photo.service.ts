@@ -7,7 +7,7 @@
 
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable, delay, finalize, map, of, tap, throwError } from 'rxjs';
+import { EMPTY, Observable, catchError, delay, finalize, map, of, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { PhotoDto, PhotosResponseDto, UploadPhotoResponseDto } from './api.dto';
 import { toVisit, toVisitFromUpload } from './api.mapper';
@@ -42,9 +42,14 @@ export class PhotoService {
   /** 방문 목록 조회: `GET /api/photos` */
   loadVisits(): Observable<Visit[]> {
     // mock 전환 지점 — Supabase 준비 후 environment.useMockApi = false
+    // 401 은 오류가 아니라 비로그인 정상 상태다 — 전부 미방문으로 표시한다
+    // (`app.py:441` @login_required · 비로그인 탐색은 `docs/요구사항정의.md` 5장)
     const source: Observable<PhotoDto[]> = environment.useMockApi
       ? of(buildVisitsMock(activeMockScenario())).pipe(delay(MOCK_LATENCY))
-      : this.http.get<PhotosResponseDto>(`${this.base}/api/photos`).pipe(map((res) => res.photos));
+      : this.http.get<PhotosResponseDto>(`${this.base}/api/photos`).pipe(
+          map((res) => res.photos),
+          catchError((err) => (err?.status === 401 ? of([]) : throwError(() => err))),
+        );
 
     return source.pipe(
       map((photos) => photos.map(toVisit)),

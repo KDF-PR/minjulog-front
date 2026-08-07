@@ -7,7 +7,7 @@
 
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, delay, map, of, tap } from 'rxjs';
+import { Observable, catchError, delay, map, of, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { EligibilityDto, RewardCodeDto } from './api.dto';
 import { toRewardCode, toRewardStatus } from './api.mapper';
@@ -48,6 +48,19 @@ export class RewardService {
     return source.pipe(
       map(toRewardStatus),
       tap((status) => this.status.set(status)),
+      // 401 은 오류가 아니라 비로그인 정상 상태다 — 자격 없음(잠김)으로 표시한다
+      // (`app.py:523` @login_required · 비로그인 열람은 `docs/pages.md` 리워드 절)
+      catchError((err) => {
+        if (err?.status !== 401) return throwError(() => err);
+        const signedOut = toRewardStatus({
+          visitedCount: 0,
+          hasRequired: false,
+          eligibleTiers: [],
+          claimedTiers: [],
+        });
+        this.status.set(signedOut);
+        return of(signedOut);
+      }),
     );
   }
 

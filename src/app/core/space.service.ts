@@ -8,7 +8,7 @@
 
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, delay, map, of, tap } from 'rxjs';
+import { Observable, catchError, delay, map, of, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { SpaceDto, SpacesResponseDto } from './api.dto';
 import { toSpace } from './api.mapper';
@@ -101,6 +101,9 @@ export class SpaceService {
     return source.pipe(
       map(mergeWithContent),
       tap((spaces) => this.spaceList.set(spaces)),
+      // 401 은 오류가 아니라 비로그인 정상 상태다 — 목록은 프론트 콘텐츠(INITIAL_SPACES)로 그린다
+      // (`app.py:349` @login_required · 비로그인 탐색은 `docs/요구사항정의.md` 5장)
+      catchError((err) => (err?.status === 401 ? of(this.spaceList()) : throwError(() => err))),
     );
   }
 }
