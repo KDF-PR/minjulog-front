@@ -1,67 +1,87 @@
-<section class="login" [class.is-ready]="ready()">
-  <header class="login-header">
-    <h2 class="login-title">로그인</h2>
-    <p class="login-desc">인증코드를 받아 시작하세요</p>
-  </header>
+<section class="step login">
+  <app-page-header (introSelect)="openIntro()" />
 
-  <div class="content">
-    <div class="content-header">
-      <p class="method-label" id="login-method-label">인증 방식</p>
-
-      <!-- 두 방식 중 하나를 고르는 토글이라 radio 대신 aria-pressed 버튼을 쓴다 -->
-      <div class="method" role="group" aria-labelledby="login-method-label">
-        <button
-          type="button"
-          class="method-item"
-          [class.is-active]="method() === 'email'"
-          [attr.aria-pressed]="method() === 'email'"
-          (click)="setMethod('email')"
-        >
-          이메일
-        </button>
-        <button
-          type="button"
-          class="method-item"
-          [class.is-active]="method() === 'sms'"
-          [attr.aria-pressed]="method() === 'sms'"
-          (click)="setMethod('sms')"
-        >
-          문자
-        </button>
-      </div>
+  <div class="step-scroll">
+    <div class="step-header">
+      <h2 class="step-title">로그인</h2>
+      <p class="step-subtitle">간편하게 로그인하고<br />방문 기록을 차곡차곡 이어가세요</p>
     </div>
 
-    <!-- form 이라 모바일 키보드 확인 키가 동작한다. 기본 submit 은 새로고침이라 먼저 막는다. -->
-    <form class="content-body" (submit)="$event.preventDefault(); sendOtp(idRef.value)">
-      <label class="field-label" for="login-identifier">
-        {{ method() === 'email' ? '이메일' : '휴대폰 번호' }}
-      </label>
-      <input
-        #idRef
-        id="login-identifier"
-        class="field-input"
-        [type]="method() === 'email' ? 'email' : 'tel'"
-        [attr.inputmode]="method() === 'email' ? 'email' : 'tel'"
-        [attr.autocomplete]="method() === 'email' ? 'email' : 'tel'"
-        [placeholder]="method() === 'email' ? 'you@example.com' : '010-1234-5678'"
-        [attr.aria-invalid]="!!error()"
-        [attr.aria-describedby]="error() ? 'login-error' : null"
-      />
+    <app-wave-divider class="login-wave" />
 
-      @if (error()) {
-        <p class="field-error" id="login-error" role="alert">
-          {{ error() }}
-        </p>
-      }
+    <div class="step-body">
+      <!-- form 이라 모바일 키보드 확인 키가 동작한다. 기본 submit 은 새로고침이라 먼저 막는다. -->
+      <form class="login-form" (submit)="$event.preventDefault(); sendOtp(idRef.value)">
+        <!-- 두 방식 중 하나를 고르는 토글이라 radio 대신 aria-pressed 버튼을 쓴다 -->
+        <div class="method" role="group" aria-label="인증 방식">
+          <button
+            type="button"
+            [class.is-active]="method() === 'sms'"
+            [attr.aria-pressed]="method() === 'sms'"
+            (click)="setMethod('sms')"
+          >
+            휴대폰 번호
+          </button>
+          <button
+            type="button"
+            [class.is-active]="method() === 'email'"
+            [attr.aria-pressed]="method() === 'email'"
+            (click)="setMethod('email')"
+          >
+            이메일
+          </button>
+        </div>
 
-      <button
-        type="submit"
-        class="btn-primary"
-        [class.is-loading]="loading()"
-        [disabled]="loading()"
-      >
-        {{ loading() ? '전송 중...' : '인증코드 받기' }}
-      </button>
-    </form>
+        <label class="field-label" for="login-identifier">
+          {{ method() === 'email' ? '이메일' : '휴대폰 번호' }}
+        </label>
+        <input
+          #idRef
+          id="login-identifier"
+          class="field-input"
+          [type]="method() === 'email' ? 'email' : 'tel'"
+          [attr.inputmode]="method() === 'email' ? 'email' : 'tel'"
+          [attr.autocomplete]="method() === 'email' ? 'email' : 'tel'"
+          [placeholder]="method() === 'email' ? 'example@email.com' : '010-0000-0000'"
+          [attr.aria-invalid]="!!error()"
+          [attr.aria-describedby]="error() ? 'login-error' : null"
+        />
+
+        @if (error()) {
+          <p class="field-error" id="login-error" role="alert">
+            {{ error() }}
+          </p>
+        }
+
+        <!-- label 이 input 을 감싸 문구를 눌러도 체크가 토글된다 -->
+        <label class="consent">
+          <input
+            #consentRef
+            type="checkbox"
+            [checked]="consented()"
+            (change)="consented.set(consentRef.checked)"
+          />
+          <i aria-hidden="true">
+            <img src="/assets/images/ui/icons/checked@2x.png" alt="" />
+          </i>
+          <span>
+            본인 확인 및 방문 기록 저장을 위해
+            {{ method() === 'email' ? '이메일 주소' : '휴대폰 번호' }}를 수집·이용하는 데
+            동의합니다.
+          </span>
+        </label>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [class.is-loading]="loading()"
+          [disabled]="loading() || !consented()"
+        >
+          {{ loading() ? '전송 중...' : '인증코드 받기' }}
+        </button>
+      </form>
+    </div>
   </div>
 </section>
+
+<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

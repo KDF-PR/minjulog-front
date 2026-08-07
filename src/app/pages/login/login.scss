@@ -1,98 +1,140 @@
-// login.scss — 로그인 화면 스타일.
-// 프레임(.contents-wrapper)이 높이를 고정하므로 넘치는 만큼은 이 안에서 스크롤한다.
+// login.scss — 로그인 화면 (v2). 골격은 templates/_step.scss, 입력 한 벌은 templates/_form.scss 가 맡는다.
+// 레몬 밴드 색은 상단 바 뒤까지 이어져야 해서 .login 이 깔고, 폼 영역이 흰색을 다시 칠한다.
 
 @use 'utils' as *;
 
 .login {
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
-  @include flex(column, center, center);
-  padding: $spacing-page-y-mobile $spacing-page-x-mobile;
-  color: $color-text;
+  background-color: $color-bg-brand-lemon;
 
-  .login-header {
-    width: 100%;
-    max-width: $content-max-width;
-    margin-bottom: $spacing-section-y-sm;
-    text-align: center;
-
-    .login-title {
-      @include typo-ds('title', 'xl');
-    }
-
-    .login-desc {
-      margin-top: $space-4;
-      color: $color-text-sub;
-      @include typo-ds('body', 'sm');
-    }
+  // 흰 폼 영역이 화면 아래 끝까지 이어지도록 가운데 칸을 세로 flex 로 세운다 —
+  // 내용이 짧으면 .step-body 가 남은 높이를 채우고, 길면 그대로 늘어나 스크롤된다.
+  .step-scroll {
+    @include flex(column);
   }
 
-  .content {
-    border: 1px solid $color-border-subtle;
-    @include border-radius($radius-lg);
-    width: 100%;
-    max-width: $content-max-width;
-    @include flex(column);
-    gap: $spacing-content-gap-lg;
-    padding: $spacing-card-md;
+  // 밴드 경계 물결. 위아래 색만 지정한다
+  .login-wave {
+    --wave-top-color: #{$color-bg-brand-lemon};
+    --wave-bottom-color: #{$color-bg};
+  }
+
+  .step-body {
+    flex: 1 0 auto;
     background-color: $color-bg;
+  }
 
-    .content-header {
-      @include flex(column);
-      gap: $spacing-content-gap-sm;
+  .login-form {
+    @include flex(column);
+    gap: $space-12;
+    padding: $spacing-page-y-mobile $page-x;
 
-      .method-label {
-        color: $color-text-muted;
-        @include typo-ds('label', 'sm');
-      }
+    .method {
+      @include flex(row);
+      margin-bottom: $space-12;
 
-      .method {
-        @include border-radius($radius-md);
-        @include flex(row);
-        gap: $space-4;
-        padding: $space-4;
-        background-color: $color-bg-muted;
+      // 시안의 155/157px 차이는 의도가 아니라는 판정 — 두 탭을 반반으로 나눈다
+      button {
+        border: 1px solid $color-border;
+        flex: 1 1 0;
+        height: $control-sm;
+        background-color: $color-bg;
+        color: $color-text;
+        @include typo-ds('label', 'md');
+        transition:
+          background-color 0.15s ease,
+          border-color 0.15s ease,
+          color 0.15s ease;
 
-        .method-item {
-          @include border-radius($radius-sm);
-          flex: 1;
-          padding: $spacing-btn-y-sm 0;
-          color: $chip-text;
-          @include typo-ds('label', 'md');
-          transition:
-            background-color 0.15s ease,
-            color 0.15s ease;
-
-          &.is-active {
-            background-color: $color-action;
-            color: $color-text-inverse;
-          }
-
-          &:focus-visible {
-            @include a11yFocusStyle();
-          }
+        // 맞닿는 변의 선은 한 겹만 남긴다 — 두 버튼이 각자 그리면 2px 가 된다
+        &:first-child {
+          @include border-radius($radius-lg 0 0 $radius-lg);
+          border-right: 0;
         }
-      }
-    }
 
-    .content-body {
-      @include flex(column);
-      gap: $spacing-content-gap-sm;
+        &:last-child {
+          @include border-radius(0 $radius-lg $radius-lg 0);
+        }
 
-      .btn-primary {
-        @include button('primary', 'lg');
-        width: 100%;
-        margin-top: $space-4;
+        &.is-active {
+          border-color: $color-action;
+          background-color: $color-action;
+          color: $color-text-inverse;
+        }
 
         &:focus-visible {
           @include a11yFocusStyle();
         }
+      }
+    }
 
-        // 응답 대기는 모션이 아니라 상태 클래스로 표시한다 (animations.md)
-        &.is-loading {
-          cursor: progress;
+    // v2 시안은 입력 라벨을 본문색 14px 로 그린다 — 전역 .field-label(sub · 13px)보다 진하다
+    .field-label {
+      color: $color-text;
+      @include typo-ds('label', 'md');
+    }
+
+    // 시안 규칙 — 로그인 오류는 문구만 빨갛고(왼쪽 정렬) 입력 칸 테두리는 회색을 유지한다.
+    // 전역 .field-input 의 오류 테두리를 되돌린다.
+    .field-input[aria-invalid='true'] {
+      border-color: $input-border;
+    }
+
+    .field-error {
+      @include typo-ds('label', 'sm');
+      line-height: $lh-tight;
+      font-family: $font-label; // 시안이 안내·오류 캡션만 SUIT 로 그린다 (Figma family/label)
+    }
+
+    .consent {
+      @include flex(row, flex-start, flex-start);
+      gap: $space-10;
+      cursor: pointer;
+
+      input {
+        @include a11y_visually_hidden();
+
+        &:checked + i img {
+          display: block;
         }
+
+        &:focus-visible + i {
+          @include a11yFocusStyle();
+        }
+      }
+
+      i {
+        @include border-radius($radius-sm);
+        flex-shrink: 0;
+        width: $icon-md;
+        height: $icon-md;
+        @include flexCenter();
+        background-color: $color-bg-muted;
+
+        img {
+          display: none;
+          width: $icon-sm;
+          height: $icon-sm;
+        }
+      }
+
+      span {
+        color: $color-text-sub;
+        @include typo-ds('label', 'sm');
+      }
+    }
+
+    .btn-primary {
+      @include button('primary', 'lg');
+      width: 100%;
+      margin-top: $space-12;
+
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
+
+      // 응답 대기는 모션이 아니라 상태 클래스로 표시한다 (animations.md)
+      &.is-loading {
+        cursor: progress;
       }
     }
   }

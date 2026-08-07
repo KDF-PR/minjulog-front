@@ -34,17 +34,6 @@
   &[aria-invalid='true'] {
     border-color: $input-border-error;
   }
-
-  // 6자리 코드 — 자릿수가 눈에 들어오게 넓은 자간으로 가운데 정렬.
-  // padding-left 로 자간이 만드는 오른쪽 여백을 상쇄해 실제로 가운데 보이게 한다.
-  &.is-code {
-    height: $control-lg;
-    padding-left: calc(#{$spacing-input-x} + #{$letter-spacing-code});
-    text-align: center;
-    letter-spacing: $letter-spacing-code;
-    @include typo-ds('title', 'xl');
-    @include font-weight('bold');
-  }
 }
 
 .field-error {
