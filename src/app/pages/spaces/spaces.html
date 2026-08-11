@@ -1,8 +1,8 @@
 <section class="step spaces" [class.is-ready]="ready()">
-  <app-page-header (introSelect)="openIntro()" />
+  <app-page-header />
 
   <div class="step-scroll" appScrollTop>
-    <div class="step-header">
+    <div class="step-header is-tab-page">
       <h2 class="step-title">방문할 곳</h2>
       <p class="step-subtitle">
         각 장소에 담긴 민주화 운동의 의미를 살펴보고, 원하는 곳부터 방문해보세요.
@@ -11,16 +11,14 @@
     <app-wave-divider class="spaces-wave" />
 
     <div class="step-body">
-      <!-- 목록은 프론트 콘텐츠로 바로 그린다. 서버가 주는 것은 방문 여부뿐이라 오류여도 목록은 남긴다 -->
       @if (loadState() === 'error') {
         <p class="page-state" role="alert">방문 기록을 불러오지 못했어요</p>
       }
 
       <ul class="space-list">
         @for (item of spaceVisits(); track item.space.slug) {
-          <li class="space-row" [class.is-visited]="item.visit !== null">
-            <a class="space-link" [routerLink]="['/spaces', item.space.slug]">
-              <!-- 진행 표식. 방문 여부는 아래 .a11y-hidden 이 이미 알리므로 그림은 감춘다 -->
+          <li [class.is-visited]="item.visit !== null">
+            <a [routerLink]="['/spaces', item.space.slug]">
               <app-stamp-badge
                 class="space-mark"
                 variant="flower"
@@ -46,16 +44,12 @@
 
       <section class="spaces-map" aria-labelledby="spaces-map-title">
         <div class="spaces-map-card">
-          <h3 class="spaces-map-title" id="spaces-map-title">방문할 곳 지도 앱에서 모아보기</h3>
+          <h3 id="spaces-map-title">방문할 곳 지도 앱에서 모아보기</h3>
           <app-map-links [query]="mapQuery()" />
         </div>
 
         <div class="bg-img-container">
-          <lazyLoadImg
-            class="spaces-map-img"
-            [src]="'/assets/images/spaces/graphics/bottom-bg'"
-            alt=""
-          />
+          <lazyLoadImg [src]="'/assets/images/spaces/graphics/bottom-bg'" alt="" />
         </div>
       </section>
     </div>
@@ -63,5 +57,3 @@
 
   <app-tab-bar />
 </section>
-
-<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

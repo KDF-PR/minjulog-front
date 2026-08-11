@@ -1,17 +1,16 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { PageHeader } from '../../shared/page-header/page-header';
-import { WaveDivider } from '../../shared/wave-divider/wave-divider';
-import { TabBar } from '../../shared/tab-bar/tab-bar';
-import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
-import { MapLinks } from '../../shared/map-links/map-links';
-import { StampBadge } from '../../shared/stamp-badge/stamp-badge';
+import { PageHeader } from '../../shared/layout/page-header/page-header';
+import { WaveDivider } from '../../shared/layout/wave-divider/wave-divider';
+import { TabBar } from '../../shared/layout/tab-bar/tab-bar';
+import { MapLinks } from '../../shared/ui/map-links/map-links';
+import { StampBadge } from '../../shared/ui/stamp-badge/stamp-badge';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState } from '../../core/models';
-import { ScrollTopDirective } from '../../utils/scroll-top.directive';
-import { LazyLoadImg } from '../../shared/lazy-load-img/lazy-load-img';
+import { ScrollTopDirective } from '../../shared/directives/scroll-top.directive';
+import { LazyLoadImg } from '../../shared/ui/lazy-load-img/lazy-load-img';
 
 /**
  * 03 방문할 곳 — 참여 기관 목록.
@@ -23,7 +22,6 @@ import { LazyLoadImg } from '../../shared/lazy-load-img/lazy-load-img';
   imports: [
     PageHeader,
     TabBar,
-    IntroDialog,
     MapLinks,
     StampBadge,
     RouterLink,
@@ -42,7 +40,6 @@ export class Spaces implements OnInit {
   protected readonly ready = signal(false);
   /** 목록은 프론트 콘텐츠로 즉시 그리므로 오류 안내에만 쓴다 */
   protected readonly loadState = signal<LoadState>('idle');
-  protected readonly introOpen = signal(false);
 
   protected readonly spaceVisits = this.spaces.spaceVisits;
   protected readonly totalCount = this.spaces.totalCount;
@@ -53,14 +50,6 @@ export class Spaces implements OnInit {
   ngOnInit(): void {
     requestAnimationFrame(() => this.ready.set(true));
     this.load();
-  }
-
-  protected openIntro(): void {
-    this.introOpen.set(true);
-  }
-
-  protected closeIntro(): void {
-    this.introOpen.set(false);
   }
 
   /** 두 호출은 서로 의존하지 않아 병렬로 부른다. 완료되면 배지가 방문 상태로 갱신된다 */

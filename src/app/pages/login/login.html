@@ -1,5 +1,5 @@
 <section class="step login">
-  <app-page-header (introSelect)="openIntro()" />
+  <app-page-header />
 
   <div class="step-scroll">
     <div class="step-header">
@@ -11,7 +11,7 @@
 
     <div class="step-body">
       <!-- form 이라 모바일 키보드 확인 키가 동작한다. 기본 submit 은 새로고침이라 먼저 막는다. -->
-      <form class="login-form" (submit)="$event.preventDefault(); sendOtp(idRef.value)">
+      <form (submit)="$event.preventDefault(); sendOtp(idRef.value)">
         <!-- 두 방식 중 하나를 고르는 토글이라 radio 대신 aria-pressed 버튼을 쓴다 -->
         <div class="method" role="group" aria-label="인증 방식">
           <button
@@ -83,5 +83,3 @@
     </div>
   </div>
 </section>
-
-<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

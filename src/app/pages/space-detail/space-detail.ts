@@ -1,17 +1,16 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { PageHeader } from '../../shared/page-header/page-header';
-import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
-import { MapLinks } from '../../shared/map-links/map-links';
-import { StampBadge } from '../../shared/stamp-badge/stamp-badge';
-import { LazyLoadImg } from '../../shared/lazy-load-img/lazy-load-img';
+import { PageHeader } from '../../shared/layout/page-header/page-header';
+import { MapLinks } from '../../shared/ui/map-links/map-links';
+import { StampBadge } from '../../shared/ui/stamp-badge/stamp-badge';
+import { LazyLoadImg } from '../../shared/ui/lazy-load-img/lazy-load-img';
 import { PhotoService } from '../../core/photo.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState, SpaceSectionType } from '../../core/models';
-import { ScrollTopDirective } from '../../utils/scroll-top.directive';
+import { ScrollTopDirective } from '../../shared/directives/scroll-top.directive';
 import { PhotoGuideSheet } from './photo-guide-sheet/photo-guide-sheet';
-import { WaveDivider } from '../../shared/wave-divider/wave-divider';
+import { WaveDivider } from '../../shared/layout/wave-divider/wave-divider';
 
 /** 섹션 종류별 기본 제목·아이콘. 데이터의 `title` 이 있으면 그쪽이 이긴다 */
 const SECTION_DEFAULTS: Record<SpaceSectionType, { title: string; icon: string }> = {
@@ -31,7 +30,6 @@ const SECTION_DEFAULTS: Record<SpaceSectionType, { title: string; icon: string }
   selector: 'app-space-detail',
   imports: [
     PageHeader,
-    IntroDialog,
     MapLinks,
     StampBadge,
     LazyLoadImg,
@@ -51,7 +49,6 @@ export class SpaceDetail implements OnInit {
   /** 진입 모션 게이트 — .is-ready 가 붙은 뒤 자식 motion-* 이 재생된다. */
   protected readonly ready = signal(false);
   protected readonly loadState = signal<LoadState>('idle');
-  protected readonly introOpen = signal(false);
   /** P1 안내 시트. 인증 버튼이 열고, 「확인했어요」가 촬영으로 잇는다 */
   protected readonly guideOpen = signal(false);
 
@@ -66,14 +63,6 @@ export class SpaceDetail implements OnInit {
     requestAnimationFrame(() => this.ready.set(true));
     this.slug.set(this.route.snapshot.paramMap.get('slug') ?? '');
     this.load();
-  }
-
-  protected openIntro(): void {
-    this.introOpen.set(true);
-  }
-
-  protected closeIntro(): void {
-    this.introOpen.set(false);
   }
 
   /** 히스토리를 되돌리면 카메라(`/stamp/:slug`)로 돌아갈 수 있어 항상 목록으로 보낸다 */

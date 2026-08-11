@@ -1,20 +1,24 @@
-// main.scss — 01 메인. 하단 버튼은 templates/_step.scss 의 .btn-container 를 그대로 쓴다.
-// 스크롤하지 않는 진입 화면이라 넘침은 잘라내고, .main 이 위치 기준을 잡아 배경 그래픽을 프레임 아래에 붙인다.
-
 @use 'sass:meta';
 @use 'sass:string';
 @use 'utils' as *;
 
-// 물결 외곽선. 다른 화면에도 필요해지면 utils/_mixins.scss 로 올린다.
-// border-image 로 그린다(배경 이미지면 폭이 늘 때 물결까지 늘어남). $fill 은 background-color 가 못 칠하는 띠 안쪽 색.
+/**
+ * main.scss — 01 메인.
+ *
+ * 스크롤하지 않는 진입 화면이라 넘침은 잘라내고, .main 이 위치 기준을 잡아 배경 그래픽을
+ * 프레임 아래에 붙인다. 하단 버튼은 templates/_step.scss 의 .btn-container 를 그대로 사용.
+ */
+
+// 물결 외곽선. border-image 로 그림 → 배경 이미지면 폭이 늘 때 물결까지 늘어남
+// $fill 은 background-color 가 못 칠하는 띠 안쪽 색. 다른 화면에도 필요해지면 utils/_mixins.scss 로 승격
 @mixin wavy-border($color, $width, $stroke-width: 1.5, $fill: #fff) {
   border: #{$width} solid transparent;
   border-image-source: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M16,5 Q18.5,2 21,5 Q23.5,8 26,5 Q28.5,2 31,5 Q33.5,8 36,5 Q38.5,2 41,5 Q43.5,8 46,5 Q48.5,2 51,5 Q53.5,8 56,5 Q58.5,2 61,5 Q63.5,8 64,5 Q67,5 75,5 Q75,5 75,16 Q78,18.5 75,21 Q72,23.5 75,26 Q78,28.5 75,31 Q72,33.5 75,36 Q78,38.5 75,41 Q72,43.5 75,46 Q78,48.5 75,51 Q72,53.5 75,56 Q78,58.5 75,61 Q72,63.5 75,64 Q75,67 75,75 Q75,75 64,75 Q63.5,72 61,75 Q58.5,78 56,75 Q53.5,72 51,75 Q48.5,78 46,75 Q43.5,72 41,75 Q38.5,78 36,75 Q33.5,72 31,75 Q28.5,78 26,75 Q23.5,72 21,75 Q18.5,78 16,75 Q13,75 5,75 Q5,75 5,64 Q2,63.5 5,61 Q8,58.5 5,56 Q2,53.5 5,51 Q8,48.5 5,46 Q2,43.5 5,41 Q8,38.5 5,36 Q2,33.5 5,31 Q8,28.5 5,26 Q2,23.5 5,21 Q8,18.5 5,16 Q5,13 5,5 Q5,5 16,5 Z' fill='#{encode-color($fill)}' stroke='#{encode-color($color)}' stroke-width='#{$stroke-width}' stroke-linejoin='round'/%3E%3C/svg%3E");
   border-image-slice: 20; // 80 짜리 타일에서 모서리로 잡는 영역
-  border-image-repeat: round; // 물결 크기는 두고 개수만 맞춘다
+  border-image-repeat: round; // 물결 크기는 두고 개수만 조정
 }
 
-// data URI 안에서는 # 를 그대로 못 쓴다
+// data URI 안에서는 # 를 그대로 못 씀
 @function encode-color($color) {
   $value: meta.inspect($color);
 
@@ -27,7 +31,7 @@
 
 // 안내 카드 — 시안 실측. 띠 16 + 여백 8 = 좌우 인셋 24, 위아래는 16 + 5 = 21
 $main-info-band: rem(16px);
-$main-info-line: #000; // 시안 실측이 순수 검정이라 토큰을 쓰지 않는다
+$main-info-line: #000; // 시안 실측이 순수 검정이라 토큰 미사용
 $main-info-tape-width: rem(88px);
 $main-info-tape-height: rem(32px);
 $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
@@ -39,12 +43,12 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
   overflow: hidden;
   @include flex(column, flex-start, center);
   gap: $space-24;
-
   padding: $space-40 $spacing-page-x-mobile;
   background-color: $color-bg-brand-lemon;
   color: $color-text;
   text-align: center;
 
+  // 배경 그래픽(z-index: 0) 위로 올린다
   .main-header,
   .main-info,
   .btn-container {
@@ -55,17 +59,18 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
     @include flex(column);
     gap: $space-8;
 
-    .main-title {
+    // 워드마크
+    h1 {
       @include typo-ds('display', 'xl');
     }
 
-    .main-subtitle {
+    p {
       color: $color-text-sub;
       @include typo-ds('title', 'md');
     }
   }
 
-  // 테이프가 위로 나온 만큼 margin 으로 밀어야 위 요소와 겹치지 않는다
+  // 안내 카드. 테이프가 위로 나온 만큼 margin 으로 밀어야 위 요소와 겹치지 않음
   .main-info {
     position: relative;
     @include wavy-border($main-info-line, $main-info-band, $fill: $color-bg);
@@ -76,11 +81,11 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
     margin-top: $main-info-tape-rise;
     padding: rem(5px) $space-8;
 
-    // padding-box 로 끊지 않으면 흰 배경이 물결 밖으로 네모나게 삐져나온다
+    // padding-box 로 끊지 않으면 흰 배경이 물결 밖으로 네모나게 삐져나옴
     background-clip: padding-box;
     background-color: $color-bg;
 
-    // 자산이 오면 배경 이미지만 넣는다. 지금은 자리만 잡아 아무것도 보이지 않는다.
+    // 카드 위에 걸치는 테이프. 자산이 오면 이 자리에 그대로 들어감
     .is-tape {
       z-index: 1;
       position: absolute;
@@ -101,42 +106,32 @@ $main-info-tape-rise: rem(15px); // 카드 위로 나오는 양
     }
   }
 
+  // 배경 그래픽. 프레임 하단에 붙이고 좌우 중앙 정렬
   .main-graphic {
-    // @include testBg();
     z-index: 0;
     position: absolute;
     bottom: 0;
     left: 50%;
     @include translate(-50%, 0);
-    // border: 1px solid $color-border-subtle;
     width: 720px;
     height: 320px;
-    
-    
     @include flexCenter();
 
     img {
       @include objectFit('vertical');
     }
-    
-
-    .main-graphic-caption {
-      color: $color-text-muted;
-      @include typo-ds('body', 'sm');
-    }
   }
-
 
   .btn-container {
     position: fixed;
     bottom: $space-24;
     left: 50%;
     @include translate(-50%, 0);
-
     width: 100%;
     @include flex(row, center, center);
     gap: $space-16;
 
+    // 「시작하기」. a 라 .btn-container 의 button 규칙이 닿지 않아 폭만 따로 지정
     a {
       @include border-radius($radius-full);
       width: 100%;

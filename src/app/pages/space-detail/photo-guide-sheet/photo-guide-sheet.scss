@@ -1,46 +1,48 @@
 @use 'utils' as *;
 
-// 골격은 templates/_bottom-sheet.scss 가 맡고 여기는 안내 내용만 입힌다.
-// 래퍼가 레이아웃에 끼지 않아야 딤·시트의 absolute 기준이 화면 골격(.step)이 된다.
+// 래퍼가 레이아웃에 끼지 않아야 딤·시트의 absolute 기준이 화면 골격(.step)이 됨
 :host {
   display: contents;
 }
 
+// 골격은 templates/_bottom-sheet.scss 담당. 여기는 안내 내용만 입힘
 .photo-guide {
-  .guide-header {
+  .bottom-sheet-header {
     @include flex(column);
     gap: $space-4;
 
-    .guide-title {
+    h2 {
       @include typo-ds('title', 'md');
     }
 
-    .guide-desc {
+    p {
       color: $color-text-sub;
       @include typo-ds('body', 'sm');
     }
   }
 
-  .guide-body {
+  .bottom-sheet-body {
     @include flex(column);
     gap: $space-16;
 
-    .guide-example {
+    // 예시 사진 틀. 자산 유무에 따라 img · lazyLoadImg 중 하나가 들어감
+    figure {
       position: relative;
       border: 1px solid $color-border-subtle;
       @include border-radius($radius-md);
       aspect-ratio: 4 / 3;
       overflow: hidden;
 
-      // lazyLoadImg 내부 img 는 스타일 표식이 달라 ::ng-deep 으로만 닿는다. 범위는 figure 안으로 한정.
+      // lazyLoadImg 내부 img 는 스타일 표식이 달라 ::ng-deep 으로만 도달. 범위는 figure 안으로 한정
       ::ng-deep img,
-      .guide-example-img {
+      img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
 
-      .guide-example-badge {
+      // 「예시 인증사진」 배지
+      figcaption {
         position: absolute;
         top: $space-8;
         left: $space-8;
@@ -63,13 +65,14 @@
     }
   }
 
-  .guide-footer {
+  .bottom-sheet-footer {
     @include flex(row, flex-start, center);
     gap: $space-8;
     border-top: 1px solid $color-border-subtle;
     padding: $space-8 $space-20;
     background-color: $color-bg-subtle;
 
+    // 닫기(←). 정사각 고정이라 button() 을 쓰지 않음
     .guide-back {
       flex: 0 0 auto;
       border: 1px solid $color-border-subtle;
@@ -84,6 +87,7 @@
       }
     }
 
+    // 남는 폭 전부 차지. min-width: 0 이 없으면 글자 길이만큼 밀려 ← 버튼이 찌그러짐
     .guide-confirm {
       @include button('primary', 'md');
       flex: 1 1 0;

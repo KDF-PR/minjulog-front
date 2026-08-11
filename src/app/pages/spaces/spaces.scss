@@ -1,12 +1,10 @@
-// spaces.scss — 03 방문할 곳.
-// 골격은 templates/_step.scss 가 맡는다. 밴드 색은 상단 바 뒤까지 이어져야 해 .spaces 가 깐다.
-
 @use 'utils' as *;
 
+// 골격은 templates/_step.scss 담당. 밴드 색은 상단 바 뒤까지 이어져야 해 .spaces 가 깜
 .spaces {
   background-color: $color-bg-brand-lime;
 
-  // 밴드 경계 물결. 위아래 색만 지정한다
+  // 밴드 경계 물결. 위아래 색만 지정
   .spaces-wave {
     --wave-top-color: #{$color-bg-brand-lime};
     --wave-bottom-color: #{$color-bg};
@@ -15,12 +13,13 @@
   .space-list {
     background-color: $color-bg;
 
-    // 행 사이만 선을 긋는다. 목록 위아래는 밴드 경계가 이미 있어 선이 겹친다.
-    .space-row + .space-row {
+    // 행 사이만 선을 그음. 목록 위아래는 밴드 경계가 이미 있어 선이 겹침
+    li + li {
       border-top: 1px solid $color-border-subtle;
     }
 
-    .space-link {
+    // 행 전체가 상세로 가는 링크. li 안의 a 는 하나뿐
+    a {
       @include flex(row, flex-start, center);
       gap: $space-12;
       padding: $space-12 $page-x;
@@ -31,12 +30,12 @@
       }
     }
 
-    // 모양·크기·색은 app-stamp-badge 가 들고 있다.
+    // 모양·크기·색은 app-stamp-badge 담당. 여기서는 줄어들지 않게만 고정
     .space-mark {
       flex: 0 0 auto;
     }
 
-    // 이름·지역 한 쌍뿐이라 안쪽은 요소 선택자로 충분하다
+    // 이름·지역 한 쌍뿐이라 안쪽은 요소 선택자로 충분
     .space-text {
       flex: 1 1 0;
       @include flex(column);
@@ -60,37 +59,34 @@
       img {
         @include objectFit();
       }
-      // flex: 0 0 auto;
-      // @include typo-ds('title', 'md');
     }
   }
 
-  // 목록 아래 초록 바탕. 일러스트 자산이 들어올 자리라 세로 여백을 넉넉히 둔다.
+  // 목록 아래 지도 안내. 배경 일러스트가 카드 뒤로 깔림
   .spaces-map {
     position: relative;
     width: 100%;
     height: 212px;
     @include flex(column, center, stretch);
     padding: $spacing-page-y-mobile $page-x $space-80;
-    // background-color: $color-action-brand;
 
     .spaces-map-card {
       z-index: 1;
       @include border-radius($radius-lg);
+      border: 1px solid $color-border;
       @include flex(column, center, center);
-
       gap: rem(16px);
       padding: $spacing-card-md $space-12 $spacing-card-lg;
       background-color: $color-bg-subtle;
-      border: 1px solid $color-border;
 
-      .spaces-map-title {
+      h3 {
         @include typo-ds('title', 'sm');
         @include font-size(13px);
         text-align: center;
       }
     }
 
+    // 배경 일러스트. 프레임보다 넓어 가운데 정렬로 양끝을 흘림
     .bg-img-container {
       position: absolute;
       bottom: 0;
@@ -98,12 +94,6 @@
       @include translate(-50%, 0);
       width: 768px;
       height: 170px;
-
-      // .space-map-img {
-      //   img {
-      //     @include objectFit();
-      //   }
-      // }
     }
   }
 }

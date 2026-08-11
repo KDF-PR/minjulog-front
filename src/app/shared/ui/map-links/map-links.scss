@@ -1,0 +1,16 @@
+@use 'utils' as *;
+
+.map-links {
+  @include flex(row, center, center);
+  flex-wrap: wrap;
+  gap: rem(6px);
+
+  // 지도 앱 링크 칩. li 안의 a 는 하나뿐 → li 생략
+  a {
+    @include border-radius($radius-full);
+    border: 1px solid $color-border;
+    padding: $space-8 $space-12;
+    background-color: $color-bg-subtle;
+    @include font-size(11px);
+  }
+}

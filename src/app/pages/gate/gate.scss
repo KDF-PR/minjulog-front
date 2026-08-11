@@ -1,7 +1,6 @@
-// gate.scss — G1 로그인 게이트. 문구와 버튼뿐이라 화면 가운데에 모은다.
-
 @use 'utils' as *;
 
+// G1 로그인 게이트. 문구와 버튼뿐이라 화면 가운데에 모음
 .gate {
   width: 100%;
   height: 100%;
@@ -11,16 +10,16 @@
   padding: $spacing-page-y-mobile $spacing-page-x-mobile;
   color: $color-text;
 
-  .gate-header {
+  header {
     width: 100%;
     max-width: $content-max-width;
     text-align: center;
 
-    .gate-title {
+    h2 {
       @include typo-ds('title', 'xl');
     }
 
-    .gate-desc {
+    p {
       margin-top: $space-8;
       color: $color-text-sub;
       @include typo-ds('body', 'sm');
@@ -33,8 +32,8 @@
     @include flex(column);
     gap: $spacing-content-gap-sm;
 
-    .btn-primary {
-      @include button('primary', 'lg');
+    // 두 버튼이 폭과 포커스 표시를 공유. 모양만 각자 지정
+    button {
       width: 100%;
 
       &:focus-visible {
@@ -42,13 +41,12 @@
       }
     }
 
+    .btn-primary {
+      @include button('primary', 'lg');
+    }
+
     .btn-text {
       @include button('text', 'md');
-      width: 100%;
-
-      &:focus-visible {
-        @include a11yFocusStyle();
-      }
     }
   }
 }

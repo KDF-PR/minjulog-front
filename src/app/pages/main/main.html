@@ -1,25 +1,20 @@
-<!-- 프레임(.contents-wrapper)은 app.html 이 이미 감싼다. 여기서 다시 감싸지 않는다. -->
 <section class="main" [class.is-ready]="ready()" appScrollTop>
   <div class="main-header">
-    <h1 class="main-title">{{ wordmark }}</h1>
-    <p class="main-subtitle">{{ subtitle }}</p>
+    <h1>{{ wordmark }}</h1>
+    <p>{{ subtitle }}</p>
   </div>
 
   <div class="main-info">
-    <!-- 테이프 자산 미수령 — 크기와 자리만 잡아 둔다 (87×31, 카드 위로 15 나옴) -->
     <figure class="img-container is-tape" aria-hidden="true">
-      <img src="/assets/images/main/graphics/tape@2x.png" alt=""  />
+      <img src="/assets/images/main/graphics/tape@2x.png" alt="" />
     </figure>
-    <span class="main-info-tape" aria-hidden="true"></span>
 
     <p class="main-info-lead">{{ tagline }}</p>
     <p class="main-info-period">{{ periodLabel }}</p>
   </div>
 
-  <!-- 메인 그래픽 자산 미수령 — 시안과 같은 문구 자리표시자 -->
   <figure class="main-graphic">
     <img src="/assets/images/main/graphics/main-bg@2x.png" alt="" aria-hidden="true" />
-    <!-- <figcaption class="main-graphic-caption">메인 그래픽</figcaption> -->
   </figure>
 
   <div class="btn-container">

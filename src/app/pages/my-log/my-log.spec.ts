@@ -3,7 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 import { MyLog } from './my-log';
-import { installIntersectionObserverMock } from '../../shared/lazy-load-img/intersection-observer.mock';
+import { installIntersectionObserverMock } from '../../shared/ui/lazy-load-img/intersection-observer.mock';
 
 describe('MyLog', () => {
   let component: MyLog;

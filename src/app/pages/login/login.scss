@@ -1,18 +1,21 @@
-// login.scss — 로그인 화면 (v2). 골격은 templates/_step.scss, 입력 한 벌은 templates/_form.scss 가 맡는다.
-// 레몬 밴드 색은 상단 바 뒤까지 이어져야 해서 .login 이 깔고, 폼 영역이 흰색을 다시 칠한다.
-
 @use 'utils' as *;
 
+/**
+ * login.scss — 로그인 화면 (v2).
+ *
+ * 골격은 templates/_step.scss, 입력 한 벌은 templates/_form.scss 담당.
+ * 레몬 밴드 색은 상단 바 뒤까지 이어져야 해서 .login 이 깔고, 폼 영역이 흰색을 다시 칠함.
+ */
 .login {
   background-color: $color-bg-brand-lemon;
 
-  // 흰 폼 영역이 화면 아래 끝까지 이어지도록 가운데 칸을 세로 flex 로 세운다 —
-  // 내용이 짧으면 .step-body 가 남은 높이를 채우고, 길면 그대로 늘어나 스크롤된다.
+  // 세로 flex 로 세워야 흰 폼 영역이 화면 아래 끝까지 이어짐
+  // 내용이 짧으면 .step-body 가 남은 높이를 채우고, 길면 그대로 늘어나 스크롤
   .step-scroll {
     @include flex(column);
   }
 
-  // 밴드 경계 물결. 위아래 색만 지정한다
+  // 밴드 경계 물결. 위아래 색만 지정
   .login-wave {
     --wave-top-color: #{$color-bg-brand-lemon};
     --wave-bottom-color: #{$color-bg};
@@ -23,16 +26,18 @@
     background-color: $color-bg;
   }
 
-  .login-form {
+  // 인증 수단 선택 + 식별자 입력 폼. .step-body 안의 form 은 이것뿐
+  form {
     @include flex(column);
     gap: $space-12;
     padding: $spacing-page-y-mobile $page-x;
 
+    // 휴대폰 · 이메일 토글
     .method {
       @include flex(row);
       margin-bottom: $space-12;
 
-      // 시안의 155/157px 차이는 의도가 아니라는 판정 — 두 탭을 반반으로 나눈다
+      // 시안의 155/157px 차이는 의도가 아니라는 판정 → 두 탭을 반반으로 분할
       button {
         border: 1px solid $color-border;
         flex: 1 1 0;
@@ -45,7 +50,7 @@
           border-color 0.15s ease,
           color 0.15s ease;
 
-        // 맞닿는 변의 선은 한 겹만 남긴다 — 두 버튼이 각자 그리면 2px 가 된다
+        // 맞닿는 변의 선은 한 겹만 유지 → 두 버튼이 각자 그리면 2px 가 됨
         &:first-child {
           @include border-radius($radius-lg 0 0 $radius-lg);
           border-right: 0;
@@ -67,14 +72,14 @@
       }
     }
 
-    // v2 시안은 입력 라벨을 본문색 14px 로 그린다 — 전역 .field-label(sub · 13px)보다 진하다
+    // v2 시안은 입력 라벨을 본문색 14px 로 그림 — 전역 .field-label(sub · 13px)보다 진함
     .field-label {
       color: $color-text;
       @include typo-ds('label', 'md');
     }
 
-    // 시안 규칙 — 로그인 오류는 문구만 빨갛고(왼쪽 정렬) 입력 칸 테두리는 회색을 유지한다.
-    // 전역 .field-input 의 오류 테두리를 되돌린다.
+    // 시안 규칙 — 로그인 오류는 문구만 빨갛고 입력 칸 테두리는 회색 유지
+    // 전역 .field-input 의 오류 테두리를 되돌림
     .field-input[aria-invalid='true'] {
       border-color: $input-border;
     }
@@ -82,14 +87,16 @@
     .field-error {
       @include typo-ds('label', 'sm');
       line-height: $lh-tight;
-      font-family: $font-label; // 시안이 안내·오류 캡션만 SUIT 로 그린다 (Figma family/label)
+      font-family: $font-label; // 시안이 안내·오류 캡션만 SUIT 로 그림 (Figma family/label)
     }
 
+    // 수집 동의. label 이 input 을 감싸 문구를 눌러도 토글됨
     .consent {
       @include flex(row, flex-start, flex-start);
       gap: $space-10;
       cursor: pointer;
 
+      // 실제 체크박스는 숨기고 i 가 대신 그림. 포커스 표시도 i 로 넘김
       input {
         @include a11y_visually_hidden();
 
@@ -132,7 +139,7 @@
         @include a11yFocusStyle();
       }
 
-      // 응답 대기는 모션이 아니라 상태 클래스로 표시한다 (animations.md)
+      // 응답 대기는 모션이 아니라 상태 클래스로 표시 (animations.md)
       &.is-loading {
         cursor: progress;
       }

@@ -1,11 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { OPERATION_PERIOD } from '../../core/spaces.content';
-import { ScrollTopDirective } from '../../utils/scroll-top.directive';
+import { ScrollTopDirective } from '../../shared/directives/scroll-top.directive';
 
 /**
  * 01 메인 — 투어 소개와 시작 지점.
- * 운영 기간 문구는 `OPERATION_PERIOD` 한 곳에서 가져온다 — 화면에 직접 적으면 기간이 바뀔 때 어긋난다.
+ * 운영 기간 문구는 `OPERATION_PERIOD` 에서만 가져옴 → 화면에 직접 적으면 기간 변경 시 어긋남.
  */
 @Component({
   selector: 'app-main',
@@ -14,7 +14,7 @@ import { ScrollTopDirective } from '../../utils/scroll-top.directive';
   styleUrl: './main.scss',
 })
 export class Main implements OnInit {
-  /** 진입 모션 게이트 — .is-ready 가 붙은 뒤 자식 motion-* 이 재생된다. */
+  /** 진입 모션 게이트 — .is-ready 가 붙은 뒤 자식 motion-* 재생 */
   protected readonly ready = signal(false);
 
   /** 안내 카드 본문. 시안 `main-info` 문구 그대로 */
@@ -24,7 +24,7 @@ export class Main implements OnInit {
   protected readonly periodLabel = OPERATION_PERIOD.label;
 
   ngOnInit(): void {
-    // 첫 프레임에 .is-ready 가 붙으면 모션이 재생되지 않는다
+    // 첫 프레임에 .is-ready 가 붙으면 모션 미재생
     requestAnimationFrame(() => this.ready.set(true));
   }
 }

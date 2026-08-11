@@ -1,8 +1,6 @@
-// dashboard.scss — 로그인 후 화면 스타일.
-// .api-result 는 응답을 그대로 출력하는 확인용 블록이다. 화면 확정 시 제거 대상.
-
 @use 'utils' as *;
 
+// 요구사항 36개 밖의 개발 확인용 화면. main 이 채워지면 라우트째 제거 대상
 .dashboard {
   width: 100%;
   height: 100%;
@@ -17,7 +15,7 @@
     gap: $spacing-content-gap-md;
     margin-bottom: $spacing-content-gap-sm;
 
-    .dashboard-title {
+    h2 {
       @include typo-ds('title', 'lg');
     }
 
@@ -43,28 +41,29 @@
     padding: $spacing-card-md;
     background-color: $color-bg;
 
-    .content-title {
+    .content-header h3 {
       color: $color-text-muted;
       @include typo-ds('label', 'sm');
     }
 
+    // 항목 이름과 값의 관계라 dl. 한 쌍을 div 로 묶어 가로로 세움
     .info-list {
       @include flex(column);
       gap: $space-4;
 
-      .info-item {
+      div {
         @include flex(row);
         gap: $space-8;
       }
 
-      .info-term {
+      dt {
         flex-shrink: 0;
         width: rem(56px);
         color: $color-text-muted;
         @include typo-ds('label', 'sm');
       }
 
-      .info-desc {
+      dd {
         min-width: 0; // 긴 값이 넘치지 않고 줄바꿈되게
         color: $color-text;
         @include typo-ds('body', 'sm');
@@ -86,6 +85,7 @@
       }
     }
 
+    // 응답을 그대로 출력하는 확인용 블록. 화면 확정 시 제거 대상
     .api-result {
       @include border-radius($radius-md);
       max-height: rem(240px);
@@ -98,5 +98,4 @@
       overflow-wrap: anywhere;
     }
   }
-
 }

@@ -1,0 +1,22 @@
+/**
+ * lazy-load-img.scss
+ *
+ * 부모 SCSS 의 `img { ... }` 는 이 이미지에 미도달. `display: contents` 로 레이아웃에서만
+ * 빠질 뿐 스타일 캡슐화는 유지되기 때문. 그래서 크기·맞춤을 CSS 변수로 개방.
+ *
+ *   --lazy-img-width(100%) · --lazy-img-height(auto) · --lazy-img-fit(contain)
+ *
+ * 로딩 상태 분기는 라이브러리가 붙이는 클래스 사용 —
+ * `.ng-lazyloading` · `.ng-lazyloaded` · `.ng-failed-lazyloaded`
+ */
+
+:host {
+  display: contents;
+}
+
+img {
+  width: var(--lazy-img-width, 100%);
+  max-width: 100%;
+  height: var(--lazy-img-height, auto);
+  object-fit: var(--lazy-img-fit, contain);
+}

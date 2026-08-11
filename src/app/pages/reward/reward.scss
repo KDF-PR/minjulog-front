@@ -1,21 +1,18 @@
-// reward.scss — 04 리워드.
-// 골격은 templates/_step.scss 가 맡는다. 선물 한 단계가 한 절이고 제목 → 카드 → CTA 를 세로로 잇는다.
-
 @use 'utils' as *;
 
+// 골격은 templates/_step.scss 담당
 .reward {
   background-color: $color-bg-brand-sky;
 
-  // 제목 묶음 — 골격 기본값과 다른 것만 덮는다
   .step-header {
-    gap: $space-12; // 기본 8. 이 화면은 세 줄이라 조금 더 띄운다
+    gap: $space-12;
 
     .step-title {
       @include font-weight('bold');
     }
 
     .step-subtitle {
-      @include typo-ds('body', 'md'); // 기본 sm
+      @include typo-ds('body', 'md');
     }
 
     // 참여 기간 — 이 화면에만 있는 셋째 줄
@@ -28,31 +25,37 @@
     }
   }
 
-  // 밴드 경계 물결. 색만 지정한다 — 가로는 컴포넌트가 전폭을 채우고 높이는 시안대로 29px 고정이다.
   .reward-wave {
     --wave-top-color: #{$color-bg-brand-sky};
     --wave-bottom-color: #{$color-bg};
   }
 
-  // 물결 아래는 어느 상태에서든 흰 바탕이어야 해 흰색을 절이 아니라 여기서 깐다.
   .step-body {
+    height: 100%;
     padding-bottom: $space-24;
     background-color: $color-bg;
 
+    // 선물 단계 하나(3곳 · 6곳). 마지막 단계 아래에는 선을 긋지 않음
     .content {
       @include flex(column);
       padding: $page-x;
+
+      &:not(:last-of-type) {
+        border-bottom: 1px solid $color-border;
+      }
 
       .content-header {
         @include flex(column);
         gap: $space-4; // 시안 5
         padding-bottom: $space-12;
 
-        .content-title {
+        // 「첫 번째 선물」 등 단계 이름
+        h3 {
           @include typo-ds('body', 'lg');
         }
 
-        .content-condition {
+        // 받을 조건
+        p {
           color: $color-text-sub;
           @include typo-ds('body', 'xs');
         }
@@ -69,11 +72,11 @@
           padding: $space-12;
           background-color: $color-bg-subtle;
 
-          // 사진 자산 미수령 — 오면 배경째 교체한다.
-          // 시안 배경색(#dfdfdf · #ffecec)은 그림 안의 색이라 토큰으로 빼지 않는다.
+          // 사진 자산 미수령 — 오면 배경째 교체
+          // 시안 배경색(#dfdfdf · #ffecec)은 그림 안의 색이라 토큰으로 빼지 않음
           .record-img {
             @include border-radius($radius-md);
-            width: rem(96px); // 시안 실측. $thumb-sm(64)과 $thumb-md(128) 사이라 토큰이 없다
+            width: rem(96px);
             height: rem(96px);
             flex-shrink: 0;
             overflow: hidden;
@@ -83,29 +86,29 @@
             @include typo-ds('label', 'sm');
           }
 
-          // 설명이 길어도 카드 밖으로 밀지 않게 한다
+          // min-width: 0 이 없으면 설명이 길 때 카드 밖으로 밀림
           .record-body {
             min-width: 0;
             @include flex(column);
             gap: $space-4;
 
-            .record-title {
+            h4 {
               @include typo-ds('label', 'sm');
               @include font-weight('semiBold');
             }
 
-            .record-summary {
+            p {
               color: $color-text-sub;
               @include typo-ds('body', 'xs');
             }
           }
         }
 
-        // 시안의 외곽선 상자가 곧 CTA 다.
+        // 잠긴 단계도 같은 버튼. disabled 로 잠가야 보조기기에 「지금은 누를 수 없다」가 전달됨
         .record-cta {
           @include button('secondary', 'md');
-          border-color: $color-border-strong; // 시안 #6c6c6c — 카드보다 진한 선
-          @include border-radius($radius-lg); // 시안 16
+          border-color: $color-border-strong;
+          @include border-radius($radius-lg);
           width: 100%;
           background-color: transparent;
 
@@ -118,10 +121,6 @@
             @include a11yFocusStyle();
           }
         }
-      }
-
-      &:not(:last-of-type) {
-        border-bottom: 1px solid $color-border;
       }
     }
 

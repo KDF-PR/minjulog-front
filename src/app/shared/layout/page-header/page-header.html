@@ -1,0 +1,7 @@
+<header class="page-header">
+  <h1><a routerLink="/main">{{ title() }}</a></h1>
+
+  <button type="button" (click)="openIntro()">소개</button>
+</header>
+
+<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

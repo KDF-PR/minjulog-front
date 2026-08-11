@@ -1,8 +1,8 @@
 <section class="step reward" [class.is-ready]="ready()">
-  <app-page-header (introSelect)="openIntro()" />
+  <app-page-header />
 
   <div class="step-scroll" appScrollTop>
-    <div class="step-header">
+    <div class="step-header is-tab-page">
       <h2 class="step-title">참여 선물</h2>
 
       @if (remainingToReward() > 0) {
@@ -16,7 +16,6 @@
       <p class="reward-period">{{ periodLabel }}</p>
     </div>
 
-    <!-- 좌우 여백이 없는 .step-scroll 바로 아래 두어야 전폭을 채운다 — 안쪽 절에 넣으면 $page-x 만큼 잘린다 -->
     <app-wave-divider class="reward-wave" />
 
     <div class="step-body">
@@ -31,26 +30,24 @@
             [attr.aria-labelledby]="'reward-' + item.tier + '-title'"
           >
             <div class="content-header">
-              <h3 class="content-title" [id]="'reward-' + item.tier + '-title'">
+              <h3 [id]="'reward-' + item.tier + '-title'">
                 {{ item.order }}
               </h3>
-              <p class="content-condition">{{ item.condition }}</p>
+              <p>{{ item.condition }}</p>
             </div>
 
             <div class="content-body">
               <div class="record">
-                <!-- 선물 사진 자산 미수령 — 시안과 같은 문구 자리표시자 -->
                 <figure class="record-img">
                   <figcaption>사진</figcaption>
                 </figure>
 
                 <div class="record-body">
-                  <h4 class="record-title">{{ item.name }}</h4>
-                  <p class="record-summary">{{ item.description }}</p>
+                  <h4>{{ item.name }}</h4>
+                  <p>{{ item.description }}</p>
                 </div>
               </div>
 
-              <!-- 잠긴 단계도 같은 버튼이다. disabled 로 잠가야 보조기기에도 「지금은 누를 수 없다」가 전해진다 -->
               <button
                 type="button"
                 class="record-cta"
@@ -78,5 +75,3 @@
 
   <app-tab-bar />
 </section>
-
-<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

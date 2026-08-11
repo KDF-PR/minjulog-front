@@ -1,5 +1,6 @@
-// my-log.scss — 02 내 방문기록. 3단 골격은 templates/_step.scss 가 맡고 이 화면 전용만 둔다.
-// 레몬 밴드 색은 상단 바 뒤까지 이어져야 해서 .my-log 가 깐다 — 흰색이 필요한 절은 각자 배경을 다시 칠한다.
+// my-log.scss — 02 내 방문기록.
+// 공통 레이아웃 : templates/_step.scss
+// 이 문서에서는 이 페이지 전용 스타일만 다룬다.
 
 @use 'utils' as *;
 
@@ -25,7 +26,6 @@ $log-icon-size: rem(22px);
     padding: $spacing-page-y-mobile $page-x;
     background-color: $color-bg;
 
-    // 블록이 작고 태그가 겹치지 않아 안쪽은 요소 선택자로 충분하다
     .progress-head {
       @include flex(row, space-between, baseline);
       gap: $space-8;
@@ -57,7 +57,7 @@ $log-icon-size: rem(22px);
       overflow: hidden;
       background-color: $progress-track;
 
-      // 채움 막대. 이 안의 span 은 하나뿐이다
+      // 채움 막대. 이 안의 span 은 하나뿐
       span {
         display: block;
         height: 100%;
@@ -71,20 +71,26 @@ $log-icon-size: rem(22px);
     padding: 0 $page-x $spacing-page-y-mobile;
     background-color: $color-bg;
 
-    // 열이 고정되고 행이 이어지는 2차원 구조라 grid 를 쓴다
+    // 열 고정 && 행이 이어지는 2차원 구조라 grid 사용
     .log-list {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: $space-16;
 
-      // 카드는 사진(.log-thumb) 위에 글(.log-info)을 겹친 두 겹이다. 방문 상태는 여기서만 나눈다.
-      .log-item {
+      /**
+       * 방문 상태 카드. 사진(.log-thumb) 위에 글(.log-info)을 absolute 로 겹침.
+       *
+       * 방문 전  사진이 흐려지고 글은 가운데 정렬 · 카메라 아이콘
+       * 방문 후  사진이 선명해지고 글은 아래 정렬 · 이름 밴드 · 도장
+       * 필수     방문 전후 무관하게 카드 위에 안내 문구
+       */
+      li {
         &.is-visited {
           .log-thumb {
             opacity: 1;
           }
 
-          // .log-info 가 가운데 정렬이라 이름 밴드 가로는 여기서 따로 늘린다
+          // 부모(.log-info)의 가운데 정렬로 제한된 이름 밴드 너비를 가로 전체로 확장
           .log-text {
             align-self: stretch;
             margin-top: auto;

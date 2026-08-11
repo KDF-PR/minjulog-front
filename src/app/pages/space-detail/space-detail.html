@@ -1,35 +1,25 @@
 <section class="step space-detail" [class.is-ready]="ready()">
-  <app-page-header (introSelect)="openIntro()" />
+  <app-page-header />
 
   <div class="step-scroll" appScrollTop>
     <div class="step-body">
-      <!-- 콘텐츠는 프론트가 들고 있어 응답을 기다리지 않는다. 서버가 주는 것은 방문 여부뿐이라
-           오류여도 화면은 남긴다 -->
       @if (loadState() === 'error') {
         <p class="page-state" role="alert">방문 기록을 불러오지 못했어요</p>
       }
 
       @if (spaceVisit(); as item) {
         <div class="detail-hero">
-          <figure class="detail-hero-figure">
+          <figure>
             @if (item.space.heroImage) {
-              <img
-                class="space-img"
-                [src]="item.space.heroImage"
-                [alt]="item.space.name + ' 대표 이미지'"
-              />
+              <img [src]="item.space.heroImage" [alt]="item.space.name + ' 대표 이미지'" />
             } @else {
-              <!-- 대표 이미지 자산 미수령 — 수령 전까지 목록과 같은 thumb 를 쓴다 -->
               <lazyLoadImg
-                class="space-img"
                 [src]="'/assets/images/spaces/' + item.space.slug + '/thumb'"
                 [alt]="item.space.name + ' 대표 이미지'"
               />
             }
 
-            <!-- 방문 전에는 「방문 전」 도장으로 바뀐다. 자리와 크기만 이 화면이 정한다.
-                 방문 여부는 서버 응답이 정하므로 응답 전에는 그리지 않는다 —
-                 「방문 전」을 먼저 찍었다가 완료로 뒤집으면 도장이 깜빡인다 -->
+            <!-- 응답 전에는 그리지 않는다. 「방문 전」을 찍었다가 완료로 뒤집으면 도장이 깜빡인다 -->
             @if (loadState() === 'ready') {
               <app-stamp-badge
                 class="detail-hero-mark"
@@ -38,23 +28,22 @@
               />
             }
           </figure>
+
           <div class="detail-hero-bg-graphic">
             <app-wave-divider class="hero-wave" />
           </div>
-          <!-- 방문 완료 축하 그래픽 — 방문 전에는 그리지 않는다 -->
+
           @if (isVisited()) {
             <div class="detail-hero-overlay-graphic">
-              <lazyLoadImg
-                class="detail-hero-overlay-img"
-                [src]="'/assets/images/space-detail/hero-complete'"
-                alt=""
-              />
+              <lazyLoadImg [src]="'/assets/images/space-detail/hero-complete'" alt="" />
             </div>
           }
         </div>
+
         <app-wave-divider class="detail-wave" />
+
         <div class="detail-header">
-          <h2 class="detail-title">{{ item.space.name }}</h2>
+          <h2>{{ item.space.name }}</h2>
           <p class="detail-subtitle">{{ item.space.tagline }}</p>
 
           <p class="detail-address">
@@ -67,7 +56,6 @@
           <p class="detail-summary">{{ item.space.summary }}</p>
         </div>
 
-        <!-- 상세 본문. 배열 순서가 곧 화면 순서다 — 종류별 제목·아이콘은 sectionDefaults -->
         @for (section of item.space.sections; track $index) {
           <section
             class="content"
@@ -82,7 +70,7 @@
                   "
                 />
               </span>
-              <h3 class="content-title" [id]="'detail-section-title-' + $index">
+              <h3 [id]="'detail-section-title-' + $index">
                 {{ section.title ?? sectionDefaults[section.type].title }}
               </h3>
               @if (section.type === 'map') {
@@ -105,12 +93,7 @@
 
                 @if (section.link; as link) {
                   <div class="content-footer">
-                    <a
-                      class="content-link link"
-                      [href]="link.url"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <a class="link" [href]="link.url" target="_blank" rel="noopener noreferrer">
                       {{ link.label }} <span aria-hidden="true">↗</span>
                     </a>
                   </div>
@@ -119,14 +102,14 @@
               @case ('viewPoints') {
                 <ul class="content-body record-list">
                   @for (point of section.points; track point.name) {
-                    <li class="record">
-                      <h4 class="record-title">
+                    <li>
+                      <h4>
                         <span class="img-container is-star" aria-hidden="true">
                           <lazyLoadImg [src]="'/assets/images/ui/icons/star'" />
                         </span>
                         {{ point.name }}
                       </h4>
-                      <p class="record-summary">{{ point.desc }}</p>
+                      <p>{{ point.desc }}</p>
                     </li>
                   }
                 </ul>
@@ -140,7 +123,7 @@
                   @if (section.tags; as tags) {
                     <ul class="content-tags">
                       @for (tag of tags; track tag) {
-                        <li class="content-tag">{{ tag }}</li>
+                        <li>{{ tag }}</li>
                       }
                     </ul>
                   }
@@ -161,10 +144,8 @@
         <span class="icon-container">
           <lazyLoadImg [src]="'/assets/images/ui/icons/prev'" />
         </span>
-        <!-- <span aria-hidden="true">←</span> -->
       </button>
 
-      <!-- 인증의 시작점은 이 버튼 하나다. 카메라 전에 안내 시트(P1)를 먼저 연다 -->
       <button type="button" class="detail-photo is-primary" (click)="openGuide()">
         사진으로 방문 인증하기
       </button>
@@ -178,5 +159,3 @@
     />
   }
 </section>
-
-<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

@@ -1,0 +1,39 @@
+<section class="stamp-result">
+  <div class="result-graphic">
+    @if (view().mark) {
+      <span aria-hidden="true">{{ view().mark }}</span>
+    }
+  </div>
+
+  <div class="result-body">
+    <h2>{{ view().title }}</h2>
+
+    @for (description of view().descriptions; track $index) {
+      <p>{{ description }}</p>
+    }
+
+    @if (view().boxedDescription) {
+      <p class="result-note">{{ view().boxedDescription }}</p>
+    }
+  </div>
+
+  @if (view().showRewardCard) {
+    <app-reward-notice
+      class="result-notice"
+      linkLabel="보러가기"
+      (linkSelect)="actionSelect.emit('viewRewards')"
+    />
+  }
+
+  <div class="result-actions">
+    @for (item of view().actions; track item.action) {
+      <button
+        type="button"
+        [class.is-primary]="item.variant === 'primary'"
+        (click)="actionSelect.emit(item.action)"
+      >
+        {{ item.label }}
+      </button>
+    }
+  </div>
+</section>

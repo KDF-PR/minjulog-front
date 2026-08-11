@@ -1,0 +1,50 @@
+@use 'utils' as *;
+
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+.tab-bar {
+  z-index: $z-index-tabbar;
+  border-top: 1px solid $color-border;
+  height: $app-tabbar-height;
+  background-color: $tabbar-bg;
+
+  ul {
+    height: 100%;
+    @include flex(row, space-between, center);
+    padding: 0 $app-bar-x;
+
+    // 탭 한 칸. 셋이 같은 너비 분할
+    li {
+      flex: 1;
+      @include flexCenter();
+
+      // 탭 버튼. 활성 표시는 routerLinkActive 가 붙이는 .is-active 하나뿐
+      a {
+        @include border-radius($radius-full);
+        border: 1px solid transparent;
+        height: $app-tab-pill-height;
+        @include flexCenter();
+        padding: 0 $spacing-chip-x;
+        color: $tabbar-item-text;
+        @include typo-ds('label', 'md');
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease;
+
+        &.is-active {
+          border-color: $tabbar-item-active-border;
+          background-color: $tabbar-item-active-bg;
+          color: $tabbar-item-active-text;
+          @include font-weight('bold');
+        }
+
+        &:focus-visible {
+          @include a11yFocusStyle();
+        }
+      }
+    }
+  }
+}

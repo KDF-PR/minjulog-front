@@ -1,0 +1,70 @@
+/**
+ * wave-divider.scss
+ *
+ * `@Input()` 없음. 쓰는 화면이 아래 CSS 변수를 덮어 모양 결정.
+ *
+ *   --wave-top-color        물결 위쪽 색   기본 transparent (부모 배경 비침)
+ *   --wave-bottom-color     물결 아래쪽 색  기본 $color-bg
+ *   --wave-line-color       물결 선 색      기본 $color-text
+ *   --wave-divider-height   전체 높이       기본 29px
+ *   --wave-top-height       위쪽 색의 높이  기본 20px
+ *   --wave-size             한 마디 가로    기본 20px
+ *
+ * 선 두께만 변경 불가 — SVG 안의 stroke-width 라 CSS 변수 미도달.
+ * 곡선 변경 시 아래 두 SVG 의 path 를 **둘 다** 수정. 면과 선이 따로 그려져서다.
+ */
+
+@use 'utils' as *;
+
+// 아래 두 SVG 의 viewBox(0 0 20 6) 와 같은 값 유지. 어긋나면 물결이 잘리거나 늘어남
+$wave-period: 20px;
+$wave-band: 6px;
+
+// 물결 아래쪽을 채우는 실루엣
+$wave-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 6' preserveAspectRatio='none'%3E%3Cpath d='M0 1.1C5 1.1 5 4.9 10 4.9C15 4.9 15 1.1 20 1.1V6H0Z' fill='black'/%3E%3C/svg%3E");
+
+// 물결 선
+$wave-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 6' preserveAspectRatio='none'%3E%3Cpath d='M0 1.1C5 1.1 5 4.9 10 4.9C15 4.9 15 1.1 20 1.1' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
+
+:host {
+  position: relative;
+  width: 100%;
+  height: var(--wave-divider-height, 29px);
+  overflow: hidden;
+  display: block;
+  flex-shrink: 0;
+  background-color: var(--wave-top-color, transparent);
+}
+
+// 물결 아래쪽 면. mask 두 장(반복 물결 마디 + 아래를 메우는 사각형)이 add 로 합쳐진다.
+.wave-divider {
+  position: absolute;
+  top: calc(var(--wave-top-height, 20px) - #{$wave-band * 0.5});
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--wave-bottom-color, #{$color-bg});
+  mask-image: $wave-shape, linear-gradient(black, black);
+  mask-repeat: repeat-x, no-repeat;
+  mask-position:
+    left top,
+    left $wave-band;
+  mask-size:
+    var(--wave-size, #{$wave-period}) $wave-band,
+    100% calc(100% - #{$wave-band});
+
+  // 물결 선. 면과 같은 곡선·같은 반복 주기라 두 모양이 어긋나지 않는다.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: $wave-band;
+    background-color: var(--wave-line-color, #{$color-text});
+    mask-image: $wave-stroke;
+    mask-repeat: repeat-x;
+    mask-position: left top;
+    mask-size: var(--wave-size, #{$wave-period}) $wave-band;
+  }
+}

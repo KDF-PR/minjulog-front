@@ -1,5 +1,5 @@
 <section class="step verify">
-  <app-page-header (introSelect)="openIntro()" />
+  <app-page-header />
 
   <div class="step-scroll">
     <div class="step-header">
@@ -23,7 +23,7 @@
           <button type="button" (click)="start()">시작하기</button>
         </div>
       } @else {
-        <form class="verify-form" (submit)="$event.preventDefault(); verify()">
+        <form (submit)="$event.preventDefault(); verify()">
           <label class="is-visually-hidden" for="verify-code">인증코드</label>
 
           <!-- 실제 input 은 하나 — SMS 자동입력·붙여넣기가 6칸으로 쪼개면 깨진다.
@@ -93,5 +93,3 @@
     </div>
   </div>
 </section>
-
-<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

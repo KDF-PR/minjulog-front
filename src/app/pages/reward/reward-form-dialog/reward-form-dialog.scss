@@ -1,0 +1,51 @@
+@use 'utils' as *;
+
+/**
+ * reward-form-dialog.scss — R2 신청 정보 입력 dialog.
+ *
+ * 카드 골격(.dialog-*)은 templates/_dialog.scss, 라벨·입력칸·오류 문구(.field-*)는
+ * templates/_form.scss 가 전역 1회 방출. 여기는 안내 dialog 와 달라지는 것만 담당.
+ */
+
+// form 이 .dialog 의 flex 자식 하나가 되면서 header/body/footer 사이 간격이 끊김
+// → .dialog 와 같은 값으로 다시 지정
+.reward-form {
+  @include flex(column);
+  gap: $space-24;
+
+  .dialog-body {
+    gap: $space-20; // 시안 실측 — 필드 묶음 사이
+    color: $color-text;
+    text-align: left; // 안내문은 가운데지만 폼은 라벨이 왼쪽에서 시작
+
+    // 필드 묶음(라벨 + 입력칸 + 오류 문구). .dialog-body 직계 div 는 이것뿐
+    > div {
+      @include flex(column);
+      gap: $space-6; // 시안 실측 — 라벨과 입력칸 사이
+    }
+
+    // 동의 줄. 체크박스와 문구를 label 하나로 묶어 문구를 눌러도 켜짐
+    .reward-agree {
+      @include flex(row, flex-start, flex-start);
+      gap: $space-8; // 시안 9 — 스케일에 없어 가장 가까운 8
+      color: $color-text-sub;
+      @include typo-ds('body', 'xs');
+      cursor: pointer;
+
+      // 시안 18. 스케일에 없어 아이콘 토큰(16) 사용
+      // 문구 줄 높이(13 × 1.64 ≈ 21)보다 낮아 첫 줄 가운데로 내림
+      input[type='checkbox'] {
+        width: $icon-sm;
+        height: $icon-sm;
+        flex-shrink: 0;
+        margin-top: $space-2;
+        accent-color: $color-action;
+        cursor: pointer;
+
+        &:focus-visible {
+          @include a11yFocusStyle();
+        }
+      }
+    }
+  }
+}

@@ -1,15 +1,13 @@
 <section class="step my-log" [class.is-ready]="ready()">
-  <app-page-header (introSelect)="openIntro()" />
+  <app-page-header />
 
   <div class="step-scroll" appScrollTop>
-    <div class="step-header">
+    <div class="step-header is-tab-page">
       <h2 class="step-title">내 방문기록</h2>
       <p class="step-subtitle">{{ introDesc() }}</p>
     </div>
 
-    <!-- 좌우 여백이 없는 .step-scroll 바로 아래 두어야 프레임 너비를 채운다 — 진행률 절 안이면 $page-x 만큼 잘린다 -->
     <app-wave-divider class="my-log-wave" />
-
     <div class="step-body">
       <section class="my-log-progress" aria-labelledby="my-log-progress-label">
         <div class="progress-head">
@@ -35,17 +33,13 @@
         }
       </section>
 
-      <section
-        class="my-log-logs"
-        aria-labelledby="my-log-logs-label"
-      >
+      <section class="my-log-logs" aria-labelledby="my-log-logs-label">
         <h3 class="a11y-hidden" id="my-log-logs-label">장소별 방문 기록</h3>
 
         @if (loadState() === 'loading') {
-          <!-- 실제 카드와 같은 크기로 로딩 전 자리를 잡는다 -->
           <ul class="log-list" aria-hidden="true">
             @for (slug of placeholderSlugs; track slug) {
-              <li class="log-item">
+              <li>
                 <span class="log-link is-skeleton"></span>
               </li>
             }
@@ -56,18 +50,16 @@
         } @else {
           <ul class="log-list">
             @for (item of spaceVisits(); track item.space.slug) {
-              <li class="log-item" [class.is-visited]="item.visit !== null">
+              <li [class.is-visited]="item.visit !== null">
                 <a class="log-link" [routerLink]="['/spaces', item.space.slug]">
                   <span class="log-thumb">
                     <lazyLoadImg [src]="'/assets/images/spaces/' + item.space.slug + '/thumb'" />
                   </span>
                   <span class="log-info">
-                    <!-- 필수 뱃지 — 민주화운동기념관만 해당 -->
                     @if (item.space.isRequired) {
                       <span class="log-required">필수</span>
                     }
                     @if (item.visit !== null) {
-                      <!-- 인증 완료 도장. 색은 장소마다 다르고 자리만 이 화면이 정한다 -->
                       <app-stamp-badge class="log-mark" [mark]="item.space.markColor" />
                       <span class="log-text">
                         <strong class="log-name">{{ item.space.shortName }}</strong>
@@ -96,5 +88,3 @@
 
   <app-tab-bar />
 </section>
-
-<app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

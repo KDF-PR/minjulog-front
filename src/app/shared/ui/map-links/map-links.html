@@ -1,0 +1,7 @@
+<ul class="map-links">
+  @for (link of links(); track link.label) {
+    <li>
+      <a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+    </li>
+  }
+</ul>

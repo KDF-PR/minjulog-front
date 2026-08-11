@@ -18,20 +18,20 @@
     animate.enter="motion-sheet-enter"
     animate.leave="motion-sheet-leave"
   >
-    <header class="bottom-sheet-header guide-header">
-      <h2 class="guide-title" id="photo-guide-title">{{ space().name }} 인증 방법</h2>
-      <p class="guide-desc">아래 사진을 참고해 이 장소임을 알아볼 수 있도록 촬영해 주세요.</p>
+    <header class="bottom-sheet-header">
+      <h2 id="photo-guide-title">{{ space().name }} 인증 방법</h2>
+      <p>아래 사진을 참고해 이 장소임을 알아볼 수 있도록 촬영해 주세요.</p>
     </header>
 
-    <div class="bottom-sheet-body guide-body">
-      <figure class="guide-example">
+    <div class="bottom-sheet-body">
+      <figure>
         @if (space().photoExample; as example) {
-          <img class="guide-example-img" [src]="example" alt="" />
+          <img [src]="example" alt="" />
         } @else {
           <!-- 예시 인증 사진 자산 미수령 — 올 때까지 목록 thumb 로 대신한다 -->
           <lazyLoadImg [src]="'/assets/images/spaces/' + space().slug + '/thumb'" />
         }
-        <figcaption class="guide-example-badge">예시 인증사진</figcaption>
+        <figcaption>예시 인증사진</figcaption>
       </figure>
 
       <p class="guide-note">
@@ -40,7 +40,7 @@
       </p>
     </div>
 
-    <footer class="bottom-sheet-footer guide-footer">
+    <footer class="bottom-sheet-footer">
       <button type="button" class="guide-back" (click)="close.emit()" aria-label="닫기">
         <span aria-hidden="true">←</span>
       </button>

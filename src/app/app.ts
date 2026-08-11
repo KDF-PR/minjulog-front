@@ -1,7 +1,7 @@
 import { Component, isDevMode } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { environment } from '../environments/environment';
-import { DevScenario } from './shared/dev-scenario/dev-scenario';
+import { DevScenario } from './shared/dev/dev-scenario/dev-scenario';
 
 @Component({
   selector: 'app-root',

@@ -1,0 +1,50 @@
+@use 'utils' as *;
+
+:host {
+  display: block;
+}
+
+.reward-notice {
+  border: 1px solid $color-border-subtle;
+  @include border-radius($radius-lg);
+  @include flex(row, flex-start, center);
+  gap: $space-12;
+  padding: $spacing-card-sm;
+  background-color: $color-bg-subtle;
+
+  // 선물 아이콘. 직계 선택 필수 → 그냥 span 이면 버튼 안의 › 까지 아이콘 상자가 됨
+  > span {
+    @include border-radius($radius-md);
+    width: $control-md;
+    height: $control-md;
+    flex-shrink: 0;
+    @include flexCenter();
+    background-color: $color-border-strong;
+    color: $color-text-inverse;
+
+    svg {
+      width: $icon-md;
+      height: $icon-md;
+    }
+  }
+
+  // 안내 문구. 남는 폭 전부 차지 → 아이콘과 버튼을 양끝으로 밀어냄
+  p {
+    flex: 1;
+    color: $color-text-sub;
+    @include typo-ds('body', 'sm');
+  }
+
+  // 「리워드 받기」 버튼
+  button {
+    flex-shrink: 0;
+    color: $color-text;
+    @include typo-ds('label', 'md');
+    @include font-weight('bold');
+    cursor: pointer;
+
+    &:focus-visible {
+      @include a11yFocusStyle();
+    }
+  }
+}

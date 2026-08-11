@@ -1,0 +1,117 @@
+@if (open()) {
+  <div
+    class="dialog-dim"
+    (click)="cancel()"
+  >
+    <!-- 카드 안쪽 클릭이 딤까지 올라가면 열자마자 닫힌다 -->
+    <div
+      class="dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="reward-form-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="dialog-header">
+        <h2 class="dialog-title" id="reward-form-title">리워드 신청</h2>
+      </div>
+
+      <form class="reward-form" [formGroup]="form" (ngSubmit)="save()">
+        <div class="dialog-body">
+          <div>
+            <label class="field-label" for="reward-name">이름</label>
+            <input
+              id="reward-name"
+              class="field-input"
+              type="text"
+              formControlName="name"
+              autocomplete="name"
+              placeholder="이름"
+              aria-label="이름 입력"
+              [attr.aria-invalid]="showError(form.controls.name)"
+              [attr.aria-describedby]="showError(form.controls.name) ? 'reward-name-error' : null"
+            />
+            <!-- 값을 실제로 고친 경우(dirty)에만 표시 — 열자마자 뜨지 않게 -->
+            @if (showError(form.controls.name)) {
+              <p class="field-error" id="reward-name-error" role="alert">이름을 입력해 주세요</p>
+            }
+          </div>
+
+          <div>
+            <label class="field-label" for="reward-phone">연락처</label>
+            <input
+              id="reward-phone"
+              class="field-input"
+              type="tel"
+              inputmode="tel"
+              formControlName="phone"
+              autocomplete="tel"
+              placeholder="010-0000-0000"
+              aria-label="연락처 입력"
+              [attr.aria-invalid]="showError(form.controls.phone)"
+              [attr.aria-describedby]="showError(form.controls.phone) ? 'reward-phone-error' : null"
+            />
+            @if (showError(form.controls.phone) && form.controls.phone.hasError('required')) {
+              <p class="field-error" id="reward-phone-error" role="alert">연락처를 입력해 주세요</p>
+            }
+            @if (showError(form.controls.phone) && form.controls.phone.hasError('pattern')) {
+              <p class="field-error" id="reward-phone-error" role="alert">
+                연락처를 다시 확인해 주세요
+              </p>
+            }
+          </div>
+
+          <div>
+            <label class="field-label" for="reward-address">주소</label>
+            <input
+              id="reward-address"
+              class="field-input"
+              type="text"
+              formControlName="address"
+              autocomplete="street-address"
+              placeholder="배송지 주소"
+              aria-label="배송지 주소 입력"
+              [attr.aria-invalid]="showError(form.controls.address)"
+              [attr.aria-describedby]="
+                showError(form.controls.address) ? 'reward-address-error' : null
+              "
+            />
+            @if (showError(form.controls.address)) {
+              <p class="field-error" id="reward-address-error" role="alert">
+                선물을 받을 주소를 입력해 주세요
+              </p>
+            }
+          </div>
+
+          <div>
+            <!-- 체크박스와 문구를 label 하나로 묶어 문구를 눌러도 켜진다 -->
+            <label class="reward-agree">
+              <input
+                type="checkbox"
+                formControlName="agree"
+                [attr.aria-describedby]="
+                  showError(form.controls.agree) ? 'reward-agree-error' : null
+                "
+              />
+              <span>
+                개인정보 수집 및 이용에 동의합니다.<br />
+                (리워드 발송 목적, 발송 후 파기)
+              </span>
+            </label>
+            @if (showError(form.controls.agree)) {
+              <p class="field-error" id="reward-agree-error" role="alert">
+                개인정보 수집 및 이용에 동의해야 신청할 수 있어요
+              </p>
+            }
+          </div>
+        </div>
+
+        <div class="dialog-footer">
+          <button type="submit" class="btn-primary" [disabled]="form.invalid || submitting()">
+            {{ submitting() ? '신청 중...' : '신청하기' }}
+          </button>
+          <button type="button" class="btn-secondary" (click)="cancel()">취소</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

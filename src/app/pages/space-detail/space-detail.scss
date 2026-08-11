@@ -1,12 +1,10 @@
-// space-detail.scss — 03 방문할 곳 상세.
-// 골격은 templates/_step.scss 가 맡는다. 제목이 대표 이미지 아래라 .step-header 대신 .detail-head 를 쓴다.
-
 @use 'utils' as *;
 
+// 골격은 templates/_step.scss 담당. 제목이 대표 이미지 아래라 .step-header 를 쓰지 않음
 .space-detail {
   background-color: $color-bg-brand-lemon;
 
-  // 물결 경계는 위아래 색만 지정한다 — hero 초록에서 본문 흰색으로 넘어간다.
+  // hero 초록 → 본문 흰색 경계. 위아래 색만 지정
   .detail-wave {
     --wave-top-color: #{$color-action-brand};
     --wave-bottom-color: #{$color-bg};
@@ -16,11 +14,10 @@
     position: relative;
     width: 100%;
     height: 324px;
-
     @include flexCenter();
 
-    // 위로 튕기는 스크롤(overscroll) 때 .step-scroll 의 흰 배경이 드러난다.
-    // 같은 초록을 화면 높이만큼 위로 늘려 그 틈을 가린다.
+    // 위로 튕기는 스크롤(overscroll) 때 .step-scroll 의 흰 배경이 드러남
+    // → 같은 초록을 화면 높이만큼 위로 늘려 그 틈을 가림
     &::before {
       content: '';
       position: absolute;
@@ -31,28 +28,26 @@
       background-color: $color-action-brand;
     }
 
-    // 대표 이미지. 1:1 비율로 정사각형을 잡고, 안쪽에 이미지를 채운다.
-    .detail-hero-figure {
+    // 대표 이미지 틀. 자산 유무에 따라 img · lazyLoadImg 중 하나가 들어감
+    figure {
       z-index: 1;
       position: relative;
       @include border-radius($radius-lg);
-
+      border: 1px solid $neutral-900;
       width: $detail-hero-size;
       height: $detail-hero-size;
-      border: 1px solid $neutral-900;
       overflow: hidden;
-
       @include flexCenter();
       background-color: $color-bg-subtle;
 
-      // lazyLoadImg 내부 img 는 스타일 표식이 달라 ::ng-deep 으로만 닿는다. 범위는 figure 안으로 한정.
+      // lazyLoadImg 내부 img 는 스타일 표식이 달라 ::ng-deep 으로만 도달. 범위는 figure 안으로 한정
       ::ng-deep img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
 
-      // 모양·색은 app-stamp-badge 가 맡는다. 기본 48px 보다 커서 크기를 덮어쓴다 (시안 실측 상 6 · 우 6).
+      // 모양·색은 app-stamp-badge 담당. 기본 48px 보다 커서 크기를 덮음 (시안 실측 상 6 · 우 6)
       .detail-hero-mark {
         z-index: 1;
         position: absolute;
@@ -63,27 +58,31 @@
       }
     }
 
+    // 방문 완료 축하 그래픽. 대표 이미지 위에 겹치므로 클릭은 통과시킴
     .detail-hero-overlay-graphic {
+      z-index: 2;
       position: absolute;
       top: 0;
       left: 50%;
       @include translate(-50%, 0);
-      z-index: 2;
-      pointer-events: none;
       width: 424px;
       height: 324px;
+      pointer-events: none;
+
       img {
         @include objectFit();
       }
     }
+
+    // hero 아래쪽 초록 띠. 물결이 이 띠와 레몬 배경의 경계를 그림
     .detail-hero-bg-graphic {
       position: absolute;
-      width: 100%;
-      left: 0;
       bottom: 0;
+      left: 0;
+      width: 100%;
       height: 140px;
-
       background-color: $color-action-brand;
+
       .hero-wave {
         --wave-top-color: #{$color-bg-brand-lemon};
         --wave-bottom-color: #{$color-action-brand};
@@ -97,7 +96,7 @@
     background-color: $color-bg;
     text-align: center;
 
-    .detail-title {
+    h2 {
       @include typo-ds('title', 'lg');
     }
 
@@ -112,12 +111,8 @@
       margin-top: $space-16;
       color: $color-text-muted;
       @include typo-ds('label', 'sm');
+
       .icon-container {
-        width: $icon-sm;
-        height: $icon-sm;
-      }
-      .detail-address-icon {
-        flex: 0 0 auto;
         width: $icon-sm;
         height: $icon-sm;
       }
@@ -130,7 +125,7 @@
     }
   }
 
-  // 세 절이 같은 골격을 쓴다.
+  // 상세 본문. 네 종류(map · story · viewPoints · visitInfo)가 같은 골격을 공유
   .content {
     @include flex(column);
     gap: $space-32;
@@ -147,11 +142,12 @@
       &.is-section {
         width: 64px;
       }
+
       &.is-star {
-        // @include testBg();
         width: 20px;
         height: 20px;
       }
+
       img {
         @include objectFit();
       }
@@ -161,15 +157,7 @@
       @include flex(column, flex-start, center);
       gap: $space-8;
 
-      // 절 아이콘 자산 미수령 — 자리만 잡아 둔다.
-      .content-icon {
-        @include border-radius($radius-full);
-        width: $icon-lg;
-        height: $icon-lg;
-        background-color: $color-bg-muted;
-      }
-
-      .content-title {
+      h3 {
         @include typo-ds('title', 'md');
       }
     }
@@ -182,13 +170,13 @@
         @include typo-ds('body', 'sm');
       }
 
-      // visitInfo 섹션의 정보 칩 (P1 시안)
+      // visitInfo 정보 칩 (P1 시안)
       .content-tags {
         @include flex(row, center, center);
         flex-wrap: wrap;
         gap: $space-8;
 
-        .content-tag {
+        li {
           border: 1px solid $color-border-subtle;
           padding: $space-4;
           color: $color-text-muted;
@@ -197,34 +185,31 @@
       }
     }
 
+    // story 절의 외부 링크. .link 타이포는 base/_typography.scss 가 이미 그림
     .content-footer {
-      text-align: center;
+      text-align: left;
 
-      // 밑줄은 전역 .link 가 맡는다 (base/_typography.scss).
-      .content-link {
+      a {
         color: $color-text-sub;
         @include typo-ds('label', 'sm');
       }
     }
 
+    // viewPoints 절. .content-body 규칙을 이어받고 gap 만 좁힘
     .record-list {
       gap: $space-12;
 
-      .record {
+      li {
         @include flex(column);
         gap: $space-4;
 
-        .record-title {
+        h4 {
           @include flex(row, flex-start, center);
           gap: $space-4;
           @include typo-ds('title', 'sm');
-
-          .record-icon {
-            color: $color-action-brand;
-          }
         }
 
-        .record-summary {
+        p {
           color: $color-text-sub;
           @include typo-ds('body', 'sm');
         }
@@ -232,23 +217,21 @@
     }
   }
 
-  // 하단 고정 영역. 버튼은 전역 .btn-container 가 그린다 (templates/_step.scss). 좌우 16 · 높이 68.
-  // .btn-container 기본값은 중앙 고정폭이라 여기서 전폭으로 되돌린다.
+  // 하단 고정 영역. 화면 흐름 밖이라 .step-scroll 과 형제로 둠
   .detail-actions {
     border-top: 1px solid $color-border;
-    // height: $app-bar-height;
-
     width: 100%;
     @include flex(row, center, center);
     gap: $space-24;
     padding: $space-12 $app-bar-x;
+    background-color: $tabbar-bg;
+
     @include tablet() {
       @include flex(row, space-between, center);
       padding: $space-12 $space-24;
     }
 
-    background-color: $tabbar-bg;
-
+    // 목록으로 돌아가기(←). 정사각 고정이라 button() 미사용
     .detail-back {
       @include border-radius($radius-sm);
       width: $icon-xl;
@@ -261,14 +244,12 @@
       }
     }
 
+    // 인증의 시작점. 카메라 전에 안내 시트(P1)를 먼저 엶
     .detail-photo {
       @include border-radius($radius-md);
       width: 100%;
-      // max-width: 264px;
       padding: $space-16;
-
       @include flexCenter();
-
       background-color: $btn-primary-bg;
       color: $btn-primary-text;
 

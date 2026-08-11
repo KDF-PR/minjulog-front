@@ -1,10 +1,9 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs';
-import { PageHeader } from '../../shared/page-header/page-header';
-import { TabBar } from '../../shared/tab-bar/tab-bar';
-import { IntroDialog } from '../../shared/intro-dialog/intro-dialog';
-import { WaveDivider } from '../../shared/wave-divider/wave-divider';
+import { PageHeader } from '../../shared/layout/page-header/page-header';
+import { TabBar } from '../../shared/layout/tab-bar/tab-bar';
+import { WaveDivider } from '../../shared/layout/wave-divider/wave-divider';
 import { AuthService } from '../../auth/auth.service';
 import { RETURN_URL_PARAM } from '../../auth/auth.guard';
 import { PhotoService } from '../../core/photo.service';
@@ -12,7 +11,7 @@ import { RewardService } from '../../core/reward.service';
 import { SpaceService } from '../../core/space.service';
 import { LoadState, REWARD_TIERS, RewardTier } from '../../core/models';
 import { OPERATION_PERIOD } from '../../core/spaces.content';
-import { ScrollTopDirective } from '../../utils/scroll-top.directive';
+import { ScrollTopDirective } from '../../shared/directives/scroll-top.directive';
 
 /** 선물 한 단계에 붙는 문구. 시안 R1 의 값을 그대로 옮겼다 — 확정 문구가 오면 여기만 바뀐다 */
 interface RewardContent {
@@ -61,7 +60,7 @@ function toCtaLabel(claimed: boolean, claimable: boolean, remaining: number): st
  */
 @Component({
   selector: 'app-reward',
-  imports: [PageHeader, TabBar, IntroDialog, WaveDivider, ScrollTopDirective],
+  imports: [PageHeader, TabBar, WaveDivider, ScrollTopDirective],
   templateUrl: './reward.html',
   styleUrl: './reward.scss',
 })
@@ -75,7 +74,6 @@ export class Reward implements OnInit {
   /** 진입 모션 게이트 — .is-ready 가 붙은 뒤 자식 motion-* 이 재생된다. */
   protected readonly ready = signal(false);
   protected readonly loadState = signal<LoadState>('idle');
-  protected readonly introOpen = signal(false);
   protected readonly claimingTier = signal<RewardTier | null>(null);
   protected readonly issuedCode = signal<string | null>(null);
   protected readonly claimError = signal<string | null>(null);
@@ -115,14 +113,6 @@ export class Reward implements OnInit {
   ngOnInit(): void {
     requestAnimationFrame(() => this.ready.set(true));
     this.load();
-  }
-
-  protected openIntro(): void {
-    this.introOpen.set(true);
-  }
-
-  protected closeIntro(): void {
-    this.introOpen.set(false);
   }
 
   /**

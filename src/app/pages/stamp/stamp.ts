@@ -6,8 +6,8 @@ import {
   StampResultAction,
   StampResultStatus,
   STAMP_RESULT_STATUSES,
-} from '../../shared/stamp-result/stamp-result';
-import { PhotoCapture } from '../../shared/photo-capture/photo-capture';
+} from './stamp-result/stamp-result';
+import { PhotoCapture } from './photo-capture/photo-capture';
 import { PhotoService } from '../../core/photo.service';
 import { RewardService } from '../../core/reward.service';
 import { SpaceService } from '../../core/space.service';
