@@ -1,9 +1,8 @@
 /**
  * 장소 6곳의 **고정 정보**.
  *
- * 사용자 상태(방문 여부)는 여기서 다루지 않는다. `PhotoService` 가 들고 있고,
- * 둘이 함께 필요한 화면은 `spaceVisits` 로 짝지어 받는다.
- * 나눠두면 로그인 전에도 장소 목록을 그대로 쓸 수 있다.
+ * 사용자 상태(방문 여부)는 `PhotoService` 담당. 둘이 함께 필요한 화면은 `spaceVisits` 로 수령.
+ * 나눠두면 로그인 전에도 장소 목록을 그대로 사용 가능.
  */
 
 import { Injectable, computed, inject, signal } from '@angular/core';
@@ -24,11 +23,11 @@ const MOCK_LATENCY = 300;
 const FIRST_TIER = REWARD_TIERS[0];
 
 /**
- * 응답을 받기 전에도 목록을 그릴 초기값.
+ * 응답 전에도 목록을 그릴 초기값.
  *
- * 목록 화면이 쓰는 값(이름·지역·마크 색·slug)은 전부 프론트 콘텐츠라 서버를 기다릴 이유가 없다.
- * 서버만 아는 값은 uuid 하나이고, `spaceId: ''` 는 "아직 서버 값이 아니다"라는 표시다 —
- * 빈 값이 업로드로 새어 나가지 않도록 `PhotoService.uploadPhoto()` 가 차단한다.
+ * 목록이 쓰는 값(이름 · 지역 · 마크 색 · slug)은 전부 프론트 콘텐츠라 서버 대기 불필요.
+ * 서버만 아는 값은 uuid 하나. `spaceId: ''` 는 "아직 서버 값이 아님" 표시이고,
+ * 이 빈 값이 업로드로 새지 않도록 `PhotoService.uploadPhoto()` 가 차단.
  */
 const INITIAL_SPACES: Space[] = SPACES_CONTENT.map((content) => ({
   ...content,
@@ -45,12 +44,12 @@ export class SpaceService {
   private readonly spaceList = signal<Space[]>(INITIAL_SPACES);
 
   /**
-   * 장소 목록 — 고정 정보만. 추천 코스 순번으로 정렬한다.
-   * 백엔드는 이름 오름차순으로 주지만 표시 순서는 프론트가 정한다.
+   * 장소 목록 — 고정 정보만. 추천 코스 순번으로 정렬.
+   * 백엔드는 이름 오름차순으로 주지만 표시 순서는 프론트가 결정.
    */
   readonly spaces = this.spaceList.asReadonly();
 
-  /** 장소 + 그 사용자의 방문 상태. 목록·상세 화면이 쓴다 */
+  /** 장소 + 그 사용자의 방문 상태. 목록·상세 화면이 사용 */
   readonly spaceVisits = computed<SpaceVisit[]>(() =>
     this.spaceList().map((space) => ({
       space,
@@ -71,7 +70,7 @@ export class SpaceService {
 
   /**
    * 방문 현황 화면 상태 — 디자인 `02`~`06`.
-   * 방문 수만으로 갈리지 않는다. 3곳을 채워도 필수를 안 갔으면 `04` 안내 화면이다.
+   * **방문 수만으로 갈리지 않는다.** 3곳을 채워도 필수를 안 갔으면 `04` 안내.
    */
   readonly progressState = computed<ProgressState>(() => {
     const count = this.visitedCount();
@@ -109,11 +108,11 @@ export class SpaceService {
 }
 
 /**
- * 백엔드 응답에 로컬 콘텐츠를 붙인다.
+ * 백엔드 응답에 로컬 콘텐츠를 결합.
  *
- * 콘텐츠를 못 찾은 장소는 목록에서 뺀다. 지금은 이름 문자열로 잇고 있어서
- * 백엔드에서 장소명을 바꾸면 조용히 사라진다 — 그래서 경고를 남긴다.
- * `slug` 컬럼이 생기면 이 매칭을 걷어낸다 (`docs/요구사항정의.md` 9장 ⑦).
+ * 콘텐츠를 못 찾은 장소는 목록에서 제외. 지금은 이름 문자열로 잇고 있어
+ * 백엔드에서 장소명을 바꾸면 **조용히 사라짐** → 그래서 경고를 남긴다.
+ * `slug` 컬럼이 생기면 이 매칭 제거 (`docs/요구사항정의.md` 9장 ⑦).
  */
 function mergeWithContent(dtos: SpaceDto[]): Space[] {
   return dtos

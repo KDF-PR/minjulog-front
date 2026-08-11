@@ -1,19 +1,19 @@
 /**
  * 화면이 쓰는 모델. 전부 camelCase.
  *
- * 세 가지를 분리한다.
- * - `SpaceContent` — 프론트가 들고 있는 고정 콘텐츠 (주소·설명·인증 팁)
- * - `Space` — 위에 백엔드 마스터 값(uuid·필수 여부)을 더한 **장소 고정 정보**
- * - `Visit` — **사용자마다 다른 상태** (언제 어떤 사진으로 인증했는가)
+ * 세 층으로 분리 —
+ *   SpaceContent  프론트가 보관하는 고정 콘텐츠 (주소 · 설명 · 인증 팁)
+ *   Space         위에 백엔드 마스터 값(uuid · 필수 여부)을 더한 장소 고정 정보
+ *   Visit         사용자마다 다른 상태 (언제 어떤 사진으로 인증했는가)
  *
- * `Space` 와 `Visit` 를 한 객체로 합치지 않는다. 합치면 방문 하나가 바뀔 때마다 장소 정보까지
- * 새로 만들어야 하고, 로그인 전후로 같은 장소가 다른 객체가 된다.
- * 둘이 함께 필요한 화면은 `SpaceVisit` 로 짝지어 받는다.
+ * **Space 와 Visit 를 한 객체로 합치지 않는다.** 합치면 방문 하나가 바뀔 때마다 장소 정보까지
+ * 새로 만들어야 하고, 로그인 전후로 같은 장소가 다른 객체가 됨.
+ * 둘이 함께 필요한 화면은 `SpaceVisit` 로 짝지어 수령.
  *
- * 백엔드 원형은 `api.dto.ts`, 변환은 `api.mapper.ts` 한 곳에서만 한다.
+ * 백엔드 원형은 `api.dto.ts`, 변환은 `api.mapper.ts` 한 곳에서만.
  */
 
-/** 장소 식별자 — 프론트 콘텐츠의 키. 백엔드 uuid 와는 별개다 */
+/** 장소 식별자 — 프론트 콘텐츠의 키. 백엔드 uuid 와 별개 */
 export type SpaceSlug =
   | 'korean-democracy-museum'
   | 'seoul-youth-hostel'
@@ -31,15 +31,14 @@ export const SPACE_SLUGS: readonly SpaceSlug[] = [
   'gwanghwamun-square',
 ] as const;
 
-/** 리워드 단계. 백엔드 `REWARD_TIERS = (3, 6)` 과 같아야 한다 (`app.py:459`) */
+/** 리워드 단계. 백엔드 `REWARD_TIERS = (3, 6)` 과 일치 필수 (`app.py:459`) */
 export type RewardTier = 3 | 6;
 export const REWARD_TIERS: readonly RewardTier[] = [3, 6] as const;
 
 /**
- * 방문 완료 스탬프 마커 색. 장소마다 하나씩 고정이다.
- *
- * 색 값은 `utils/_colors.scss` 의 `$stamp-mark-*` 가 들고 있다. 여기에는 이름만 둔다 —
- * 색 자체가 오면 화면 코드가 색을 아는 자리가 된다.
+ * 방문 완료 스탬프 마커 색. 장소마다 하나씩 고정.
+ * 색 값은 `utils/_colors.scss` 의 `$stamp-mark-*` 담당 → 여기에는 이름만.
+ * 색 자체를 두면 화면 코드가 색을 아는 자리가 됨.
  */
 export type StampMark = 'pink' | 'skyblue' | 'orange' | 'lemon' | 'lime' | 'green';
 export const STAMP_MARKS: readonly StampMark[] = [
@@ -51,17 +50,17 @@ export const STAMP_MARKS: readonly StampMark[] = [
   'green',
 ] as const;
 
-// ── ① 고정 콘텐츠 — 프론트 소유 ────────────────────────────────────
+// ① 고정 콘텐츠 — 프론트 소유
 
 /**
- * 프론트가 보관하는 장소 콘텐츠. 백엔드 `spaces` 테이블에 자리가 없는 항목들이다.
+ * 프론트가 보관하는 장소 콘텐츠. 백엔드 `spaces` 테이블에 자리가 없는 항목들.
  * 원본은 `spaces.content.ts`.
  */
 export interface SpaceContent {
   slug: SpaceSlug;
   /** 그리드용 짧은 이름 */
   shortName: string;
-  /** 정식 명칭. 백엔드 `name` 과 일치시켜 매칭에 쓴다 */
+  /** 정식 명칭. 백엔드 `name` 과 일치시켜 매칭에 사용 */
   name: string;
   region: string;
   address: string;
@@ -81,8 +80,8 @@ export interface SpaceContent {
   /** 상세 화면 본문. **배열 순서가 곧 화면 순서다** */
   sections: SpaceSection[];
 
-  // ── 선택 항목 ─────────────────────────────────────────────
-  // 공식 콘텐츠를 못 받아 비어 있는 장소가 있다. **없으면 그 영역을 통째로 숨긴다.**
+  // 선택 항목 — 공식 콘텐츠 미수령으로 비어 있는 장소가 있다.
+  // **없으면 그 영역을 통째로 숨긴다.** 빈 문자열을 넣지 않는다.
 
   /** 대표 사진. `/assets/images/spaces/<slug>.jpg` */
   heroImage?: string;
@@ -90,34 +89,32 @@ export interface SpaceContent {
   photoExample?: string;
   /** 지도 미리보기·길찾기용 좌표 */
   coords?: SpaceCoords;
-  /** 가까운 다른 장소. 상세 화면 하단에서 다음 걸음을 잇는다 */
+  /** 가까운 다른 장소. 상세 화면 하단에서 다음 걸음으로 연결 */
   nearby?: NearbySpace[];
 }
 
-/** 상세 화면 섹션 종류. 화면 렌더러(`@switch`)와 1:1 이다 */
+/** 상세 화면 섹션 종류. 화면 렌더러(`@switch`)와 1:1 */
 export type SpaceSectionType = 'story' | 'map' | 'viewPoints' | 'visitInfo';
 
 /**
- * 상세 화면 섹션 하나. `type` 이 정하고, 종류마다 쓰는 필드가 다르다.
+ * 상세 화면 섹션 하나. `type` 이 쓰는 필드를 결정.
  *
- * | 종류 | 쓰는 필드 |
- * | story | paragraphs · link |
- * | map | mapLinks |
- * | viewPoints | points |
- * | visitInfo | paragraphs · tags |
+ *   story       paragraphs · link
+ *   map         mapLinks
+ *   viewPoints  points
+ *   visitInfo   paragraphs · tags
  *
- * 제목·아이콘은 종류별 기본값을 화면(`SECTION_DEFAULTS`)이 들고,
- * `title` 은 덮어쓸 때만 넣는다.
+ * 제목·아이콘의 종류별 기본값은 화면(`SECTION_DEFAULTS`) 보유. `title` 은 덮어쓸 때만.
  */
 export interface SpaceSection {
   type: SpaceSectionType;
   /** 기본 제목(「이곳의 이야기」 등)을 덮어쓸 때만 */
   title?: string;
-  /** 본문 문단. 문단 하나가 배열 원소 하나다 */
+  /** 본문 문단. 문단 하나가 배열 원소 하나 */
   paragraphs?: string[];
   /** 본문 아래 외부 링크 */
   link?: SpaceLink;
-  /** 지도 앱별 확정 주소. 없는 앱은 검색어 링크로 대신한다 */
+  /** 지도 앱별 확정 주소. 없는 앱은 검색어 링크로 대체 */
   mapLinks?: SpaceMapLinks;
   /** 둘러볼 지점 목록 */
   points?: SpaceViewPoint[];
@@ -130,7 +127,7 @@ export interface SpaceCoords {
   lng: number;
 }
 
-/** 지도 앱별 바로가기 주소. 없는 앱은 검색어로 만든 링크가 대신한다 (`MapLinks`) */
+/** 지도 앱별 바로가기 주소. 없는 앱은 검색어로 만든 링크가 대체 (`MapLinks`) */
 export interface SpaceMapLinks {
   naver?: string;
   kakao?: string;
@@ -143,7 +140,7 @@ export interface NearbySpace {
   walkMinutes: number;
 }
 
-/** 장소 안에서 눈여겨볼 지점. 다른 장소가 아니라 그 장소의 일부다 */
+/** 장소 안에서 눈여겨볼 지점. 다른 장소가 아니라 그 장소의 일부 */
 export interface SpaceViewPoint {
   /** 예: `M2(대공분실) 509호` */
   name: string;
@@ -157,22 +154,22 @@ export interface SpaceLink {
   url: string;
 }
 
-// ── ② 장소 고정 정보 — 사용자와 무관 ────────────────────────────────
+// ② 장소 고정 정보 — 사용자와 무관
 
 /**
  * 화면이 쓰는 장소. **사용자 상태를 담지 않는다.**
- * 누가 보든 같은 값이라 로그인 전에도 그대로 쓸 수 있다.
+ * 누가 보든 같은 값이라 로그인 전에도 그대로 사용 가능.
  */
 export interface Space extends SpaceContent {
-  /** 백엔드 uuid. 사진 업로드 시 `space_id` 로 보낸다 */
+  /** 백엔드 uuid. 사진 업로드 시 `space_id` 로 전송 */
   spaceId: string;
   /** 리워드 필수 방문 장소 여부 (백엔드 `is_required`) */
   isRequired: boolean;
 }
 
-// ── ③ 사용자 상태 ──────────────────────────────────────────────────
+// ③ 사용자 상태
 
-/** 방문 인증 한 건. 사용자마다 다르다 */
+/** 방문 인증 한 건. 사용자마다 다름 */
 export interface Visit {
   visitId: string;
   spaceId: string;
@@ -180,14 +177,14 @@ export interface Visit {
   visitedAt: Date;
 }
 
-/** 장소 + 그 사용자의 방문 상태. 목록·상세 화면이 함께 볼 때 쓴다 */
+/** 장소 + 그 사용자의 방문 상태. 목록·상세 화면이 함께 볼 때 사용 */
 export interface SpaceVisit {
   space: Space;
   /** 방문 전이면 null */
   visit: Visit | null;
 }
 
-/** 리워드 자격. 서버가 계산한 값이다 */
+/** 리워드 자격. 서버가 계산한 값 */
 export interface RewardStatus {
   visitedCount: number;
   hasRequired: boolean;
@@ -199,16 +196,16 @@ export interface RewardStatus {
 export interface RewardCode {
   tier: RewardTier;
   code: string;
-  /** 구글폼 미설정 시 null — 코드는 항상 화면에 함께 보여준다 */
+  /** 구글폼 미설정 시 null — 코드는 항상 화면에 함께 표시 */
   formUrl: string | null;
 }
 
-// ── 화면 상태 ──────────────────────────────────────────────────────
+// 화면 상태
 
 /**
  * 방문 현황 화면 상태 — 디자인 `02`~`06` 다섯 단계.
- * 방문 수만으로는 갈리지 않는다. `requiredMissing` 은 3곳을 채웠지만
- * 민주화운동기념관을 안 간 경우로, 별도 안내 화면(`04`)이 있다.
+ * **방문 수만으로 갈리지 않는다.** `requiredMissing` 은 3곳을 채웠지만
+ * 민주화운동기념관을 안 간 경우 → 별도 안내 문구를 띄운다.
  */
 export type ProgressState =
   | 'empty' // 02 · 0곳

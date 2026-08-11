@@ -1,7 +1,7 @@
 /**
  * 리워드 자격 조회와 코드 발급.
  *
- * **자격 판정은 항상 서버가 한다.** 화면의 진행률 계산은 표시용이고, 신청 가능 여부는
+ * **자격 판정은 항상 서버 몫.** 화면의 진행률 계산은 표시용이고, 신청 가능 여부는
  * `eligibleTiers` 를 따른다. 어긋나면 서버가 맞다 (`app.py:540` 재계산).
  */
 
@@ -23,7 +23,7 @@ export class RewardService {
   private base = environment.apiBase;
 
   private readonly status = signal<RewardStatus | null>(null);
-  /** mock 전용 — 발급받은 코드를 기억해 두 번째 클릭에 같은 값을 돌려준다 */
+  /** mock 전용 — 발급 코드를 기억해 두 번째 클릭에 같은 값 반환 */
   private readonly mockIssuedCodes = new Map<RewardTier, string>();
 
   readonly rewardStatus = this.status.asReadonly();
@@ -40,7 +40,7 @@ export class RewardService {
 
   /** 자격 조회: `GET /api/rewards/eligibility` */
   loadStatus(): Observable<RewardStatus> {
-    // mock 전환 지점 — 실제 방문 상태에서 자격을 계산해 화면 흐름을 맞춘다
+    // mock 전환 지점 — 실제 방문 상태에서 자격을 계산해 화면 흐름 재현
     const source: Observable<EligibilityDto> = environment.useMockApi
       ? of(this.buildMockEligibility()).pipe(delay(MOCK_LATENCY))
       : this.http.get<EligibilityDto>(`${this.base}/api/rewards/eligibility`);
@@ -48,7 +48,7 @@ export class RewardService {
     return source.pipe(
       map(toRewardStatus),
       tap((status) => this.status.set(status)),
-      // 401 은 오류가 아니라 비로그인 정상 상태다 — 자격 없음(잠김)으로 표시한다
+      // 401 은 오류가 아니라 비로그인 정상 상태 → 자격 없음(잠김)으로 표시
       // (`app.py:523` @login_required · 비로그인 열람은 `docs/pages.md` 리워드 절)
       catchError((err) => {
         if (err?.status !== 401) return throwError(() => err);
@@ -67,8 +67,8 @@ export class RewardService {
   /**
    * 코드 발급·조회: `POST /api/rewards/code`
    *
-   * 같은 tier 로 여러 번 눌러도 코드는 바뀌지 않는다. 자격 미달이면 `403` 이 온다.
-   * `formUrl` 이 `null` 로 올 수 있으므로 코드는 항상 화면에 함께 보여준다.
+   * 같은 tier 로 여러 번 눌러도 코드는 불변. 자격 미달이면 `403`.
+   * `formUrl` 이 `null` 로 올 수 있어 코드는 항상 화면에 함께 표시.
    */
   claimReward(tier: RewardTier): Observable<RewardCode> {
     // mock 전환 지점
@@ -90,7 +90,7 @@ export class RewardService {
     );
   }
 
-  /** 방문 상태에서 자격을 계산한다 — 백엔드 `_reward_progress` 와 같은 규칙 */
+  /** 방문 상태에서 자격 계산 — 백엔드 `_reward_progress` 와 같은 규칙 */
   private buildMockEligibility(): EligibilityDto {
     const visitedCount = this.spaces.visitedCount();
     const hasRequired = this.spaces.hasVisitedRequired();
@@ -106,7 +106,7 @@ export class RewardService {
     const existing = this.mockIssuedCodes.get(tier);
     const code = existing ?? `MOCK${tier}${'AB7K9XQ2'.slice(0, 4)}`;
     this.mockIssuedCodes.set(tier, code);
-    // 실제로는 구글폼 설정이 없으면 null 이 온다 — 그 경우도 화면에서 확인해야 한다
+    // 구글폼 미설정 시 실제로는 null — 그 경우도 화면에서 확인 필요
     return { tier, code, formUrl: null };
   }
 }
