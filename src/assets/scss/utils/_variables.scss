@@ -40,8 +40,16 @@ $font-label: 'SUIT', sans-serif;
 // Font Stroke
 // GabiaNull 이 굵기 하나뿐이라 글자 테두리로 두께를 낸다. 값은 Figma font-stroke/*.
 // 모든 글자에 light 를 깔고 display 만 heavy 로 올린다.
+//
+// light 만 em 이다. body 에 깔려 10px 캡션부터 24px 제목까지 전부 상속받는데,
+// 고정 px 는 글자가 작을수록 비율로 더 두꺼워진다 — 0.1px 이 12px 글자에서는 잉크를 4.3%,
+// 48px 글자에서는 1.8% 늘린다. 작은 글자는 획 사이가 원래 좁아 저해상도에서 그 차이가 뭉갠다.
+// 기준은 본문 16px 이고, 0.006em 은 16px 에서 지금과 같은 0.1px 이 된다.
+//
+// 나머지 셋은 px 로 둔다. heavy 는 display(28px·48px)에만 붙어 작은 글자와 무관하고,
+// medium·bold 는 아직 쓰는 곳이 없다.
 
-$font-stroke-light: 0.1px;
+$font-stroke-light: 0.006em; // 12px → 0.07px · 16px → 0.1px · 24px → 0.14px
 $font-stroke-medium: 0.15px;
 $font-stroke-bold: 0.2px;
 $font-stroke-heavy: 0.5px;
@@ -218,6 +226,10 @@ $container-max: rem(1440px);
 $page-x: $space-24;
 $app-bar-x: $space-16;
 $content-max-width: rem(296px); // 360 - 좌우 여백 32×2
+
+// 탭으로 오가는 세 화면의 제목 묶음 높이. 셋 중 가장 높은 참여 선물(세 줄, 실측 157px)을 8배수로 올렸다.
+$step-header-height: rem(160px);
+
 $app-header-height: rem(48px); // 상단 헤더
 $app-header-chip-height: rem(32px); // 헤더 안 「소개」 칩. 헤더에 들어가야 해 $control-sm 보다 낮다
 $app-tabbar-height: rem(56px); // 하단 탭바

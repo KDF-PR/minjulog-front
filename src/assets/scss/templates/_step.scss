@@ -46,6 +46,13 @@
     @include flex(column);
     gap: $space-8;
     padding: $spacing-page-y-mobile $page-x;
+
+    // 탭으로 오가는 세 화면(내 방문기록·방문할 곳·참여 선물)은 높이를 맞춘다.
+    // 화면마다 문구 줄 수가 달라 그대로 두면 탭을 바꿀 때 물결 경계와 본문 시작점이 위아래로 튄다.
+    // 제목은 위에 붙여 두고 남는 높이는 아래에 쌓인다 — 제목 위치까지 흔들리면 맞추는 뜻이 없다.
+    &.is-tab-page {
+      min-height: $step-header-height;
+    }
   }
 
   .step-title {
