@@ -34,5 +34,5 @@ export const environment = {
    * 전환 조건 — Supabase 준비 완료 + 공간 6곳 식별자 확정 후 false.
    * 전환 시 재확인할 항목은 `docs/요구사항정의.md` 「전환 시 재검증할 것」 참고.
    */
-  useMockApi: true,
+  useMockApi: false,
 };
