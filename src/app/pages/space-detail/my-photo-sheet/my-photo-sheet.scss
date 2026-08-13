@@ -1,0 +1,82 @@
+@use 'utils' as *;
+
+// 래퍼가 레이아웃에 끼지 않아야 딤·시트의 absolute 기준이 화면 골격(.step)이 됨
+:host {
+  display: contents;
+}
+
+// 골격은 templates/_bottom-sheet.scss 담당. 여기는 사진과 안내만 입힘
+.my-photo {
+  .bottom-sheet-header {
+    @include flex(column);
+    gap: $space-4;
+
+    h2 {
+      @include typo-ds('title', 'md');
+    }
+
+    p {
+      color: $color-text-sub;
+      @include typo-ds('body', 'sm');
+    }
+  }
+
+  .bottom-sheet-body {
+    @include flex(column);
+    gap: $space-16;
+
+    // 내가 올린 사진 틀. 원본 비율이 제각각이라 틀에 맞춰 자름
+    figure {
+      border: 1px solid $color-border-subtle;
+      @include border-radius($radius-md);
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    // 교체 정책 안내. 신청 후에도 교체 가능 (`docs/요구사항정의.md` 6장)
+    .my-photo-note {
+      border: 1px solid $color-border-subtle;
+      @include border-radius($radius-md);
+      padding: $space-16;
+      background-color: $color-bg-subtle;
+      color: $color-text-sub;
+      @include typo-ds('body', 'xs');
+    }
+  }
+
+  .bottom-sheet-footer {
+    @include flex(row, flex-start, center);
+    gap: $space-8;
+    border-top: 1px solid $color-border-subtle;
+    padding: $space-8 $space-20;
+    background-color: $color-bg-subtle;
+
+    // 닫기(←). 정사각 고정이라 button() 을 쓰지 않음
+    .sheet-back {
+      flex: 0 0 auto;
+      border: 1px solid $color-border-subtle;
+      @include border-radius($radius-md);
+      width: $control-md;
+      height: $control-md;
+      @include flexCenter();
+      background-color: $color-bg;
+
+      &:focus-visible {
+        @include a11yFocusStyle();
+      }
+    }
+
+    // 남는 폭 전부 차지. min-width: 0 이 없으면 글자 길이만큼 밀려 ← 버튼이 찌그러짐
+    .sheet-replace {
+      @include button('primary', 'md');
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+}

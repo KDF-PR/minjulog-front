@@ -78,7 +78,6 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
         ],
       },
     ],
-    nearby: [],
   },
   {
     slug: 'seoul-youth-hostel',
@@ -87,16 +86,26 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '종로구',
     address: '서울 종로구 신영동 산25-1',
     category: '교류 · 쉼',
-    tagline: '북한산 자락에서 잠시 쉬어 가는 곳', // 임시 — 확정 문구 오면 교체
-    summary: '도심 속 청소년과 시민을 위한 숙박·문화 교류 공간이에요.',
+    tagline: '남산에 남겨진 국가폭력의 흔적',
+    summary:
+      '지금은 여행객들이 머무는 공간이지만, 이곳은 과거 중앙정보부와 국가안전기획부가 있던 자리입니다. 군사정권 시절 민주주의를 억압했던 국가권력의 흔적을 되짚어보며, 남산 곳곳에 남아 있는 민주주의와 인권의 흔적을 따라 걸어보세요.',
     photoGuide: '건물 외관이나 안내 표지가 보이게 찍어 주세요.',
     courseOrder: 2,
     markColor: 'lemon', // 확정 — 겹치지 않는 브랜드 색으로 배정
     sections: [
       { type: 'map' },
       {
-        type: 'story',
-        paragraphs: ['북한산 자락에 있어 도심에서 잠시 벗어나 쉬어 갈 수 있는 곳이에요.'],
+        type: 'nearby',
+        points: [
+          {
+            name: '기억의 터',
+            desc: '일제강점기 일본군 ‘위안부’ 피해자를 기억하고 평화를 기원하는 추모공간',
+          },
+          {
+            name: '남산골한옥마을',
+            desc: '조선헌병사령부와 수도방위사령부가 있었던 예장동 일대의 역사를 함께 떠올려볼 수 있는 공간',
+          },
+        ],
       },
     ],
   },
@@ -107,30 +116,27 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '중구',
     address: '서울 중구 명동길 74',
     category: '성당 · 상징 공간',
-    tagline: '시민의 목소리가 모여들던 피난처', // 임시 — 확정 문구 오면 교체
-    summary: '민주화운동 시기 시민들의 목소리가 모였던 성당이에요.',
+    tagline: '민주주의를 지켜낸 마지막 울타리',
+    summary:
+      '명동성당은 종교시설을 넘어 한국 민주주의 역사에서 가장 상징적인 공간 가운데 하나입니다. 1987년 6월 민주항쟁 당시, 경찰의 강경 진압을 피해 모여든 시민과 학생들이 이곳에서 농성일 이어갔고, 명동성당은 이들을 품어 안으며 민주주의를 향한 연대의 든든한 울타리가 되어주었습니다.',
     photoGuide: '성당 전경이나 정문이 보이게 담아 주세요. 미사 중에는 조용히 부탁드려요.',
     courseOrder: 3,
     markColor: 'lime', // 확정 — 겹치지 않는 브랜드 색으로 배정
     sections: [
       { type: 'map' },
       {
-        type: 'story',
-        paragraphs: [
-          '1970~80년대 농성과 집회가 이어지며 피난처 역할을 했어요.',
-          '지금도 미사가 열리는 공간이라 방문 전에 시간을 확인하면 좋아요.',
+        type: 'nearby',
+        points: [
+          {
+            name: '서울YWCA',
+            desc: '여성·시민운동과 민주화운동을 함께 이어온 공간',
+          },
+          {
+            name: '향린교회',
+            desc: '민주주의와 인권을 위해 연대해 온 대표적인 교회',
+          },
         ],
       },
-      // v3 `09 장소 상세 · 방문 완료` 시안 문구
-      {
-        type: 'visitInfo',
-        paragraphs: ['방문 전 미사 시간을 확인해 주세요.'],
-        tags: ['명동역 6번 출구'],
-      },
-    ],
-    nearby: [
-      { slug: 'marronnier-park', walkMinutes: 20 },
-      { slug: 'jeon-taeil-bridge', walkMinutes: 10 },
     ],
   },
   {
@@ -140,28 +146,27 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '종로구',
     address: '서울 종로구 대학로8길 1',
     category: '공원 · 열린 공간',
-    tagline: '대학로 한복판의 열린 광장', // 임시 — 확정 문구 오면 교체
-    summary: '대학로 한복판, 누구에게나 열린 광장이에요.',
+    tagline: '학생들이 자유를 외치며 거리로 나선 곳',
+    summary:
+      '지금의 마로니에공원은 공연과 문화예술의 공간이지만, 1960년 4·19혁명 당시에는 서울대학교 문리과대학이 있던 곳이었습니다. 이곳에서는 학생들이 독재에 맞서 거리로 나섰고, 며칠 뒤에는 전국 대학교수들이 "학생의 피에 보답하라"는 시국선언을 발표하며 민주주의 회복을 촉구했습니다. 학생과 시민, 교수들이 함께 역사를 바꾼 곳이자, 민주주의를 향한 용기가 시작된 공간입니다.',
     photoGuide: '마로니에 나무나 상징 조형물이 보이게 한 장 담아 주세요. 구도는 자유롭게요.',
     courseOrder: 4,
     markColor: 'skyblue', // 확정 — 시안 `02 내 방문기록`
     sections: [
       { type: 'map' },
       {
-        type: 'story',
-        paragraphs: [
-          '1980년대부터 시민들이 목소리를 나누고, 공연과 전시가 열리는 열린 마당으로 자리 잡았어요.',
+        type: 'nearby',
+        points: [
+          {
+            name: '동성고등학교',
+            desc: '4·19혁명 당시 학생들이 거리로 나섰던 대표적인 학교 중 하나',
+          },
+          {
+            name: '한국기독교회관',
+            desc: '민주화운동과 인권운동의 중요한 거점 역할을 했던 공간',
+          },
         ],
       },
-      // v3 `08 장소 상세 · 미방문` 시안 문구
-      {
-        type: 'visitInfo',
-        tags: ['상시 개방', '무료', '혜화역 2번 출구'],
-      },
-    ],
-    nearby: [
-      { slug: 'jeon-taeil-bridge', walkMinutes: 12 },
-      { slug: 'myeongdong-cathedral', walkMinutes: 20 },
     ],
   },
   {
@@ -171,18 +176,25 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '종로구',
     address: '서울 종로구 청계천로 (버들다리)',
     category: '다리 · 기억 공간',
-    tagline: '스물두 살의 외침을 기억하는 다리', // 임시 — 확정 문구 오면 교체
-    summary: '노동운동가 전태일을 기리는 청계천 위 다리예요.',
+    tagline: '한 사람의 외침이 세상을 바꾸다',
+    summary:
+      '청계천 평화시장 인근의 전태일다리는 노동과 인권을 이야기할 때 가장 먼저 떠오르는 장소입니다. 1970년 평화시장 재단사였던 전태일은 "근로기준법을 준수하라"는 외침과 함께 자신의 몸을 불살랐습니다. 그의 희생은 열악한 노동 현실을 세상에 알렸고, 이후 노동운동과 민주화운동의 중요한 출발점이 되었습니다. 오늘날 청계천을 걸으며 전태일 동상과 그의 정신을 기억하는 공간들을 만나보세요.',
     photoGuide: '전태일 동상이나 다리 이름 표지가 보이게 찍어 주세요.',
     courseOrder: 5,
     markColor: 'green', // 확정 — 겹치지 않는 브랜드 색으로 배정
     sections: [
       { type: 'map' },
       {
-        type: 'story',
-        paragraphs: [
-          '1970년 이곳 평화시장 앞에서 스물두 살 전태일이 노동자의 권리를 외쳤어요.',
-          '다리 위에 그를 기리는 동상과 동판이 있어요.',
+        type: 'nearby',
+        points: [
+          {
+            name: '평화시장',
+            desc: '전태일이 재단사로 일했던 노동운동의 출발점',
+          },
+          {
+            name: '전태일기념관',
+            desc: '전태일의 삶과 노동·인권의 역사를 만날 수 있는 공간',
+          },
         ],
       },
     ],
@@ -194,17 +206,25 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     region: '종로구',
     address: '서울 종로구 세종대로 172',
     category: '광장 · 열린 공간',
-    tagline: '함께 모여 목소리를 내온 서울의 광장', // 임시 — 확정 문구 오면 교체
-    summary: '시민들이 모여 목소리를 내온 서울의 대표 광장이에요.',
+    tagline: '시대마다 시민들이 모인 민주주의의 광장',
+    summary:
+      '광화문은 조선시대부터 오늘날까지 대한민국의 정치와 행정의 중심지였습니다. 자연스럽게 시민들이 가장 먼저 모여 목소리를 내는 장소가 되었고, 한국 현대사의 결정적인 순간마다 역사의 중심에 있었습니다. 4·19혁명, 6월 민주항쟁, 촛불집회까지. 시대는 달라졌지만 시민들은 언제나 광장에 모여 민주주의를 이야기했습니다.',
     photoGuide: '광장 전경이나 대표 조형물이 보이게 담아 주세요.',
     courseOrder: 6,
     markColor: 'orange', // 확정 — 시안 `02 내 방문기록`
     sections: [
       { type: 'map' },
       {
-        type: 'story',
-        paragraphs: [
-          '집회와 추모, 축제가 모두 열려온 자리예요. 동선이 넓어 천천히 둘러보기 좋아요.',
+        type: 'nearby',
+        points: [
+          {
+            name: '대한성공회 서울주교좌성당',
+            desc: '민주화운동 당시 시민들의 피난처이자 연대의 공간',
+          },
+          {
+            name: '서울특별시의회 본관(구 경성부민관)',
+            desc: '해방 전후 독립과 민주주의의 역사를 품은 공간. 본관 앞에 4·19혁명을 기억하는 표석이 있다',
+          },
         ],
       },
     ],

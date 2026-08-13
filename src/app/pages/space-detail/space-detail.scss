@@ -121,7 +121,14 @@
     .detail-summary {
       margin-top: $space-24;
       @include typo-ds('body', 'sm');
+      @include font-size(15px);
       text-align: left;
+    }
+
+    // 방문 완료 후 내 사진 카드. 내용은 visit-record 담당, 여기는 배치만
+    .detail-record {
+      width: 100%;
+      margin-top: $space-24;
     }
   }
 
@@ -170,7 +177,6 @@
         @include typo-ds('body', 'sm');
       }
 
-      // visitInfo 정보 칩 (P1 시안)
       .content-tags {
         @include flex(row, center, center);
         flex-wrap: wrap;
@@ -195,7 +201,6 @@
       }
     }
 
-    // viewPoints 절. .content-body 규칙을 이어받고 gap 만 좁힘
     .record-list {
       gap: $space-12;
 
@@ -214,6 +219,31 @@
           @include typo-ds('body', 'sm');
         }
       }
+    }
+  }
+
+  // 본문 끝 장식 띠. 물결이 흰 본문과 초록의 경계를 그리고 그 아래에 발자국이 놓임
+  .detail-footer-graphic {
+    position: relative;
+    width: 100%;
+    height: 172px; // 시안 고정값
+    overflow: hidden;
+    background-color: $color-action-brand;
+
+    // 물결은 흐름의 첫 자식이라 띠 맨 위에 얹힘
+    .footer-wave {
+      --wave-top-color: #{$color-bg};
+      --wave-bottom-color: #{$color-action-brand};
+    }
+
+    // 발자국. 프레임보다 넓어 가운데 정렬로 양끝을 흘림
+    .footprints {
+      position: absolute;
+      bottom: $space-24;
+      left: 50%;
+      @include translate(-50%, 0);
+      width: 369px;
+      height: 84px;
     }
   }
 

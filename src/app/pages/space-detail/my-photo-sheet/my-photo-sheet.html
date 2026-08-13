@@ -1,0 +1,47 @@
+@if (open()) {
+  <div
+    class="bottom-sheet-dim"
+    (click)="close.emit()"
+    animate.enter="motion-fade-enter"
+    animate.leave="motion-fade-leave"
+  ></div>
+
+  <section
+    #sheetEl
+    class="bottom-sheet my-photo"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="my-photo-title"
+    tabindex="-1"
+    cdkTrapFocus
+    (keydown.escape)="close.emit()"
+    animate.enter="motion-sheet-enter"
+    animate.leave="motion-sheet-leave"
+  >
+    <header class="bottom-sheet-header">
+      <h2 id="my-photo-title">내 인증 사진</h2>
+      <p>{{ visit().visitedAt | date: 'yyyy년 M월 d일' }} 방문</p>
+    </header>
+
+    <div class="bottom-sheet-body">
+      <figure>
+        <img [src]="visit().photoUrl" alt="내가 올린 인증 사진" />
+      </figure>
+
+      <p class="my-photo-note">
+        사진은 언제든 바꿀 수 있어요.<br />
+        교체하면 새 사진이 이전 사진을 대신해요.
+      </p>
+    </div>
+
+    <footer class="bottom-sheet-footer">
+      <button type="button" class="sheet-back" (click)="close.emit()" aria-label="닫기">
+        <span class="icon-container">
+          <lazyLoadImg [src]="'/assets/images/ui/icons/prev'" />
+        </span>
+      </button>
+
+      <button type="button" class="sheet-replace" (click)="replace.emit()">사진 교체</button>
+    </footer>
+  </section>
+}

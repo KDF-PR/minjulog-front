@@ -42,8 +42,11 @@
 
     <footer class="bottom-sheet-footer">
       <button type="button" class="guide-back" (click)="close.emit()" aria-label="닫기">
-        <span aria-hidden="true">←</span>
+        <span class="icon-container">
+          <lazyLoadImg [src]="'/assets/images/ui/icons/prev'" />
+        </span>
       </button>
+
       <button type="button" class="guide-confirm" (click)="confirm.emit()">확인했어요</button>
     </footer>
   </section>

@@ -54,6 +54,10 @@
           </p>
 
           <p class="detail-summary">{{ item.space.summary }}</p>
+
+          @if (item.visit; as visit) {
+            <app-visit-record class="detail-record" [visit]="visit" (view)="openMyPhoto()" />
+          }
         </div>
 
         @for (section of item.space.sections; track $index) {
@@ -114,6 +118,25 @@
                   }
                 </ul>
               }
+              @case ('nearby') {
+                <ul class="content-body record-list">
+                  @for (point of section.points; track point.name) {
+                    <li>
+                      <h4>
+                        <span class="img-container is-star" aria-hidden="true">
+                          <lazyLoadImg [src]="'/assets/images/ui/icons/star'" />
+                        </span>
+                        @if (point.slug) {
+                          <a [routerLink]="['/spaces', point.slug]">{{ point.name }}</a>
+                        } @else {
+                          {{ point.name }}
+                        }
+                      </h4>
+                      <p>{{ point.desc }}</p>
+                    </li>
+                  }
+                </ul>
+              }
               @case ('visitInfo') {
                 <div class="content-body">
                   @for (paragraph of section.paragraphs; track $index) {
@@ -132,6 +155,13 @@
             }
           </section>
         }
+
+        <div class="detail-footer-graphic">
+          <app-wave-divider class="footer-wave" />
+          <span class="footprints" aria-hidden="true">
+            <lazyLoadImg [src]="'/assets/images/space-detail/footprints'" alt="" />
+          </span>
+        </div>
       } @else {
         <p class="page-state" role="alert">찾을 수 없는 장소예요</p>
       }
@@ -157,5 +187,14 @@
       (close)="closeGuide()"
       (confirm)="startCapture()"
     />
+
+    @if (item.visit; as visit) {
+      <app-my-photo-sheet
+        [open]="myPhotoOpen()"
+        [visit]="visit"
+        (close)="closeMyPhoto()"
+        (replace)="startReplace()"
+      />
+    }
   }
 </section>

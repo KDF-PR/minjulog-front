@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { PageHeader } from '../../shared/layout/page-header/page-header';
 import { MapLinks } from '../../shared/ui/map-links/map-links';
@@ -10,14 +10,20 @@ import { SpaceService } from '../../core/space.service';
 import { LoadState, SpaceSectionType } from '../../core/models';
 import { ScrollTopDirective } from '../../shared/directives/scroll-top.directive';
 import { PhotoGuideSheet } from './photo-guide-sheet/photo-guide-sheet';
+import { MyPhotoSheet } from './my-photo-sheet/my-photo-sheet';
+import { VisitRecord } from './visit-record/visit-record';
 import { WaveDivider } from '../../shared/layout/wave-divider/wave-divider';
 
-/** 섹션 종류별 기본 제목·아이콘. 데이터의 `title` 이 있으면 그쪽이 이긴다 */
+/**
+ * 섹션 종류별 기본 제목·아이콘. 데이터의 `title` 이 있으면 그쪽이 이긴다.
+ * `viewPoints` 와 `nearby` 는 같은 목록을 그리고 여기 두 값만 다르다.
+ */
 const SECTION_DEFAULTS: Record<SpaceSectionType, { title: string; icon: string }> = {
   map: { title: '찾아가는 길', icon: 'map' },
   story: { title: '이곳의 이야기', icon: 'letter' },
   viewPoints: { title: '자세히 둘러보면 좋을 곳', icon: 'flower' },
   visitInfo: { title: '관람 정보', icon: 'letter' }, // 전용 아이콘 자산 미수령
+  nearby: { title: '함께 둘러볼 곳', icon: 'flower' }, // 전용 아이콘 자산 미수령 — viewPoints 와 공유
 };
 
 /**
@@ -29,12 +35,15 @@ const SECTION_DEFAULTS: Record<SpaceSectionType, { title: string; icon: string }
 @Component({
   selector: 'app-space-detail',
   imports: [
+    RouterLink,
     PageHeader,
     MapLinks,
     StampBadge,
     LazyLoadImg,
     ScrollTopDirective,
     PhotoGuideSheet,
+    MyPhotoSheet,
+    VisitRecord,
     WaveDivider,
   ],
   templateUrl: './space-detail.html',
@@ -51,6 +60,8 @@ export class SpaceDetail implements OnInit {
   protected readonly loadState = signal<LoadState>('idle');
   /** P1 안내 시트. 인증 버튼이 열고, 「확인했어요」가 촬영으로 잇는다 */
   protected readonly guideOpen = signal(false);
+  /** 내 사진 시트. 방문 완료 카드의 「내 사진 보기」가 열고, 「사진 교체」가 촬영으로 잇는다 */
+  protected readonly myPhotoOpen = signal(false);
 
   protected readonly sectionDefaults = SECTION_DEFAULTS;
 
@@ -81,6 +92,20 @@ export class SpaceDetail implements OnInit {
   /** 안내 시트의 「확인했어요」 — 시트를 닫고 촬영 화면으로 보낸다 */
   protected startCapture(): void {
     this.guideOpen.set(false);
+    this.router.navigate(['/stamp', this.slug()]);
+  }
+
+  protected openMyPhoto(): void {
+    this.myPhotoOpen.set(true);
+  }
+
+  protected closeMyPhoto(): void {
+    this.myPhotoOpen.set(false);
+  }
+
+  /** 「사진 교체」 — 이미 한 번 인증한 사용자라 안내 시트(P1)를 건너뛰고 바로 촬영 */
+  protected startReplace(): void {
+    this.myPhotoOpen.set(false);
     this.router.navigate(['/stamp', this.slug()]);
   }
 

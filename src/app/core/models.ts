@@ -89,12 +89,10 @@ export interface SpaceContent {
   photoExample?: string;
   /** 지도 미리보기·길찾기용 좌표 */
   coords?: SpaceCoords;
-  /** 가까운 다른 장소. 상세 화면 하단에서 다음 걸음으로 연결 */
-  nearby?: NearbySpace[];
 }
 
 /** 상세 화면 섹션 종류. 화면 렌더러(`@switch`)와 1:1 */
-export type SpaceSectionType = 'story' | 'map' | 'viewPoints' | 'visitInfo';
+export type SpaceSectionType = 'story' | 'map' | 'viewPoints' | 'visitInfo' | 'nearby';
 
 /**
  * 상세 화면 섹션 하나. `type` 이 쓰는 필드를 결정.
@@ -103,8 +101,10 @@ export type SpaceSectionType = 'story' | 'map' | 'viewPoints' | 'visitInfo';
  *   map         mapLinks
  *   viewPoints  points
  *   visitInfo   paragraphs · tags
+ *   nearby      points
  *
- * 제목·아이콘의 종류별 기본값은 화면(`SECTION_DEFAULTS`) 보유. `title` 은 덮어쓸 때만.
+ * **`viewPoints` 와 `nearby` 는 같은 `points` 를 쓴다.** 목록 모양이 같고 제목·아이콘만 다르다 —
+ * 그 둘은 화면(`SECTION_DEFAULTS`)이 종류별로 들고 있고, `title` 은 덮어쓸 때만 넣는다.
  */
 export interface SpaceSection {
   type: SpaceSectionType;
@@ -116,8 +116,8 @@ export interface SpaceSection {
   link?: SpaceLink;
   /** 지도 앱별 확정 주소. 없는 앱은 검색어 링크로 대체 */
   mapLinks?: SpaceMapLinks;
-  /** 둘러볼 지점 목록 */
-  points?: SpaceViewPoint[];
+  /** 목록 항목. `viewPoints` 와 `nearby` 가 함께 사용 */
+  points?: SpacePoint[];
   /** 정보 칩 (예: `관람 60분`) */
   tags?: string[];
 }
@@ -134,18 +134,17 @@ export interface SpaceMapLinks {
   google?: string;
 }
 
-export interface NearbySpace {
-  slug: SpaceSlug;
-  /** 도보 소요 분 */
-  walkMinutes: number;
-}
-
-/** 장소 안에서 눈여겨볼 지점. 다른 장소가 아니라 그 장소의 일부 */
-export interface SpaceViewPoint {
-  /** 예: `M2(대공분실) 509호` */
+/**
+ * 목록 한 줄. `viewPoints`(그 장소 안의 지점)와 `nearby`(가까운 다른 장소)가 함께 쓴다.
+ * 두 종류의 차이는 제목·아이콘뿐이라 항목 타입을 나누지 않는다.
+ */
+export interface SpacePoint {
+  /** 예: `M2(대공분실) 509호` · `마로니에공원` */
   name: string;
-  /** 왜 볼 만한지 한 줄 */
+  /** 왜 볼 만한지 · 얼마나 가까운지 한 줄 (예: `도보 20분`) */
   desc: string;
+  /** 다른 장소를 가리킬 때만. 있으면 그 장소 상세로 이동시킬 수 있다 */
+  slug?: SpaceSlug;
 }
 
 /** 바깥으로 나가는 링크 */
