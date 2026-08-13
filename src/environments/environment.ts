@@ -1,8 +1,12 @@
 // API 베이스 주소와 개발용 스위치.
-// 로컬 개발: apiBase '' (빈 문자열) → /api 요청을 dev 프록시가 백엔드(localhost:5001)로 전달.
-// 배포 시: 백엔드의 절대주소로 교체.
+//
+// 배포본에는 dev 프록시가 없다. apiBase 가 빈 문자열이면 `/api` 요청이 프론트 자신에게
+// 가고, Firebase Hosting 의 SPA rewrite 가 index.html 을 돌려줘 JSON 파싱에서 깨진다.
+// 그래서 백엔드 절대주소를 박아 둔다.
+//
+// 로컬에서 프록시로 돌리려면 이 값을 '' 로 비운다 — 그때만 proxy.conf.json 이 쓰인다.
 export const environment = {
-  apiBase: '',
+  apiBase: 'https://minjulog-back.vercel.app',
 
   /**
    * Firebase 웹 설정. Firebase 프로젝트 `kdemo-stamp`.
