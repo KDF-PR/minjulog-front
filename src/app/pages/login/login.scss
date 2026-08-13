@@ -100,8 +100,14 @@
       input {
         @include a11y_visually_hidden();
 
-        &:checked + i img {
-          display: block;
+        // 체크 시 상자를 어둡게 뒤집고 체크 표시는 희게
+        &:checked + i {
+          background-color: $color-bg-inverse;
+
+          img {
+            display: block;
+            filter: invert(1); // 체크 자산이 검정 단색 → 반전만으로 흰 표시
+          }
         }
 
         &:focus-visible + i {

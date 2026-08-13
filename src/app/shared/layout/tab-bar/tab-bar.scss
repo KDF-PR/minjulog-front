@@ -30,6 +30,9 @@
         padding: 0 $spacing-chip-x;
         color: $tabbar-item-text;
         @include typo-ds('label', 'md');
+        @include smallWidth-only() {
+          @include font-size(13px);
+        }
         transition:
           background-color 0.15s ease,
           color 0.15s ease;

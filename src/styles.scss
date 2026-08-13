@@ -3,13 +3,6 @@
 // **CSS를 방출하는 파일은 전부 여기서만 @use 한다.** 컴포넌트 SCSS 는
 // `@use 'utils' as *` 로 토큰·mixin 만 가져간다(utils/_index.scss 참고).
 // 이 경계를 지키지 않으면 같은 클래스·keyframes 가 컴포넌트마다 중복 방출된다.
-//
-// 컴포넌트에서 쓰는 방법:
-//   @use 'utils' as *;
-//   .login { @include flex(column); gap: $space-16; }
-//
-// 경로가 'utils' 로 짧은 이유는 angular.json 의
-// stylePreprocessorOptions.includePaths 에 src/assets/scss 를 등록해서다.
 
 // 1) 기본 규칙 — reset 이 먼저, 그 위에 타이포
 @use 'base/reset';
@@ -28,6 +21,10 @@
 @use 'templates/dialog';
 @use 'templates/form';
 @use 'templates/step';
+
+body {
+  background-color: #8cc7ff;
+}
 
 .ng-lazyloading {
   opacity: 0.4;
