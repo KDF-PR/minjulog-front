@@ -1,7 +1,7 @@
 {
   "/api": {
-    "target": "https://minjulog-back.vercel.app",
-    "secure": true,
+    "target": "http://localhost:5001",
+    "secure": false,
     "changeOrigin": true
   }
 }

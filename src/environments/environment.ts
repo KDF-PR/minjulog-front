@@ -1,10 +1,10 @@
-// API 베이스 주소와 개발용 스위치.
+// 배포용 설정 — `npm run build` 가 이 파일을 쓴다.
+// `npm start` 는 environment.development.ts 로 갈아 끼운다 (angular.json fileReplacements).
+// 로컬 확인용 값은 그쪽에서 고치고, 이 파일에는 배포본에 실릴 값만 둔다.
 //
-// 배포본에는 dev 프록시가 없다. apiBase 가 빈 문자열이면 `/api` 요청이 프론트 자신에게
-// 가고, Firebase Hosting 의 SPA rewrite 가 index.html 을 돌려줘 JSON 파싱에서 깨진다.
-// 그래서 백엔드 절대주소를 박아 둔다.
-//
-// 로컬에서 프록시로 돌리려면 이 값을 '' 로 비운다 — 그때만 proxy.conf.json 이 쓰인다.
+// apiBase 가 절대주소인 이유 — 배포본에는 dev 프록시가 없다. 빈 문자열이면 `/api` 요청이
+// 프론트 자신에게 가고, Firebase Hosting 의 SPA rewrite 가 index.html 을 돌려줘
+// JSON 파싱에서 깨진다.
 export const environment = {
   apiBase: 'https://minjulog-back.vercel.app',
 
@@ -28,15 +28,6 @@ export const environment = {
     measurementId: 'G-L1WSV61NT4',
   },
 
-  /**
-   * true 면 네트워크 없이 로컬 fixture 로 화면을 그린다.
-   *
-   * 지금 true 인 이유 — 백엔드 `.env` 의 `SUPABASE_URL` 이 placeholder 라
-   * 공간·사진·리워드 API 가 서버를 띄워도 동작하지 않는다. 인증 API 는 동작하지만
-   * 실제 메일이 발송되고 재전송 60초 제한이 걸려 반복 검증이 느리다.
-   *
-   * 전환 조건 — Supabase 준비 완료 + 공간 6곳 식별자 확정 후 false.
-   * 전환 시 재확인할 항목은 `docs/요구사항정의.md` 「전환 시 재검증할 것」 참고.
-   */
+  // 배포본은 실제 API 를 쓴다. mock 으로 확인하는 건 npm start (development 구성) 쪽.
   useMockApi: false,
 };

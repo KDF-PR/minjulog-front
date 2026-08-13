@@ -8,7 +8,7 @@
 | 프레임워크 | Angular 22 (standalone + signal) |
 | 백엔드 | `kdemo-stamp-back` — Flask + Supabase, 별도 저장소 |
 | 인증 | 세션 쿠키. 모든 요청에 `withCredentials` 적용 |
-| 현재 상태 | 실제 백엔드 연동. mock 은 스위치 하나로 되돌아간다 |
+| 현재 상태 | 배포본은 실제 백엔드 연동 · 로컬 `npm start` 는 mock |
 
 사용자가 거치는 순서는 이렇다.
 
@@ -37,28 +37,35 @@ npm start        # http://localhost:4200
 - 4200 포트가 이미 쓰이고 있으면 `npm start -- --port 4300` 처럼 지정
 - lint 설정은 없다. 타입 검증은 `npm run build` 로 대신한다
 
-### 백엔드 연결
+### 로컬과 배포가 다른 설정을 쓴다
 
-`/api/*` 요청은 dev 프록시가 백엔드로 넘긴다 (`proxy.conf.json`).
-지금 대상은 **배포된 백엔드**이므로, 로컬에서 띄운 화면도 운영 데이터를 건드린다.
+환경 파일 두 개를 빌드 구성이 갈라 쓴다 (angular.json 의 `fileReplacements`).
 
-주의할 점이 셋 있다.
+| 명령 | 환경 파일 | 동작 |
+| :-- | :-- | :-- |
+| `npm start` | `environment.development.ts` | mock — 네트워크 없이 화면만 |
+| `npm run build` | `environment.ts` | 실제 백엔드 (절대주소) |
 
-- 로그인 화면을 열면 **실제 인증 메일이 발송된다.** 재전송 60초 제한과 발송 한도를 함께 쓴다
-- 사진 인증과 리워드 신청은 서버에 그대로 남는다
-- 화면만 확인할 때는 아래 mock 모드로 돌리는 편이 안전하다
-
-로컬 백엔드(`../kdemo-stamp-back`, 포트 5001)를 쓰려면 `proxy.conf.json` 의
-`target` 을 `http://localhost:5001` 로, `secure` 를 `false` 로 되돌린다.
-
-### mock 모드
-
-네트워크 없이 화면만으로 도는 모드다. 전환 스위치는
-`src/environments/environment.ts` 의 `useMockApi` 한 곳이다.
-
-- `true` 로 두면 로컬 fixture 로 전체 화면을 그린다. 백엔드도 프록시도 필요 없다
+- `npm start` 는 로컬 fixture 로 전체 화면을 그린다. 백엔드 없이 돈다
 - mock 응답은 실제 API 의 필드명과 오류 형태를 그대로 맞춰 뒀다
-- 개발 패널은 이 값이 `true` 인 개발 빌드에서만 나온다 (`app.ts` 의 `showDevTools`)
+- 개발 패널(화면 상태 전환 도구)도 이 모드에서만 나온다 (`app.ts` 의 `showDevTools`)
+
+로컬에서 실제 백엔드를 붙여 보려면 `environment.development.ts` 의 `useMockApi` 를
+`false` 로 바꾼다. 그때 요청은 dev 프록시(`proxy.conf.json`)를 타고
+로컬 백엔드(`../kdemo-stamp-back`, 포트 5001)로 간다.
+
+### 배포
+
+Firebase Hosting 에 올린다. 주소는 https://kdemo-stamp.web.app
+
+```bash
+npm run build
+firebase deploy --only hosting
+```
+
+- 배포본은 백엔드 절대주소를 쓴다 — **로그인하면 실제 인증 메일이 발송된다.**
+  재전송 60초 제한과 발송 한도를 함께 쓴다
+- Node 24 에서 firebase CLI 가 `Premature close` 로 끊기면 `nvm use 22` 후 실행
 
 ---
 
