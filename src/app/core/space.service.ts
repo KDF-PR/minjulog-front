@@ -11,7 +11,7 @@ import { Observable, catchError, delay, map, of, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { SpaceDto, SpacesResponseDto } from './api.dto';
 import { toSpace } from './api.mapper';
-import { ProgressState, REWARD_TIERS, Space, SpaceVisit } from './models';
+import { ProgressState, REWARD_TIERS, RewardTier, Space, SpaceVisit } from './models';
 import { REQUIRED_SPACE_SLUG, SPACES_CONTENT, findContentByName } from './spaces.content';
 import { SPACES_MOCK } from './mock/spaces.mock';
 import { PhotoService } from './photo.service';
@@ -67,6 +67,20 @@ export class SpaceService {
   readonly hasVisitedRequired = computed(() =>
     this.spaceVisits().some((item) => item.space.isRequired && item.visit !== null),
   );
+
+  /** 다음으로 열릴 선물의 기준 방문 수(3곳 · 6곳). 모든 단계를 지났으면 null */
+  readonly nextRewardTier = computed<RewardTier | null>(
+    () => REWARD_TIERS.find((tier) => tier > this.visitedCount()) ?? null,
+  );
+
+  /**
+   * 다음 선물까지 남은 방문 수. 모든 단계를 지났으면 0.
+   * 두 화면(`my-log` · `reward`)이 같은 값을 써야 해서 여기 한 곳에 둔다.
+   */
+  readonly remainingToReward = computed(() => {
+    const tier = this.nextRewardTier();
+    return tier ? tier - this.visitedCount() : 0;
+  });
 
   /**
    * 방문 현황 화면 상태 — 디자인 `02`~`06`.

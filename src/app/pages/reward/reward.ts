@@ -12,6 +12,7 @@ import { SpaceService } from '../../core/space.service';
 import { LoadState, REWARD_TIERS, RewardTier } from '../../core/models';
 import { OPERATION_PERIOD } from '../../core/spaces.content';
 import { ScrollTopDirective } from '../../shared/directives/scroll-top.directive';
+import { LazyLoadImg } from '../../shared/ui/lazy-load-img/lazy-load-img';
 
 /** 선물 한 단계에 붙는 문구. 시안 R1 의 값을 그대로 옮겼다 — 확정 문구가 오면 여기만 바뀐다 */
 interface RewardContent {
@@ -26,7 +27,7 @@ interface RewardContent {
 const REWARD_CONTENT: Record<RewardTier, RewardContent> = {
   3: {
     order: '첫 번째 선물',
-    condition: '민주화운동기념관을 포함해 3곳 방문시 증정',
+    condition: '민주화운동기념관 포함 3곳 방문시 증정',
     name: '민주화 기념 마그넷',
     description: '서울을 배경으로 민주화운동 관련 장소가 새겨진 마그넷이예요.',
   },
@@ -38,17 +39,28 @@ const REWARD_CONTENT: Record<RewardTier, RewardContent> = {
   },
 };
 
+/**
+ * 선물을 못 받는 이유. 잠긴 까닭이 둘이라 `claimable: false` 하나로는 문구를 고를 수 없다.
+ *
+ *   count     아직 방문 수가 모자람
+ *   required  개수는 채웠지만 필수 장소를 안 감
+ */
+type LockReason = 'count' | 'required';
+
 /** 화면에 그리는 선물 한 단계 — 시안 문구와 서버가 준 자격을 합친 값 */
 interface RewardItem extends RewardContent {
   tier: RewardTier;
   claimable: boolean;
   claimed: boolean;
+  /** 받을 수 있거나 이미 받았으면 null */
+  lock: LockReason | null;
   ctaLabel: string;
 }
 
-function toCtaLabel(claimed: boolean, claimable: boolean, remaining: number): string {
-  if (claimed) return '받은 리워드 확인';
-  if (claimable) return '리워드 받기';
+function toCtaLabel(item: Omit<RewardItem, 'ctaLabel'>, remaining: number): string {
+  if (item.claimed) return '받은 리워드 확인';
+  if (item.claimable) return '리워드 받기';
+  if (item.lock === 'required') return '필수 장소 방문이 필요해요';
   return `${remaining}곳 더 방문하면 받을 수 있어요`;
 }
 
@@ -60,7 +72,7 @@ function toCtaLabel(claimed: boolean, claimable: boolean, remaining: number): st
  */
 @Component({
   selector: 'app-reward',
-  imports: [PageHeader, TabBar, WaveDivider, ScrollTopDirective],
+  imports: [PageHeader, TabBar, WaveDivider, ScrollTopDirective, LazyLoadImg],
   templateUrl: './reward.html',
   styleUrl: './reward.scss',
 })
@@ -79,18 +91,42 @@ export class Reward implements OnInit {
   protected readonly claimError = signal<string | null>(null);
 
   protected readonly periodLabel = OPERATION_PERIOD.label;
-  
 
   protected readonly visitedCount = this.spaces.visitedCount;
 
   /** 로그인 여부. 「리워드 받기」를 눌렀을 때 게이트로 보낼지 가른다 */
   protected readonly isSignedIn = computed(() => this.auth.currentUser() !== null);
 
-  /** 다음 선물까지 남은 스탬프 수. 모든 단계를 지났으면 0 */
-  protected readonly remainingToReward = computed(() => {
-    const visited = this.visitedCount();
-    const nextTier = REWARD_TIERS.find((tier) => tier > visited);
-    return nextTier ? nextTier - visited : 0;
+  protected readonly remainingToReward = this.spaces.remainingToReward;
+
+  /** 필수 장소 이름. 응답 전에도 프론트 콘텐츠에서 채워진다 */
+  private readonly requiredName = computed(
+    () => this.spaces.requiredSpace()?.shortName ?? '필수 장소',
+  );
+
+  /**
+   * 상단 안내 문구.
+   *
+   * **방문 수만 세지 않는다.** 필수 장소를 빼고 3곳을 돌면 첫 선물이 아직 안 열리는데,
+   * 방문 수만 보면 두 번째 선물을 기준 삼아 「3개 더」라고 안내하게 된다.
+   * `my-log` 와 같은 판정(`progressState`)을 써 두 화면이 다른 말을 하지 않게 한다.
+   *
+   * 어느 선물이 남았는지는 `nextRewardTier` 가 답한다 — 아래 카드의 절 제목(`order`)을
+   * 그대로 불러 써서 안내와 카드가 같은 이름을 가리킨다.
+   */
+  protected readonly introDesc = computed(() => {
+    switch (this.spaces.progressState()) {
+      case 'requiredMissing':
+        return `${this.requiredName()}에 방문해야 첫 선물을 받을 수 있어요.`;
+      case 'allComplete':
+        return '받을 수 있는 선물을 확인해보세요.';
+      default: {
+        const tier = this.spaces.nextRewardTier();
+        return tier
+          ? `${this.remainingToReward()}개 더 모으면 ${REWARD_CONTENT[tier].order}을 받을 수 있어요.`
+          : '받을 수 있는 선물을 확인해보세요.';
+      }
+    }
   });
 
   /** 선물 두 단계. 문구는 화면 상수, 자격은 서버 값을 쓴다 */
@@ -100,15 +136,20 @@ export class Reward implements OnInit {
       const claimed = this.rewards.hasClaimed(tier);
       const remaining = Math.max(tier - this.visitedCount(), 0);
 
-      return {
-        ...REWARD_CONTENT[tier],
-        tier,
-        claimable,
-        claimed,
-        ctaLabel: toCtaLabel(claimed, claimable, remaining),
-      };
+      // 개수를 채웠는데도 못 받으면 남은 조건은 필수 장소뿐이다 (`app.py:530` 판정 규칙)
+      const lock: LockReason | null =
+        claimable || claimed ? null : remaining > 0 ? 'count' : 'required';
+
+      const item = { ...REWARD_CONTENT[tier], tier, claimable, claimed, lock };
+      return { ...item, ctaLabel: toCtaLabel(item, remaining) };
     }),
   );
+
+  /**
+   * 잠긴 단계 옆에 붙일 안내. 필수 미방문일 때만 나온다.
+   * 조사는 `에` 로 고정한다 — 장소 이름이 바뀌어도 `을/를` 처럼 갈리지 않는다.
+   */
+  protected readonly requiredNotice = computed(() => `먼저 ${this.requiredName()}에 방문해 주세요`);
 
   ngOnInit(): void {
     requestAnimationFrame(() => this.ready.set(true));

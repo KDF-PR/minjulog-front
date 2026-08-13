@@ -10,7 +10,7 @@ import { StampBadge } from '../../shared/ui/stamp-badge/stamp-badge';
 import { PhotoService } from '../../core/photo.service';
 import { RewardService } from '../../core/reward.service';
 import { SpaceService } from '../../core/space.service';
-import { LoadState, REWARD_TIERS, SPACE_SLUGS } from '../../core/models';
+import { LoadState, SPACE_SLUGS } from '../../core/models';
 import { ScrollTopDirective } from '../../shared/directives/scroll-top.directive';
 
 /**
@@ -54,12 +54,7 @@ export class MyLog implements OnInit {
     return total === 0 ? 0 : Math.round((this.visitedCount() / total) * 100);
   });
 
-  /** 다음 선물까지 남은 스탬프 수. 모든 단계를 지났으면 0 */
-  protected readonly remainingToReward = computed(() => {
-    const visited = this.visitedCount();
-    const nextTier = REWARD_TIERS.find((tier) => tier > visited);
-    return nextTier ? nextTier - visited : 0;
-  });
+  protected readonly remainingToReward = this.spaces.remainingToReward;
 
   protected readonly hasClaimableReward = computed(
     () => this.rewards.eligibleTiers().length > this.rewards.claimedTiers().length,

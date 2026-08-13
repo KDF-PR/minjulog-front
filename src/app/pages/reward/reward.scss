@@ -4,6 +4,12 @@
 .reward {
   background-color: $color-bg-brand-sky;
 
+  // 세로 flex 로 세워야 흰 본문이 화면 아래 끝까지 이어짐
+  // 내용이 짧으면 .step-body 가 남은 높이를 채우고, 길면 그대로 늘어나 스크롤
+  .step-scroll {
+    @include flex(column);
+  }
+
   .step-header {
     gap: $space-12;
 
@@ -20,7 +26,7 @@
       @include typo-ds('body', 'sm');
       color: $color-text-sub;
       @include font-size(12px);
-      font-family: 'SUIT Variable', sans-serif;
+      // font-family: 'SUIT Variable', sans-serif;
       letter-spacing: 0;
     }
   }
@@ -31,7 +37,7 @@
   }
 
   .step-body {
-    height: 100%;
+    flex: 1 0 auto;
     padding-bottom: $space-24;
     background-color: $color-bg;
 
@@ -65,61 +71,88 @@
         @include flex(column);
         gap: $space-12;
 
+        // 리워드 카드
         .record {
           @include border-radius($radius-lg);
-          @include flex(row, flex-start, center);
+          @include flex(column);
           gap: $space-12;
           padding: $space-12;
-          background-color: $color-bg-subtle;
+          background-color: $color-bg;
+          border: 1px solid $color-border;
 
-          // 사진 자산 미수령 — 오면 배경째 교체
-          // 시안 배경색(#dfdfdf · #ffecec)은 그림 안의 색이라 토큰으로 빼지 않음
-          .record-img {
-            @include border-radius($radius-md);
-            width: rem(96px);
-            height: rem(96px);
-            flex-shrink: 0;
-            overflow: hidden;
-            @include flexCenter();
-            background-color: $color-bg-muted;
-            color: $color-text-muted;
-            @include typo-ds('label', 'sm');
-          }
+          .record-row {
+            width: 100%;
+            @include flex(row, flex-start, center);
+            gap: $space-12;
 
-          // min-width: 0 이 없으면 설명이 길 때 카드 밖으로 밀림
-          .record-body {
-            min-width: 0;
-            @include flex(column);
-            gap: $space-4;
+            // 리워드 상품 이미지 (현재 리워드 상품 사진 미수령)
+            .record-img-container {
+              @include border-radius($radius-md);
+              width: rem(96px);
+              height: rem(96px);
 
-            h4 {
-              @include typo-ds('label', 'sm');
-              @include font-weight('semiBold');
+              flex-shrink: 0;
+              overflow: hidden;
+
+              @include flexCenter();
+              background-color: $color-bg-muted;
+
+              img {
+                @include objectFit();
+              }
+              // color: $color-text-muted;
+              // @include typo-ds('label', 'sm');
             }
 
-            p {
-              color: $color-text-sub;
-              @include typo-ds('body', 'xs');
+            .record-body {
+              min-width: 0; // 생략 시 설명이 길 때 카드 밖으로 밀림
+              @include flex(column);
+              gap: $space-4;
+
+              h4 {
+                @include typo-ds('title', 'sm');
+                @include font-size(15px);
+              }
+
+              p {
+                color: $color-text-sub;
+                @include typo-ds('body', 'xs');
+                @include font-size(12px);
+              }
+            }
+
+            // 잠긴 단계도 같은 버튼. disabled 로 잠가야 보조기기에 「지금은 누를 수 없다」가 전달됨
+            .record-cta {
+              border-color: $color-border-strong;
+              @include border-radius($radius-md);
+
+              width: 100%;
+              background-color: $color-bg-subtle;
+
+              height: $control-md;
+              border: $color-border;
+
+              @include typo-ds('label', 'sm');
+
+              &:disabled {
+                border-color: $btn-primary-border-disabled;
+                background-color: $btn-primary-bg-disabled;
+                color: $btn-primary-text-disabled;
+                cursor: default;
+              }
+
+              &:focus-visible {
+                @include a11yFocusStyle();
+              }
             }
           }
         }
 
-        // 잠긴 단계도 같은 버튼. disabled 로 잠가야 보조기기에 「지금은 누를 수 없다」가 전달됨
-        .record-cta {
-          @include button('secondary', 'md');
-          border-color: $color-border-strong;
-          @include border-radius($radius-lg);
-          width: 100%;
-          background-color: transparent;
-
-          &:disabled {
-            border-color: $color-border;
-            cursor: default;
-          }
-
-          &:focus-visible {
-            @include a11yFocusStyle();
-          }
+        // 필수 미방문 안내. 버튼 바로 위에 둬야 잠긴 이유와 할 일이 붙어 읽힌다
+        .record-lock {
+          color: $color-text-sub;
+          @include typo-ds('body', 'xs');
+          text-align: center;
         }
       }
     }
@@ -129,6 +162,7 @@
       border: 1px solid $color-border-subtle;
       @include border-radius($radius-md);
       padding: $space-12;
+
       color: $color-text-sub;
       @include typo-ds('body', 'sm');
       text-align: center;
