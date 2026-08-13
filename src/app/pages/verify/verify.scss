@@ -25,7 +25,7 @@
     background-color: $color-bg;
   }
 
-  // 코드 입력 폼. 완료(done) 상태에서는 .verify-done 으로 교체돼 동시에 존재하지 않음
+  // 코드 입력 폼
   form {
     @include flex(column);
     gap: $space-12;
@@ -125,38 +125,6 @@
         @include typo-ds('label', 'sm');
         line-height: $lh-tight;
         font-family: $font-label;
-      }
-    }
-  }
-
-  // 완료 상태 — 검정 원 안 흰 체크, 바로 아래 시작하기
-  .verify-done {
-    @include flex(column, flex-start, center);
-    gap: $space-12;
-    padding: $spacing-page-y-mobile $page-x;
-
-    i {
-      @include border-radius($radius-full);
-      flex-shrink: 0;
-      width: $thumb-sm;
-      height: $thumb-sm;
-      @include flexCenter();
-      background-color: $color-bg-inverse;
-
-      img {
-        // 시안은 40px 이지만 checked@2x 원본이 48px 라 레티나에서 흐려짐 → 자산이 견디는 32 로 낮춤
-        width: $icon-lg;
-        height: $icon-lg;
-        filter: invert(1); // 체크 자산이 검정 단색이라 반전만으로 흰 아이콘이 됨
-      }
-    }
-
-    button {
-      @include button('primary', 'lg');
-      width: 100%;
-
-      &:focus-visible {
-        @include a11yFocusStyle();
       }
     }
   }

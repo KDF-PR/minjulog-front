@@ -26,9 +26,11 @@ export const routes: Routes = [
     path: 'spaces/:slug',
     loadComponent: () => import('./pages/space-detail/space-detail').then((m) => m.SpaceDetail),
   },
-  // 사진 인증. 장소 상세의 인증 버튼이 보내고, 결과 6장은 `status` 로 분기
+  // 사진 인증. 장소 상세의 인증 버튼이 보내고, 결과 6장은 `status` 로 분기.
+  // 기록을 남기는 첫 지점이라 가드 적용 — 비로그인 촬영은 업로드에서야 401 로 막혀 헛수고가 된다
   {
     path: 'stamp/:slug',
+    canActivate: [authGuard],
     loadComponent: () => import('./pages/stamp/stamp').then((m) => m.Stamp),
   },
   // 어떤 선물이 걸려 있는지는 로그인 전에도 공개.

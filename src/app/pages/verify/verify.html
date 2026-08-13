@@ -3,93 +3,79 @@
 
   <div class="step-scroll">
     <div class="step-header">
-      @if (status() === 'done') {
-        <h2 class="step-title">로그인 완료</h2>
-        <p class="step-subtitle">이제 방문할 때마다 기록이 차곡차곡 저장돼요</p>
-      } @else {
-        <h2 class="step-title">인증코드 입력</h2>
-        <p class="step-subtitle">{{ sentSubtitle }}</p>
-      }
+      <h2 class="step-title">인증코드 입력</h2>
+      <p class="step-subtitle">{{ sentSubtitle }}</p>
     </div>
 
     <app-wave-divider class="verify-wave" />
 
     <div class="step-body">
-      @if (status() === 'done') {
-        <div class="verify-done">
-          <i aria-hidden="true">
-            <img src="/assets/images/ui/icons/checked@2x.png" alt="" />
-          </i>
-          <button type="button" (click)="start()">시작하기</button>
-        </div>
-      } @else {
-        <form (submit)="$event.preventDefault(); verify()">
-          <label class="is-visually-hidden" for="verify-code">인증코드</label>
+      <form (submit)="$event.preventDefault(); verify()">
+        <label class="is-visually-hidden" for="verify-code">인증코드</label>
 
-          <!-- 실제 input 은 하나 — SMS 자동입력·붙여넣기가 6칸으로 쪼개면 깨진다.
-               투명한 input 이 칸 전체를 덮어 어느 칸을 눌러도 포커스가 간다. -->
-          <div class="code" [class.is-error]="status() === 'mismatch'">
-            <input
-              #codeRef
-              id="verify-code"
-              type="text"
-              inputmode="numeric"
-              autocomplete="one-time-code"
-              maxlength="6"
-              [value]="code()"
-              (input)="onCodeInput(codeRef)"
-              [disabled]="status() === 'expired' || status() === 'exceeded'"
-              [attr.aria-invalid]="status() === 'mismatch'"
-              [attr.aria-describedby]="error() ? 'verify-error' : null"
-            />
-            @for (char of codeChars(); track $index) {
-              <span
-                aria-hidden="true"
-                [class.is-caret]="status() === 'input' && $index === caretIndex()"
-              >
-                {{ char }}
-              </span>
-            }
-          </div>
-
-          @if (error()) {
-            <p class="verify-error" id="verify-error" role="alert">{{ error() }}</p>
-          }
-
-          <!-- expiresIn 은 코드 유효시간(5분), resendWait 는 재전송 대기(60초) — 뜻이 달라 합치지 않는다 -->
-          <p class="verify-timer" role="status">{{ expiresLabel() }}</p>
-
-          @if (status() === 'input') {
-            <button
-              type="submit"
-              class="btn-primary"
-              [class.is-loading]="loading()"
-              [disabled]="loading() || code().length !== 6"
+        <!-- 실제 input 은 하나 — SMS 자동입력·붙여넣기가 6칸으로 쪼개면 깨진다.
+             투명한 input 이 칸 전체를 덮어 어느 칸을 눌러도 포커스가 간다. -->
+        <div class="code" [class.is-error]="status() === 'mismatch'">
+          <input
+            #codeRef
+            id="verify-code"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            [value]="code()"
+            (input)="onCodeInput(codeRef)"
+            [disabled]="status() === 'expired' || status() === 'exceeded'"
+            [attr.aria-invalid]="status() === 'mismatch'"
+            [attr.aria-describedby]="error() ? 'verify-error' : null"
+          />
+          @for (char of codeChars(); track $index) {
+            <span
+              aria-hidden="true"
+              [class.is-caret]="status() === 'input' && $index === caretIndex()"
             >
-              {{ loading() ? '확인 중...' : '확인' }}
-            </button>
-          } @else if (status() === 'mismatch') {
-            <button type="button" class="btn-primary" (click)="retype()">다시 입력하기</button>
-          } @else {
-            <!-- 만료·초과에서는 주 버튼이 재전송을 맡는다. 대기 중 누르면 백엔드가 429 -->
-            <button type="button" class="btn-primary" [disabled]="!canResend()" (click)="resend()">
-              {{ canResend() ? '인증코드 다시 받기' : resendWait() + '초 후 다시 받기' }}
-            </button>
+              {{ char }}
+            </span>
           }
+        </div>
 
-          <div class="verify-notice">
-            @if (status() === 'input') {
-              <p>{{ notReceivedHint }}</p>
-            }
-            @if (status() === 'input' || status() === 'mismatch') {
-              <p>5회 틀리면 코드가 만료돼요. 인증코드를 다시 받아 주세요.</p>
-            }
-            @if (status() === 'exceeded') {
-              <p>인증코드를 다시 받으면 새로 시도할 수 있어요</p>
-            }
-          </div>
-        </form>
-      }
+        @if (error()) {
+          <p class="verify-error" id="verify-error" role="alert">{{ error() }}</p>
+        }
+
+        <!-- expiresIn 은 코드 유효시간(5분), resendWait 는 재전송 대기(60초) — 뜻이 달라 합치지 않는다 -->
+        <p class="verify-timer" role="status">{{ expiresLabel() }}</p>
+
+        @if (status() === 'input') {
+          <button
+            type="submit"
+            class="btn-primary"
+            [class.is-loading]="loading()"
+            [disabled]="loading() || code().length !== 6"
+          >
+            {{ loading() ? '확인 중...' : '확인' }}
+          </button>
+        } @else if (status() === 'mismatch') {
+          <button type="button" class="btn-primary" (click)="retype()">다시 입력하기</button>
+        } @else {
+          <!-- 만료·초과에서는 주 버튼이 재전송을 맡는다. 대기 중 누르면 백엔드가 429 -->
+          <button type="button" class="btn-primary" [disabled]="!canResend()" (click)="resend()">
+            {{ canResend() ? '인증코드 다시 받기' : resendWait() + '초 후 다시 받기' }}
+          </button>
+        }
+
+        <div class="verify-notice">
+          @if (status() === 'input') {
+            <p>{{ notReceivedHint }}</p>
+          }
+          @if (status() === 'input' || status() === 'mismatch') {
+            <p>5회 틀리면 코드가 만료돼요. 인증코드를 다시 받아 주세요.</p>
+          }
+          @if (status() === 'exceeded') {
+            <p>인증코드를 다시 받으면 새로 시도할 수 있어요</p>
+          }
+        </div>
+      </form>
     </div>
   </div>
 </section>

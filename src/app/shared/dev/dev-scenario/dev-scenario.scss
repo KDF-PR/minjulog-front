@@ -19,7 +19,7 @@
     box-shadow: 0 4px 16px rgb(0 0 0 / 0.15);
     background-color: $color-bg;
 
-    // 시나리오 항목 (02 · 0곳 … 06 · 6곳)
+    // 상태 항목 (로그인 전 · 02~06 시나리오)
     button {
       @include border-radius($radius-full);
       padding: $space-6 $space-12;

@@ -1,7 +1,32 @@
 <header class="page-header">
   <h1><a routerLink="/main">{{ title() }}</a></h1>
 
-  <button type="button" (click)="openIntro()">소개</button>
+  <div class="header-actions">
+    <button type="button" (click)="openIntro()">소개</button>
+
+    @if (isSignedIn()) {
+      <a class="account" routerLink="/my-log">
+        <span class="account-dot" aria-hidden="true"></span>
+        내 기록
+      </a>
+    } @else {
+      <a class="account" routerLink="/login" [queryParams]="loginQueryParams">
+        <!-- 사람 아이콘. 전용 자산 미수령 — 시안 근사치 인라인 svg -->
+        <svg
+          class="account-icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.4"
+          aria-hidden="true"
+        >
+          <circle cx="8" cy="5" r="2.6" />
+          <path d="M2.8 14c.6-2.9 2.7-4.4 5.2-4.4s4.6 1.5 5.2 4.4" />
+        </svg>
+        로그인
+      </a>
+    }
+  </div>
 </header>
 
 <app-intro-dialog [open]="introOpen()" (close)="closeIntro()" />

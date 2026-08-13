@@ -8,9 +8,23 @@
  * 실제와 다른 유일한 지점이고, 쿠키 유지 여부는 `useMockApi = false` 로만 확인된다.
  */
 
+import { signal } from '@angular/core';
+
 // `import type` 이어야 한다 — auth.service 가 이 파일을 값으로 가져가므로
 // 일반 import 면 런타임 순환 참조가 된다. 타입 import 는 컴파일 시 사라진다.
 import type { AuthMethod, User } from '../../auth/auth.service';
+
+/**
+ * mock 로그인 상태 — 세션 쿠키 대신 이 signal 하나가 로그인 여부를 기억한다.
+ *
+ * **처음부터 로그인 상태로 둔다.** 그래야 `authGuard` 가 붙은 화면을 매번 로그인 없이
+ * 열 수 있다. 로그인 전 상태는 DEV 패널의 「로그인 전」 버튼으로 전환해 확인한다.
+ *
+ * `AuthService` 밖에 두는 이유 — 비로그인일 때 실제 API 가 `401` 을 주듯
+ * mock 데이터 서비스(`PhotoService`)도 이 값을 보고 빈 결과를 돌려줘야 해서다.
+ * `useMockApi = false` 면 미사용.
+ */
+export const mockSignedIn = signal(true);
 
 /** 로그인 성공 시 돌려줄 가짜 유저. id 는 고정값이라 실행할 때마다 흔들리지 않는다 */
 export const USER_MOCK: User = {

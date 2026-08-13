@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay, map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { MOCK_OTP_CODE, USER_MOCK, buildUserMock } from '../core/mock/user.mock';
+import { MOCK_OTP_CODE, USER_MOCK, buildUserMock, mockSignedIn } from '../core/mock/user.mock';
 
 export type AuthMethod = 'email' | 'sms';
 
@@ -50,17 +50,21 @@ export class AuthService {
   pendingIdentifier: string | null = null;
   pendingMethod: AuthMethod | null = null;
 
+  // mock 로그인 상태는 `core/mock/user.mock.ts` 의 `mockSignedIn` signal 이 든다.
+  // 가드에는 mock 분기를 넣지 않는다 — mock/실제 전환은 서비스 안에서만.
+
+  /** 세션 중 유저 확인을 이미 시작했는지. `ensureUserChecked` 의 중복 호출 차단용 */
+  private hasCheckedUser = false;
+
   /**
-   * mock 전용 — 세션 쿠키 대신 로그인 여부를 기억.
-   *
-   * **처음부터 로그인 상태로 둔다.** 그래야 `authGuard` 가 붙은 화면을 매번 로그인 없이 열 수 있다.
-   * 가드에는 mock 분기를 넣지 않는다 — mock/실제 전환은 서비스 안에서만.
-   *
-   * 로그아웃 상태 확인이 필요하면 이 값을 `false` 로. 게이트·로그인·인증 세 화면은 가드가 없어
-   * 주소로 직접 열 수 있으므로 이 값이 `true` 라도 로그인 흐름 자체는 확인 가능.
-   * `useMockApi = false` 로 바꾸면 이 값은 미사용.
+   * 세션당 1회만 유저를 확인한다. 헤더처럼 **화면마다 다시 그려지는 곳**이 부른다 —
+   * `fetchUser` 를 직접 부르면 페이지를 오갈 때마다 요청이 나간다.
+   * 판정이 매번 새로워야 하는 곳(리워드 자격 등)은 계속 `fetchUser` 를 쓴다.
    */
-  private mockSignedIn = environment.useMockApi;
+  ensureUserChecked(): void {
+    if (this.hasCheckedUser) return;
+    this.fetchUser().subscribe();
+  }
 
   /**
    * 식별자 정규화 — 발송과 검증이 **같은 문자열**을 보내게 만든다.
@@ -110,7 +114,7 @@ export class AuthService {
       return of({ message: '[mock] 인증되었습니다.', user }).pipe(
         delay(MOCK_LATENCY),
         tap((res) => {
-          this.mockSignedIn = true;
+          mockSignedIn.set(true);
           this.currentUser.set(res.user);
         }),
       );
@@ -126,9 +130,11 @@ export class AuthService {
 
   /** 현재 유저 조회: GET /api/auth/user (미로그인이면 401 → null 로 변환) */
   fetchUser(): Observable<User | null> {
+    this.hasCheckedUser = true;
+
     // mock 전환 지점 — 쿠키 대신 메모리 플래그 참조
     if (environment.useMockApi) {
-      const user = this.mockSignedIn ? (this.currentUser() ?? USER_MOCK) : null;
+      const user = mockSignedIn() ? (this.currentUser() ?? USER_MOCK) : null;
       this.currentUser.set(user);
       return of(user).pipe(delay(MOCK_LATENCY));
     }
@@ -154,7 +160,7 @@ export class AuthService {
 
     return source.pipe(
       tap(() => {
-        this.mockSignedIn = false;
+        mockSignedIn.set(false);
         this.currentUser.set(null);
         this.pendingIdentifier = null;
         this.pendingMethod = null;

@@ -13,6 +13,7 @@ import { PhotoDto, PhotosResponseDto, UploadPhotoResponseDto } from './api.dto';
 import { toVisit, toVisitFromUpload } from './api.mapper';
 import { Visit } from './models';
 import { activeMockScenario, buildVisitsMock } from './mock/visits.mock';
+import { mockSignedIn } from './mock/user.mock';
 
 /** mock 응답 지연(ms) — 로딩 상태가 화면에 보이도록 */
 const MOCK_LATENCY = 300;
@@ -44,8 +45,9 @@ export class PhotoService {
     // mock 전환 지점 — Supabase 준비 후 environment.useMockApi = false
     // 401 은 오류가 아니라 비로그인 정상 상태 → 전부 미방문으로 표시
     // (`app.py:441` @login_required · 비로그인 탐색은 `docs/요구사항정의.md` 5장)
+    // mock 도 같은 규칙 — 로그인 전(DEV 패널)이면 실제 401 때처럼 빈 목록
     const source: Observable<PhotoDto[]> = environment.useMockApi
-      ? of(buildVisitsMock(activeMockScenario())).pipe(delay(MOCK_LATENCY))
+      ? of(mockSignedIn() ? buildVisitsMock(activeMockScenario()) : []).pipe(delay(MOCK_LATENCY))
       : this.http.get<PhotosResponseDto>(`${this.base}/api/photos`).pipe(
           map((res) => res.photos),
           catchError((err) => (err?.status === 401 ? of([]) : throwError(() => err))),

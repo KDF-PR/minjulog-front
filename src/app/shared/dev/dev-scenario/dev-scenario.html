@@ -1,10 +1,14 @@
 <aside class="dev-scenario" [class.is-open]="open()">
   @if (open()) {
-    <div role="group" aria-label="방문 시나리오 전환">
+    <div role="group" aria-label="화면 상태 전환">
+      <button type="button" [class.is-active]="!signedIn()" (click)="signOut()">
+        로그인 전
+      </button>
+
       @for (item of scenarios; track item) {
         <button
           type="button"
-          [class.is-active]="scenario() === item"
+          [class.is-active]="signedIn() && scenario() === item"
           (click)="select(item)"
         >
           {{ labels[item] }}

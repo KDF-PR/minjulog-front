@@ -27,14 +27,15 @@ import { WaveDivider } from '../../shared/layout/wave-divider/wave-divider';
  *   mismatch  코드 불일치 — 401
  *   expired   코드 만료 — 로컬 타이머(OTP_TTL_SECONDS) 소진
  *   exceeded  시도 초과 — 429, 백엔드가 코드 폐기
- *   done      인증 성공 — 시작하기 클릭 시 원래 자리로 복귀
+ *
+ * 성공은 상태가 아니다 — 완료 화면 없이 즉시 원래 자리로 이동한다.
  */
-type VerifyStatus = 'input' | 'mismatch' | 'expired' | 'exceeded' | 'done';
+type VerifyStatus = 'input' | 'mismatch' | 'expired' | 'exceeded';
 
 const CODE_LENGTH = 6;
 
 /**
- * L2 — 인증코드 입력 화면. 6자리 검증 후 성공 상태(done)까지 이 화면에서 처리.
+ * L2 — 인증코드 입력 화면. 6자리 검증 성공 시 완료 화면 없이 바로 복귀.
  *
  * 실제 input 은 하나 — SMS 자동입력(`autocomplete="one-time-code"`)과 붙여넣기는
  * 한 input 에만 온전히 들어옴. 시각 6칸은 값을 한 자리씩 나눠 그리는 표시 전용.
@@ -128,7 +129,7 @@ export class Verify implements OnInit, OnDestroy {
       next: () => {
         this.loading.set(false);
         this.stopTicker();
-        this.status.set('done');
+        this.redirectAfterLogin();
       },
       error: (err) => {
         this.loading.set(false);
@@ -172,9 +173,17 @@ export class Verify implements OnInit, OnDestroy {
     });
   }
 
-  /** 성공 상태의 시작하기 — 게이트가 넘긴 자리로 복귀 */
-  protected start(): void {
-    this.router.navigateByUrl(this.returnUrl ?? '/my-log');
+  /**
+   * 인증 성공 — 게이트가 넘긴 자리로 즉시 복귀, 없으면 방문 현황.
+   *
+   * 인증 화면 주소는 버린다 — 헤더의 로그인 링크가 현재 화면(`/verify` 등)을
+   * `returnUrl` 로 실어 보내는 경우가 있어, 그대로 따르면 로그인 직후
+   * 인증코드 입력 화면으로 돌아가는 순환이 생긴다.
+   */
+  private redirectAfterLogin(): void {
+    const target = this.returnUrl;
+    const isAuthScreen = ['/login', '/verify', '/gate'].some((path) => target?.startsWith(path));
+    this.router.navigateByUrl(target && !isAuthScreen ? target : '/my-log');
   }
 
   private startTicker(): void {
