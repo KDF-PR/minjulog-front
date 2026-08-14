@@ -6,7 +6,9 @@
 // 프론트 자신에게 가고, Firebase Hosting 의 SPA rewrite 가 index.html 을 돌려줘
 // JSON 파싱에서 깨진다.
 export const environment = {
-  apiBase: 'https://minjulog-back.vercel.app',
+  // 프론트(minjulog.kr)와 등록 도메인이 같아야 세션 쿠키(SameSite=Lax)가 산다.
+  // vercel.app 직접 주소로 되돌리면 교차 사이트가 되어 로그인이 유지되지 않는다
+  apiBase: 'https://api.minjulog.kr',
 
   /**
    * Firebase 웹 설정. Firebase 프로젝트 `kdemo-stamp`.
