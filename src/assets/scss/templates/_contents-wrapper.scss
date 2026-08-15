@@ -8,6 +8,9 @@
 // (페이지 이탈 fade 중 배경까지 사라져도 색이 변하지 않는 이유 — utils/_motion.scss 참고)
 body {
   background-color: $color-bg-page;
+  // iOS 에서 스크롤할 곳 없는 문서가 통째로 튕기며(고무줄) 프레임 밖이 드러남 → 차단.
+  // 스크롤은 .step-scroll 안에서만 일어난다 (templates/_step.scss)
+  overscroll-behavior: none;
 }
 
 .contents-wrapper {

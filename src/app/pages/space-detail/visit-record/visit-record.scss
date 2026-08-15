@@ -1,19 +1,19 @@
 @use 'utils' as *;
 
 .visit-record {
-  @include border-radius($radius-lg);
+  @include border-radius($radius-sm);
   border: 1px solid $color-border;
   width: 100%;
   @include flex(row, center, stretch);
-  gap: $space-16;
-  padding: $space-16;
+  gap: $space-12;
+  padding: $space-12;
   background-color: $color-bg-subtle;
   text-align: left;
 
   // 내가 올린 인증 사진 썸네일
   .record-img {
     flex: 0 0 auto;
-    @include border-radius($radius-md);
+    @include border-radius($radius-sm);
     border: 1px solid $color-border;
     width: 96px;
     height: 96px;
@@ -28,23 +28,44 @@
   }
 
   .record-body {
-    flex: 1 1 0;
+    width: 100%;
+    height: 100%;
+    height: 96px;
+
     min-width: 0;
-    @include flex(column, flex-start, stretch);
+    @include flex(column, space-between, stretch);
     gap: $space-4;
 
-    .record-title {
-      @include typo-ds('label', 'md');
+    .text {
+      width: 100%;
+      .record-title {
+        @include typo-ds('label', 'md');
+        font-family: 'SUIT';
+        letter-spacing: 0;
+        margin-bottom: $space-4;
+      }
+
+      .record-summary {
+        @include font-size(12px);
+        @include font-weight('regular');
+        color: $color-text-sub;
+        font-family: 'SUIT';
+        letter-spacing: 0;
+      }
     }
 
-    .record-summary {
-      color: $color-text-sub;
-      @include typo-ds('label', 'xs');
-    }
+    .btn-record-view {
+      width: 100%;
+      height: $control-sm;
+      @include flex(row, center, center);
 
-    .record-view {
-      @include button('secondary', 'sm');
-      margin-top: auto; // 문구 길이와 무관하게 버튼을 카드 하단에 붙임
+      background-color: $color-bg;
+      color: $btn-secondary-text;
+      border: 1px solid $btn-secondary-border;
+
+      font-family: 'SUIT';
+      @include font-size(12px);
+      letter-spacing: 0;
     }
   }
 }

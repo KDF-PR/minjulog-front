@@ -36,7 +36,11 @@
   .step-scroll {
     flex: 1;
     min-height: 0;
+    overflow-x: hidden;
     overflow-y: auto;
+    // 끝에 닿은 뒤의 고무줄 튕김 차단 — 콘텐츠가 끌려나면
+    // 상단 바·하단 바와의 사이로 배경이 드러난다 (iOS · macOS 트랙패드)
+    overscroll-behavior-y: none;
   }
 
   // 제목 묶음. 좌우 여백이 여기서 붙으므로 프레임 전폭을 채워야 하는 것
@@ -74,6 +78,7 @@
   &.is-scrolly {
     overflow-x: hidden;
     overflow-y: scroll;
+    overscroll-behavior-y: none; // .step-scroll 과 같은 이유
   }
 }
 

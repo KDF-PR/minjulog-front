@@ -4,9 +4,12 @@
   </span>
 
   <div class="record-body">
-    <p class="record-title">방문 기록이 저장됐어요</p>
-    <!-- 시안 문구는 「리워드 신청 전까지」 — 정책 확정(신청 후에도 교체 가능)에 맞춰 바꿈 -->
-    <p class="record-summary">사진은 언제든 바꿀 수 있어요</p>
-    <button type="button" class="record-view" (click)="view.emit()">내 사진 보기</button>
+    <div class="text">
+      <p class="record-title">방문 기록이 저장됐어요</p>
+      <!-- 시안 문구는 「리워드 신청 전까지」 — 정책 확정(신청 후에도 교체 가능)에 맞춰 바꿈 -->
+      <p class="record-summary">사진은 언제든 바꿀 수 있어요</p>
+    </div>
+
+    <button type="button" class="btn-record-view" (click)="view.emit()">내 사진 보기</button>
   </div>
 </div>

@@ -110,7 +110,10 @@
       gap: $space-4;
       margin-top: $space-16;
       color: $color-text-muted;
-      @include typo-ds('label', 'sm');
+      @include typo-ds('label', 'md');
+      @include font-weight('regular');
+      font-family: 'SUIT';
+      letter-spacing: 0;
 
       .icon-container {
         width: $icon-sm;
@@ -249,7 +252,7 @@
 
   // 하단 고정 영역. 화면 흐름 밖이라 .step-scroll 과 형제로 둠
   .detail-actions {
-    border-top: 1px solid $color-border;
+    // border-top: 1px solid $color-border;
     width: 100%;
     @include flex(row, center, center);
     gap: $space-24;

@@ -25,6 +25,16 @@ export class PhotoService {
 
   private readonly visits = signal<Visit[]>([]);
   private readonly uploading = signal(false);
+  private readonly loaded = signal(false);
+
+  /**
+   * 방문 목록을 한 번이라도 받아왔는지. 참이 되면 앱이 살아 있는 동안 유지된다.
+   *
+   * 화면을 옮길 때마다 방문 여부를 「모름」으로 되돌리지 않으려고 둔다 —
+   * 되돌리면 이미 아는 답을 두고 배지를 숨겼다 다시 그리게 된다.
+   * 비로그인(401)도 「방문 없음」으로 확정된 답이라 참이다.
+   */
+  readonly visitsLoaded = this.loaded.asReadonly();
 
   /** 방문한 장소의 백엔드 uuid 집합 */
   readonly visitedSpaceIds = computed(() => new Set(this.visits().map((visit) => visit.spaceId)));
@@ -55,7 +65,10 @@ export class PhotoService {
 
     return source.pipe(
       map((photos) => photos.map(toVisit)),
-      tap((visits) => this.visits.set(visits)),
+      tap((visits) => {
+        this.visits.set(visits);
+        this.loaded.set(true);
+      }),
     );
   }
 

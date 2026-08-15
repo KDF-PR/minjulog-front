@@ -70,9 +70,25 @@ export class SpaceDetail implements OnInit {
   protected readonly spaceVisit = computed(() => this.spaces.findVisitBySlug(this.slug()));
   protected readonly isVisited = computed(() => this.spaceVisit()?.visit != null);
 
+  /** 방문 여부가 확정됐는지. 배지·축하 그림·내 사진 카드가 이 하나를 함께 본다 */
+  protected readonly visitStateKnown = this.spaces.visitStateKnown;
+
+  /**
+   * 화면에 들어온 순간 이미 알고 있었는지. 알고 있었으면 모션 없이 처음부터 그린다 —
+   * 목록에서 들어오는 대부분이 여기다. 기다린 끝에 나타날 때만 페이드를 붙인다.
+   *
+   * `motion-fade-in`(legacy) 이 아니라 `animate.enter` 를 쓴다 — 저쪽은 조상의 `.is-ready`
+   * 가 붙어야 재생되고 그 전까지 `opacity: 0` 이라, 늦게 삽입되는 요소가 안 보인 채 남을 수 있다.
+   */
+  private readonly knownOnEnter = signal(false);
+  protected readonly visitStateEnter = computed(() =>
+    this.knownOnEnter() ? '' : 'motion-fade-enter',
+  );
+
   ngOnInit(): void {
     requestAnimationFrame(() => this.ready.set(true));
     this.slug.set(this.route.snapshot.paramMap.get('slug') ?? '');
+    this.knownOnEnter.set(this.visitStateKnown());
     this.load();
   }
 

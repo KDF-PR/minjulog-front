@@ -10,8 +10,18 @@ import { StampBadge } from '../../shared/ui/stamp-badge/stamp-badge';
 import { PhotoService } from '../../core/photo.service';
 import { RewardService } from '../../core/reward.service';
 import { SpaceService } from '../../core/space.service';
-import { LoadState, SPACE_SLUGS } from '../../core/models';
+import { LoadState, REWARD_TIERS, SPACE_SLUGS } from '../../core/models';
 import { ScrollTopDirective } from '../../shared/directives/scroll-top.directive';
+
+/** 첫 번째 선물의 기준 방문 수. 이 수를 넘겨도 필수를 안 갔으면 선물이 열리지 않는다 */
+const FIRST_TIER = REWARD_TIERS[0];
+
+/** 목적격 조사. 끝 받침으로 을/를 을 가른다 — 필수 장소 이름이 바뀌어도 문장이 깨지지 않게 */
+function withObjectParticle(name: string): string {
+  const last = name.charCodeAt(name.length - 1);
+  const isHangul = last >= 0xac00 && last <= 0xd7a3;
+  return `${name}${isHangul && (last - 0xac00) % 28 !== 0 ? '을' : '를'}`;
+}
 
 /**
  * 02 내 스탬프 — 진행률과 스탬프 그리드.
@@ -46,7 +56,6 @@ export class MyLog implements OnInit {
   protected readonly spaceVisits = this.spaces.spaceVisits;
   protected readonly visitedCount = this.spaces.visitedCount;
   protected readonly totalCount = this.spaces.totalCount;
-  protected readonly progressState = this.spaces.progressState;
 
   /** 0~100. 장소를 아직 못 받았으면 0 (0 나누기 방지) */
   protected readonly progressPercent = computed(() => {
@@ -66,27 +75,37 @@ export class MyLog implements OnInit {
   );
 
   /**
-   * 상단 안내 문구.
+   * 상단 안내 문구. 방문 수와 **필수 장소 방문 여부**가 함께 가른다.
    *
-   * **방문 수만 세지 않는다.** 필수 장소를 빼고 3곳을 돌면 첫 선물이 아직 안 열리는데,
-   * 방문 수만 보면 두 번째 선물을 기준 삼아 "3곳 더" 라고 안내하게 된다.
-   * 그래서 서비스의 `progressState` 판정을 그대로 따른다 (디자인 `02`~`06`).
+   * 필수를 빼고 3곳을 돌면 첫 선물이 아직 안 열린다 — 방문 수만 보면 두 번째 선물을
+   * 기준 삼아 "3곳 더" 라고 안내하게 된다. 그래서 필수 여부를 먼저 본다.
    *
-   * `inProgress` 와 `firstComplete` 는 같은 문구다 — 1차 완성 안내는 문구가 아니라
-   * `RewardNotice` 배너가 맡는다.
+   * 남은 수는 `SpaceService.remainingToReward` 가 준다. 화면이 따로 빼면 두 화면이 어긋난다.
    */
   protected readonly introDesc = computed(() => {
-    switch (this.progressState()) {
-      case 'empty':
-        return '아래 장소를 방문하고 사진으로 인증해 보세요.';
-      case 'requiredMissing':
-        // 문구는 임시다 — 시안에 `04` 안내가 없다 (`docs/pages.md` 3장)
-        return `${this.requiredName()}에 방문해야 첫 선물을 받을 수 있어요.`;
-      case 'allComplete':
-        return '여섯 곳을 모두 방문했어요.';
-      default:
-        return `${this.remainingToReward()}곳 더 방문하고 다음 선물도 받아요.`;
+    const visited = this.visitedCount();
+    const remaining = this.remainingToReward();
+    const required = withObjectParticle(this.requiredName());
+
+    if (visited === 0) {
+      return `${required} 포함하여 ${remaining}곳을 방문하면 선물을 받을 수 있어요.`;
     }
+
+    if (visited === this.totalCount()) return '모든 장소 방문을 완료했어요.';
+
+    if (!this.spaces.hasVisitedRequired()) {
+      if (visited < FIRST_TIER) {
+        return `${required} 포함하여 ${remaining}곳 더 방문하면 첫 번째 선물을 받을 수 있어요.`;
+      }
+      // 3곳째에만 「첫 번째」를 붙인다 — 그 뒤로는 몇 번째 선물인지가 흐려진다
+      return visited === FIRST_TIER
+        ? `${required} 방문해야 첫 번째 선물을 받을 수 있어요.`
+        : `${required} 방문해야 선물을 받을 수 있어요.`;
+    }
+
+    return visited < FIRST_TIER
+      ? `${remaining}곳 더 방문하면 첫 번째 선물을 받을 수 있어요.`
+      : `${remaining}곳 더 방문하고 두 번째 선물을 받아보세요.`;
   });
 
   /** 로딩 중 자리 채움. 장소 수는 프론트가 이미 알아 응답 전에도 실제와 같은 높이를 잡을 수 있다 */

@@ -6,11 +6,8 @@
 
 // 방문 전 사진 투명도. opacity 토큰이 없어 이 화면에만 둔다. 글이 사진 위에서 읽히게 낮게 잡는다.
 $thumb-dim-opacity: 0.25;
-
-// 방문 전 카메라 아이콘 크기. 시안 실측이라 $icon-* 어느 단계와도 맞지 않는다
 $log-icon-size: rem(22px);
 
-// 제목 묶음(.step-header)에 배경이 없는 것은 이 색이 그대로 비쳐야 해서다.
 .my-log {
   background-color: $color-bg-brand-lemon;
 
@@ -33,6 +30,8 @@ $log-icon-size: rem(22px);
       h3 {
         color: $color-text-sub;
         @include typo-ds('label', 'md');
+        font-family: 'SUIT';
+        letter-spacing: 0;
       }
 
       p {
@@ -40,12 +39,18 @@ $log-icon-size: rem(22px);
         gap: $space-4;
 
         strong {
-          @include typo-ds('display', 'sm');
+          @include typo-ds('display', 'lg');
+          font-family: 'SUIT';
+          letter-spacing: 0;
         }
 
         span {
           color: $color-text-muted;
           @include typo-ds('title', 'md');
+          @include font-weight('regular');
+
+          font-family: 'SUIT';
+          letter-spacing: 0;
         }
       }
     }
@@ -56,6 +61,7 @@ $log-icon-size: rem(22px);
       height: $progress-bar-height;
       overflow: hidden;
       background-color: $progress-track;
+      border: 1px solid black;
 
       // 채움 막대. 이 안의 span 은 하나뿐
       span {
@@ -68,7 +74,7 @@ $log-icon-size: rem(22px);
   }
 
   .my-log-logs {
-    padding: 0 $page-x $spacing-page-y-mobile;
+    padding: 0 $page-x 5rem;
     background-color: $color-bg;
 
     // 열 고정 && 행이 이어지는 2차원 구조라 grid 사용
@@ -151,6 +157,8 @@ $log-icon-size: rem(22px);
         background-color: $color-bg-inverse;
         color: $color-text-inverse;
         @include typo-ds('label', 'xs');
+        font-family: 'SUIT';
+        letter-spacing: 0;
       }
 
       // 방문 완료 도장. 모양·색은 app-stamp-badge 가 들고 여기서는 자리만 정한다 (시안 실측 상 5 · 우 4).
@@ -188,7 +196,7 @@ $log-icon-size: rem(22px);
         }
 
         .log-guide {
-          color: $color-text-muted;
+          color: $color-text-sub;
           @include typo-ds('label', 'xs');
         }
       }

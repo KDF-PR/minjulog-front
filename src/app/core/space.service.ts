@@ -42,6 +42,17 @@ export class SpaceService {
   private base = environment.apiBase;
 
   private readonly spaceList = signal<Space[]>(INITIAL_SPACES);
+  private readonly spacesLoaded = signal(false);
+
+  /**
+   * 방문 여부를 확정할 수 있는 상태인지.
+   *
+   * 장소의 서버 uuid 와 방문 목록이 **둘 다** 있어야 짝이 맞는다 — `INITIAL_SPACES` 의
+   * `spaceId` 는 빈 문자열이라 방문 기록이 있어도 붙지 않는다.
+   * 거짓인 동안 화면은 방문 배지를 그리지 않는다. 회색 「방문 전」을 먼저 찍으면
+   * 답이 온 뒤 색이 뒤집히면서 더 눈에 띈다.
+   */
+  readonly visitStateKnown = computed(() => this.spacesLoaded() && this.photos.visitsLoaded());
 
   /**
    * 장소 목록 — 고정 정보만. 추천 코스 순번으로 정렬.
@@ -117,6 +128,8 @@ export class SpaceService {
       // 401 은 오류가 아니라 비로그인 정상 상태다 — 목록은 프론트 콘텐츠(INITIAL_SPACES)로 그린다
       // (`app.py:349` @login_required · 비로그인 탐색은 `docs/요구사항정의.md` 5장)
       catchError((err) => (err?.status === 401 ? of(this.spaceList()) : throwError(() => err))),
+      // catchError 뒤에 둔다 — 비로그인도 확정된 답이라 「받아왔음」에 넣는다
+      tap(() => this.spacesLoaded.set(true)),
     );
   }
 }
