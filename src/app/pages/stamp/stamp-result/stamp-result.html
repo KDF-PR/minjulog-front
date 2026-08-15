@@ -1,39 +1,86 @@
-<section class="stamp-result">
-  <div class="result-graphic">
-    @if (view().mark) {
-      <span aria-hidden="true">{{ view().mark }}</span>
-    }
-  </div>
+<section class="stamp-result" [class.is-recorded]="isRecorded()">
+  @if (isRecorded()) {
+    <!-- 적립 직후(1a·1b). 하늘색 밴드 → 물결 → 흰 본문, 사진이 경계에 걸친다 -->
+    <header class="result-header">
+      <h1>민주로그</h1>
 
-  <div class="result-body">
-    <h2>{{ view().title }}</h2>
-
-    @for (description of view().descriptions; track $index) {
-      <p>{{ description }}</p>
-    }
-
-    @if (view().boxedDescription) {
-      <p class="result-note">{{ view().boxedDescription }}</p>
-    }
-  </div>
-
-  @if (view().showRewardCard) {
-    <app-reward-notice
-      class="result-notice"
-      linkLabel="보러가기"
-      (linkSelect)="actionSelect.emit('viewRewards')"
-    />
-  }
-
-  <div class="result-actions">
-    @for (item of view().actions; track item.action) {
-      <button
-        type="button"
-        [class.is-primary]="item.variant === 'primary'"
-        (click)="actionSelect.emit(item.action)"
-      >
-        {{ item.label }}
+      <button type="button" class="result-close" aria-label="닫기" (click)="actionSelect.emit('close')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="m3.5 3.5 9 9m0-9-9 9" />
+        </svg>
       </button>
-    }
-  </div>
+    </header>
+
+    <div class="result-band"></div>
+    <app-wave-divider class="result-wave" />
+
+    <div class="result-main">
+      @if (space(); as visitedSpace) {
+        <figure class="result-photo">
+          <span class="result-photo-img">
+            <lazyLoadImg [src]="'/assets/images/spaces/' + visitedSpace.slug + '/thumb'" />
+          </span>
+          <!-- 방문 여부는 제목이 이미 알린다 -->
+          <app-stamp-badge [mark]="visitedSpace.markColor" aria-hidden="true" />
+        </figure>
+      }
+
+      <h2>{{ view().title }}</h2>
+      <p class="result-count">내 방문 기록 {{ stampCount() }} / {{ totalCount() }}개</p>
+
+      @if (view().showRewardCard) {
+        <app-reward-notice
+          class="result-notice"
+          title="지금 신청할 수 있는 선물이 있어요"
+          linkLabel="보러가기"
+          (linkSelect)="actionSelect.emit('viewRewards')"
+        />
+      } @else if (rewardGuide()) {
+        <!-- 아직 신청할 선물이 없으면 카드를 비우지 않고 한 줄 안내로 대신한다 -->
+        <p class="result-guide">{{ rewardGuide() }}</p>
+      }
+
+      <div class="result-actions">
+        @for (item of view().actions; track item.action) {
+          <button
+            type="button"
+            [class.is-primary]="item.variant === 'primary'"
+            (click)="actionSelect.emit(item.action)"
+          >
+            {{ item.label }}
+          </button>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="result-graphic">
+      @if (view().mark) {
+        <span aria-hidden="true">{{ view().mark }}</span>
+      }
+    </div>
+
+    <div class="result-body">
+      <h2>{{ view().title }}</h2>
+
+      @for (description of view().descriptions; track $index) {
+        <p>{{ description }}</p>
+      }
+
+      @if (view().boxedDescription) {
+        <p class="result-note">{{ view().boxedDescription }}</p>
+      }
+    </div>
+
+    <div class="result-actions">
+      @for (item of view().actions; track item.action) {
+        <button
+          type="button"
+          [class.is-primary]="item.variant === 'primary'"
+          (click)="actionSelect.emit(item.action)"
+        >
+          {{ item.label }}
+        </button>
+      }
+    </div>
+  }
 </section>

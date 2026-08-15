@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { LazyLoadImg } from '../lazy-load-img/lazy-load-img';
 
 /**
  * 받을 수 있는 선물을 알리는 카드. 02 내 스탬프와 08 적립 결과가 같이 쓴다.
@@ -8,11 +9,12 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
   selector: 'app-reward-notice',
   templateUrl: './reward-notice.html',
   styleUrl: './reward-notice.scss',
+  imports: [LazyLoadImg],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RewardNotice {
   readonly title = input('받을 수 있는 선물이 있어요');
-  readonly linkLabel = input('리워드 받기');
+  readonly linkLabel = input('신청하기');
 
   readonly linkSelect = output<void>();
 }

@@ -49,11 +49,24 @@ export class Stamp implements OnInit {
   protected readonly stampCount = this.spaces.visitedCount;
   protected readonly totalCount = this.spaces.totalCount;
 
-  /** 다음 선물까지 남은 스탬프 수. 모든 단계를 지났으면 0 */
-  protected readonly remainingToReward = computed(() => {
-    const visited = this.stampCount();
-    const nextTier = REWARD_TIERS.find((tier) => tier > visited);
-    return nextTier ? nextTier - visited : 0;
+  /**
+   * 적립됐지만 아직 신청할 선물이 없을 때(1b)의 다음 조건 안내.
+   * 방문 수만 보지 않는다 — 3곳을 채워도 필수가 빠졌으면 첫 선물 조건을 다시 알려야 한다.
+   * 선물 이름(첫 번째·두 번째)은 리워드 화면 `REWARD_CONTENT` 의 절 제목과 맞춘다.
+   */
+  protected readonly rewardGuide = computed(() => {
+    const requiredName = this.spaces.requiredSpace()?.shortName ?? '필수 장소';
+
+    switch (this.spaces.progressState()) {
+      case 'requiredMissing':
+        return `${requiredName}에 방문하면 첫 번째 선물을 신청할 수 있어요`;
+      case 'allComplete':
+        return '';
+      default:
+        return this.spaces.nextRewardTier() === REWARD_TIERS[0]
+          ? `${requiredName}을 포함해 ${REWARD_TIERS[0]}곳을 방문하면 첫 번째 선물을 신청할 수 있어요`
+          : `${this.totalCount()}곳을 모두 방문하면 두 번째 선물을 신청할 수 있어요`;
+    }
   });
 
   ngOnInit(): void {
@@ -70,6 +83,13 @@ export class Stamp implements OnInit {
         return;
       case 'viewRewards':
         this.router.navigate(['/reward']);
+        return;
+      case 'viewSpaces':
+        this.router.navigate(['/spaces']);
+        return;
+      case 'close':
+        // 닫기 — 인증을 시작한 장소 상세로 되돌린다
+        this.onCaptureCancel();
         return;
       case 'goMain':
       case 'viewHelp':

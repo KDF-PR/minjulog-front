@@ -65,9 +65,19 @@
     @include flex(column);
     gap: $space-8;
 
+    button {
+      @include typo-ds('label', 'md');
+    }
+
     .btn-primary {
-      @include button('primary', 'lg');
+      // @include button('primary', 'lg');
       width: 100%;
+      @include border-radius($radius-md);
+      height: $control-md;
+
+      background-color: $btn-primary-bg;
+      color: $btn-primary-text;
+      border: 1px solid $btn-primary-border;
 
       &:focus-visible {
         @include a11yFocusStyle();
@@ -75,8 +85,12 @@
     }
 
     .btn-secondary {
-      @include button('secondary', 'lg');
+      // @include button('secondary', 'lg');
       width: 100%;
+
+      background-color: $btn-secondary-bg;
+      color: $btn-secondary-text;
+      border: 1px solid $btn-secondary-border;
 
       &:focus-visible {
         @include a11yFocusStyle();

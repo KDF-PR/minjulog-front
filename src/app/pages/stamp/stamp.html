@@ -4,7 +4,8 @@
       [status]="result"
       [stampCount]="stampCount()"
       [totalCount]="totalCount()"
-      [remainingToReward]="remainingToReward()"
+      [space]="space() ?? null"
+      [rewardGuide]="rewardGuide()"
       (actionSelect)="onAction($event)"
     />
   } @else {

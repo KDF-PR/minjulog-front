@@ -13,72 +13,76 @@
     <app-wave-divider class="reward-wave" />
 
     <div class="step-body">
-      @if (loadState() === 'loading') {
-        <p class="page-state" role="status">리워드를 불러오는 중이에요</p>
-      } @else if (loadState() === 'error') {
+      <!-- 선물 이름·사진·조건은 프론트 상수라 응답 전에도 그린다.
+           서버가 정하는 건 자격뿐이고, 그 부분만 버튼 글자로 뒤늦게 채워진다.
+           실패해도 카드를 지우지 않는다 — 안내는 맞고 신청만 안 되는 상태다 -->
+      @if (loadState() === 'error') {
         <p class="page-state" role="alert">리워드를 불러오지 못했어요</p>
-      } @else {
-        @for (item of rewardItems(); track item.tier) {
-          <section class="content" [attr.aria-labelledby]="'reward-' + item.tier + '-title'">
-            <div class="content-header">
-              <!-- 리워드 이름 -->
-              <h3 [id]="'reward-' + item.tier + '-title'">
-                {{ item.order }}
-              </h3>
-              <!-- 리워드 설명 -->
-              <p>{{ item.condition }}</p>
-            </div>
+      }
 
-            <div class="content-body">
-              <!-- 리워드 카드 -->
-              <div class="record">
-                <div class="record-row">
-                  <span class="record-img-container">
-                    <lazyLoadImg [src]="'/assets/images/rewards/reward_first'" />
-                  </span>
-                  <!-- <figure class="record-img">
-                  <figcaption>사진</figcaption>
-                </figure> -->
+      @for (item of rewardItems(); track item.tier) {
+        <section class="content" [attr.aria-labelledby]="'reward-' + item.tier + '-title'">
+          <div class="content-header">
+            <!-- 리워드 이름 -->
+            <h3 [id]="'reward-' + item.tier + '-title'">
+              {{ item.order }}
+            </h3>
+            <!-- 리워드 설명 -->
+            <p>{{ item.condition }}</p>
+          </div>
 
-                  <div class="record-body">
-                    <h4>{{ item.name }}</h4>
-                    <p>{{ item.description }}</p>
-                  </div>
-                </div>
+          <div class="content-body">
+            <!-- 리워드 카드 -->
+            <div class="record">
+              <div class="record-row">
+                <span class="record-img-container" aria-hidden="true">
+                  <lazyLoadImg [src]="item.image" />
+                </span>
 
-                <div class="record-row">
-                  <!-- 수령 가능 여부 안내 -->
-                  <button
-                    type="button"
-                    class="record-cta"
-                    [disabled]="!item.claimable || claimingTier() !== null"
-                    (click)="claim(item.tier)"
-                  >
-                    {{ item.ctaLabel }}
-                  </button>
+                <div class="record-body">
+                  <h4>{{ item.name }}</h4>
+                  <p>{{ item.description }}</p>
                 </div>
               </div>
 
-              <!-- 필수 미 방문시 안내 -->
-              @if (item.lock === 'required') {
-                <p class="record-lock">{{ requiredNotice() }}</p>
-              }
+              <div class="record-row">
+                <!-- 이미 받은 tier 도 눌린다 — 같은 코드를 다시 보여준다 -->
+                <button
+                  type="button"
+                  class="record-cta"
+                  [disabled]="!item.claimable && !item.claimed"
+                  (click)="claim(item.tier)"
+                >
+                  {{ item.ctaLabel }}
+                </button>
+              </div>
             </div>
-          </section>
-        }
 
-        @if (issuedCode(); as code) {
-          <p class="reward-code" role="status">
-            리워드 코드 <strong>{{ code }}</strong>
-          </p>
-        }
-
-        @if (claimError(); as message) {
-          <p class="page-state" role="alert">{{ message }}</p>
-        }
+            <!-- 필수 미 방문시 안내 -->
+            @if (item.lock === 'required') {
+              <p class="record-lock">{{ requiredNotice() }}</p>
+            }
+          </div>
+        </section>
       }
     </div>
   </div>
 
   <app-tab-bar />
+
+  <app-reward-claim-dialog
+    [open]="claimTier() !== null"
+    [phase]="claimPhase()"
+    [badgeLabel]="claimBadge()"
+    [image]="claimImage()"
+    [reopened]="claimReopened()"
+    [code]="issuedReward()?.code ?? null"
+    [formUrl]="issuedReward()?.formUrl ?? null"
+    [errorMessage]="claimError()"
+    (apply)="requestCode()"
+    (openForm)="openForm()"
+    (showCode)="claimPhase.set('codecheck')"
+    (backToIssued)="claimPhase.set('issued')"
+    (close)="closeClaim()"
+  />
 </section>

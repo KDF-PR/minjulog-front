@@ -106,7 +106,10 @@ export class RewardService {
     const existing = this.mockIssuedCodes.get(tier);
     const code = existing ?? `MOCK${tier}${'AB7K9XQ2'.slice(0, 4)}`;
     this.mockIssuedCodes.set(tier, code);
-    // 구글폼 미설정 시 실제로는 null — 그 경우도 화면에서 확인 필요
-    return { tier, code, formUrl: null };
+    // 실서버와 같게 두 tier 모두 폼 주소를 준다 — 폼은 하나이고 코드·tier 를
+    // 프리필로 구분한다 (`app.py:486`). 더미 주소라 열면 구글폼 404.
+    // 폼 미설정(formUrl null) 분기를 화면으로 확인할 때는 이 값을 잠시 null 로 바꾼다
+    const formUrl = `https://docs.google.com/forms/d/e/mock/viewform?usp=pp_url&entry.0=${code}&entry.1=${tier}`;
+    return { tier, code, formUrl };
   }
 }

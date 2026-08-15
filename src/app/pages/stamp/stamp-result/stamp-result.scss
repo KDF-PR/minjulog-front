@@ -7,6 +7,12 @@
   overflow-y: auto;
 }
 
+// 적립 화면(1a·1b)의 하늘색 밴드 높이와 사진 크기.
+// 밴드 + 물결(29px) 위로 사진을 절반쯤 끌어올려 「방금 찍혔다」는 겹침을 만든다
+$result-band-height: rem(88px);
+$result-photo-size: rem(200px);
+$result-photo-lift: rem(120px);
+
 .stamp-result {
   min-height: 100%;
   @include flex(column, center, center);
@@ -15,6 +21,152 @@
   background-color: $color-bg-page;
   color: $color-text;
   text-align: center;
+
+  // 적립 직후(1a·1b) — 다른 화면과 같은 밴드 → 물결 → 흰 본문 골격으로 바꾼다
+  &.is-recorded {
+    @include flex(column, flex-start, stretch);
+    gap: 0;
+    padding: 0;
+    background-color: $color-bg;
+
+    .result-header {
+      height: $app-header-height;
+      flex-shrink: 0;
+      @include flex(row, space-between, center);
+      padding: 0 $app-bar-x;
+      background-color: $color-bg-brand-sky;
+
+      h1 {
+        @include typo-ds('title', 'md');
+        @include font-weight('bold');
+      }
+
+      .result-close {
+        border: 1px solid $color-border-strong;
+        @include border-radius($radius-full);
+        width: $control-md;
+        height: $control-md;
+        @include flexCenter();
+        background-color: $color-bg;
+        cursor: pointer;
+
+        svg {
+          width: $icon-sm;
+          height: $icon-sm;
+        }
+
+        &:focus-visible {
+          @include a11yFocusStyle();
+        }
+      }
+    }
+
+    // 물결 위의 빈 하늘색 칸. 사진이 이 위로 겹쳐 올라온다
+    .result-band {
+      height: $result-band-height;
+      flex-shrink: 0;
+      background-color: $color-bg-brand-sky;
+    }
+
+    .result-wave {
+      --wave-top-color: #{$color-bg-brand-sky};
+      --wave-bottom-color: #{$color-bg};
+    }
+
+    .result-main {
+      flex: 1;
+      @include flex(column, flex-start, center);
+      padding: 0 $page-x $space-24;
+
+      .result-photo {
+        z-index: 1; // 물결보다 위 — 경계가 사진 뒤로 지나간다
+        position: relative;
+        width: $result-photo-size;
+        height: $result-photo-size;
+        flex-shrink: 0;
+        margin-top: -$result-photo-lift;
+        margin-bottom: $space-24;
+
+        // 사진만 둥글게 자른다. figure 에서 자르면 모서리 밖 도장까지 잘린다
+        .result-photo-img {
+          --lazy-img-height: 100%;
+          --lazy-img-fit: cover;
+
+          @include border-radius($radius-lg);
+          display: block;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        app-stamp-badge {
+          position: absolute;
+          top: rem(-10px);
+          right: rem(-10px);
+        }
+      }
+
+      h2 {
+        @include typo-ds('title', 'lg');
+        @include font-weight('bold');
+      }
+
+      .result-count {
+        margin-top: $space-8;
+        color: $color-text-sub;
+        @include typo-ds('body', 'md');
+      }
+
+      .result-notice {
+        width: 100%;
+        width: auto;
+        width: fit-content;
+        // max-width: $content-max-width;
+        max-width: unset;
+
+        margin-top: $space-24;
+        text-align: left;
+      }
+
+      // 신청할 선물이 없을 때의 한 줄 안내 (1b)
+      .result-guide {
+        margin-top: $space-24;
+        color: $color-text-muted;
+        @include typo-ds('body', 'md');
+      }
+
+      // 하단 고정 대신 flex 여백으로 밀어 내린다 — 내용이 길어지면 자연스럽게 이어진다
+      .result-actions {
+        width: 100%;
+        max-width: $content-max-width;
+        @include flex(column, flex-end, stretch);
+        flex: 1;
+        gap: $space-8;
+        margin-top: $space-24;
+
+        button {
+          @include button('secondary', 'lg');
+          @include border-radius($radius-full);
+          width: 100%;
+          max-width: none;
+
+          &.is-primary {
+            border-color: $btn-primary-border;
+            background-color: $btn-primary-bg;
+            color: $btn-primary-text;
+
+            &:hover {
+              background-color: $btn-primary-bg-hover;
+              border-color: $btn-primary-border-hover;
+            }
+          }
+
+          &:focus-visible {
+            @include a11yFocusStyle();
+          }
+        }
+      }
+    }
+  }
 
   // 상단 원형 그래픽. 안의 span 은 기호(!·–) 하나뿐이고 status 에 따라 비기도 함
   .result-graphic {

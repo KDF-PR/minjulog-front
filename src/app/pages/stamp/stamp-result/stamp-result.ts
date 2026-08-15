@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { Space } from '../../../core/models';
+import { WaveDivider } from '../../../shared/layout/wave-divider/wave-divider';
+import { LazyLoadImg } from '../../../shared/ui/lazy-load-img/lazy-load-img';
 import { RewardNotice } from '../../../shared/ui/reward-notice/reward-notice';
+import { StampBadge } from '../../../shared/ui/stamp-badge/stamp-badge';
 
 /**
  * 사진 업로드 후 결과 화면의 상태.
@@ -26,9 +30,11 @@ export const STAMP_RESULT_STATUSES: readonly StampResultStatus[] = [
 export type StampResultAction =
   | 'viewStamps'
   | 'viewRewards'
+  | 'viewSpaces'
   | 'viewHelp'
   | 'goMain'
-  | 'retry';
+  | 'retry'
+  | 'close';
 
 /** 결과 화면 CTA 하나 */
 interface ResultAction {
@@ -52,7 +58,7 @@ interface ResultView {
 
 @Component({
   selector: 'app-stamp-result',
-  imports: [RewardNotice],
+  imports: [LazyLoadImg, RewardNotice, StampBadge, WaveDivider],
   templateUrl: './stamp-result.html',
   styleUrl: './stamp-result.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,10 +68,19 @@ export class StampResult {
 
   readonly stampCount = input(0);
   readonly totalCount = input(0);
-  /** 다음 리워드까지 남은 개수. 0 이면 문구 미표시 */
-  readonly remainingToReward = input(0);
+
+  /** 방금 인증한 장소. 적립 화면의 사진·도장이 쓴다 — 나머지 상태에서는 미사용 */
+  readonly space = input<Space | null>(null);
+
+  /** 적립됐지만 신청할 선물이 없을 때 다음 조건 안내. 문구는 화면(stamp)이 정한다 */
+  readonly rewardGuide = input('');
 
   readonly actionSelect = output<StampResultAction>();
+
+  /** 적립 직후 두 상태만 시안 1a·1b 의 「방문을 기록했어요」 구조를 쓴다 */
+  protected readonly isRecorded = computed(
+    () => this.status() === 'success' || this.status() === 'reward',
+  );
 
   protected readonly view = computed<ResultView>(() => this.buildView());
 
@@ -83,18 +98,22 @@ export class StampResult {
       case 'success':
         return {
           ...base,
-          title: '스탬프를 받았어요',
-          descriptions: [...this.rewardHint(), this.countLabel()],
-          actions: this.afterClaimActions(),
+          title: '방문을 기록했어요',
+          actions: [
+            { action: 'viewStamps', label: '내 방문 기록 보기', variant: 'primary' },
+            { action: 'viewSpaces', label: '다음 방문할 곳 보기', variant: 'secondary' },
+          ],
         };
 
       case 'reward':
         return {
           ...base,
-          title: '스탬프를 받았어요',
-          descriptions: [this.countLabel()],
+          title: '방문을 기록했어요',
           showRewardCard: true,
-          actions: this.afterClaimActions(),
+          actions: [
+            { action: 'viewStamps', label: '내 방문 기록 보기', variant: 'primary' },
+            { action: 'viewRewards', label: '참여 선물 보기', variant: 'secondary' },
+          ],
         };
 
       case 'already':
@@ -141,20 +160,4 @@ export class StampResult {
     }
   }
 
-  /** 적립 직후 두 상태(success · reward)가 같은 CTA 사용 */
-  private afterClaimActions(): readonly ResultAction[] {
-    return [
-      { action: 'viewStamps', label: '내 스탬프 보기', variant: 'primary' },
-      { action: 'viewRewards', label: '리워드 보기', variant: 'secondary' },
-    ];
-  }
-
-  private rewardHint(): readonly string[] {
-    const remaining = this.remainingToReward();
-    return remaining > 0 ? [`다음 리워드까지 ${remaining}개 남았어요`] : [];
-  }
-
-  private countLabel(): string {
-    return `내 스탬프 ${this.stampCount()}/${this.totalCount()}개`;
-  }
 }

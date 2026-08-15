@@ -17,13 +17,14 @@
       @include font-weight('bold');
     }
 
-    .step-subtitle {
-      @include typo-ds('body', 'md');
-    }
+    // .step-subtitle 은 템플릿 기본(body sm · 14px)을 그대로 쓴다 — 탭 세 화면 통일
 
     // 참여 기간 — 이 화면에만 있는 셋째 줄
     .reward-period {
       @include typo-ds('body', 'sm');
+      font-family: 'SUIT';
+      letter-spacing: 0;
+
       color: $color-text-sub;
       @include font-size(12px);
       // font-family: 'SUIT Variable', sans-serif;
@@ -41,7 +42,7 @@
     padding-bottom: $space-24;
     background-color: $color-bg;
 
-    // 선물 단계 하나(3곳 · 6곳). 마지막 단계 아래에는 선을 긋지 않음
+    // 선물 단계 하나(3곳 · 6곳)
     .content {
       @include flex(column);
       padding: $page-x;
@@ -52,7 +53,7 @@
 
       .content-header {
         @include flex(column);
-        gap: $space-4; // 시안 5
+        gap: $space-4;
         padding-bottom: $space-12;
 
         // 「첫 번째 선물」 등 단계 이름
@@ -79,6 +80,8 @@
           padding: $space-12;
           background-color: $color-bg;
           border: 1px solid $color-border;
+
+          margin-top: $space-16;
 
           .record-row {
             width: 100%;
@@ -121,18 +124,20 @@
               }
             }
 
-            // 잠긴 단계도 같은 버튼. disabled 로 잠가야 보조기기에 「지금은 누를 수 없다」가 전달됨
             .record-cta {
               border-color: $color-border-strong;
               @include border-radius($radius-md);
 
               width: 100%;
-              background-color: $color-bg-subtle;
-
+              // background-color: $color-bg-subtle;
+              background-color: $btn-primary-bg;
+              color: $btn-primary-text;
+              border: 1px solid $btn-primary-border;
               height: $control-md;
-              border: $color-border;
 
               @include typo-ds('label', 'sm');
+              font-family: 'SUIT';
+              letter-spacing: 0;
 
               &:disabled {
                 border-color: $btn-primary-border-disabled;
@@ -154,23 +159,6 @@
           @include typo-ds('body', 'xs');
           text-align: center;
         }
-      }
-    }
-
-    .reward-code {
-      margin: $space-16 $page-x 0;
-      border: 1px solid $color-border-subtle;
-      @include border-radius($radius-md);
-      padding: $space-12;
-
-      color: $color-text-sub;
-      @include typo-ds('body', 'sm');
-      text-align: center;
-
-      strong {
-        color: $color-text;
-        @include font-weight('bold');
-        letter-spacing: $letter-spacing-wide;
       }
     }
   }
