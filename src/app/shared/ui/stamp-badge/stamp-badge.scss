@@ -11,8 +11,10 @@
   display: block;
   width: $stamp-mark-sm;
   height: $stamp-mark-sm;
-  // 색 미배정 장소에서도 그림이 사라지지 않게 두는 기본값. 방문 전 그림은 쓰지 않는다.
-  color: $color-bg-subtle;
+  // 아래 $marks 에 키가 없는 장소용 기본값. **일부러 오류색이다** —
+  // 배경색으로 두면 색이 빠져도 흰 배지로 보여 빌드·콘솔 어디에도 안 걸리고 조용히 지나간다.
+  // 방문 전 그림은 회색 고정 자산이라 이 값이 닿지 않는다.
+  color: $color-error;
 }
 
 :host([data-variant='flower']) {
@@ -25,14 +27,15 @@ svg {
   height: 100%;
 }
 
-// 키 추가 시 core/models.ts 의 StampMark 도 함께 추가. 한쪽만 늘리면 색 미적용
+// core/models.ts 의 StampMark 와 키가 1:1 이어야 한다. 한쪽만 고치면 그 색이 안 나온다 —
+// 빠진 키는 위 :host 기본값(오류색)으로 떨어져 화면에서 바로 드러난다.
 $marks: (
   'pink': $stamp-mark-pink,
   'skyblue': $stamp-mark-skyblue,
   'orange': $stamp-mark-orange,
-  'lemon': $stamp-mark-lemon,
+  'yellow': $stamp-mark-yellow,
   'lime': $stamp-mark-lime,
-  'green': $stamp-mark-green,
+  'purple': $stamp-mark-purple,
 );
 
 @each $name, $color in $marks {

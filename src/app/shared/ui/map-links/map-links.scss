@@ -12,5 +12,8 @@
     padding: $space-8 $space-12;
     background-color: $color-bg-subtle;
     @include font-size(11px);
+    font-family: 'SUIT';
+    letter-spacing: 0;
+    color: $color-text-muted;
   }
 }

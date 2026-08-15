@@ -49,6 +49,7 @@
 
 $default-sans: $font-primary;
 $default-serif: 'Noto Serif KR', 'Microsoft YaHei', 'SimSun', 'AppleMyungjo', serif;
+$default-suit: 'SUIT', sans-serif; // for label
 
 html {
   font-family: $default-sans;

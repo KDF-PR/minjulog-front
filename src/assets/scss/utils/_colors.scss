@@ -179,12 +179,15 @@ $progress-fill: $color-action-brand;
 // 방문 완료 마커 색상은 장소별로 고정.
 // core/spaces.content.ts 의 markColor에 어느 장소가 어느 색상인지 지정
 
+// 아래 6색은 stamp-badge.scss 의 $marks 와 core/models.ts 의 StampMark 셋이 같은 목록이다.
+// yellow · purple 은 Figma 가 아직 semantic 으로만 들고 있어 원색을 여기 직접 적었다.
+
 $stamp-mark-pink: $brand-pink;
 $stamp-mark-skyblue: $brand-skyblue;
 $stamp-mark-orange: $brand-orange;
-$stamp-mark-lemon: $brand-lemon;
+$stamp-mark-yellow: #ffe23e;
 $stamp-mark-lime: $brand-lime;
-$stamp-mark-green: $brand-green;
+$stamp-mark-purple: #a29bff;
 
 $stamp-name-bg: $color-bg-brand-light; // 완료 카드의 장소 이름 밴드
 $stamp-name-text: $color-text;

@@ -26,14 +26,25 @@ $wave-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' v
 // 물결 선
 $wave-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 6' preserveAspectRatio='none'%3E%3Cpath d='M0 1.1C5 1.1 5 4.9 10 4.9C15 4.9 15 1.1 20 1.1' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
 
+// Android 소수 배율(DPR 2.625 · 3.5)에서 요소 경계의 안티앨리어싱이 층마다 다르게
+// 반올림돼, 아래 요소와 만나는 마지막 픽셀 줄이 덜 덮이고 그 틈으로 페이지 배경색이
+// 가로줄로 비친다. 두 가지로 막는다 —
+//   ① 배경을 곡선 최저점에서 하드스톱: 아래쪽은 위쪽 색이 아니라 아래쪽 색으로 칠한다
+//   ② 1px 키우고 -1px 마진: 다음 요소 밑으로 1px 겹쳐 틈이 생길 자리를 아래쪽 색이 메운다
+// ②의 겹침이 다음 요소 위에 그려지지만(호스트가 positioned) 그 색이 다음 절의 배경색이라
+// 보이지 않는다 — --wave-bottom-color 는 항상 다음 절의 배경과 같은 값을 쓴다.
 :host {
   position: relative;
   width: 100%;
-  height: var(--wave-divider-height, 29px);
+  height: calc(var(--wave-divider-height, 29px) + 1px);
   overflow: hidden;
   display: block;
   flex-shrink: 0;
-  background-color: var(--wave-top-color, transparent);
+  margin-bottom: -1px;
+  background-image: linear-gradient(
+    var(--wave-top-color, transparent) calc(var(--wave-top-height, 20px) + #{$wave-band * 0.5}),
+    var(--wave-bottom-color, #{$color-bg}) 0
+  );
 }
 
 // 물결 아래쪽 면. mask 두 장(반복 물결 마디 + 아래를 메우는 사각형)이 add 로 합쳐진다.
@@ -46,12 +57,16 @@ $wave-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' 
   background-color: var(--wave-bottom-color, #{$color-bg});
   mask-image: $wave-shape, linear-gradient(black, black);
   mask-repeat: repeat-x, no-repeat;
+
+  // 사각형 마스크를 물결 마디와 1px 겹치고 아래로 1px 내밀어 붙인다.
+  // 정확히 이어 붙이면 Android 소수 배율(DPR 2.625 등)에서 마지막 픽셀 줄이
+  // 덜 칠해져 뒤의 위쪽 색이 가로줄로 비친다. 마스크는 add 라 겹침은 무해.
   mask-position:
     left top,
-    left $wave-band;
+    left calc(#{$wave-band} - 1px);
   mask-size:
     var(--wave-size, #{$wave-period}) $wave-band,
-    100% calc(100% - #{$wave-band});
+    100% calc(100% - #{$wave-band} + 2px);
 
   // 물결 선. 면과 같은 곡선·같은 반복 주기라 두 모양이 어긋나지 않는다.
   &::before {

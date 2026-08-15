@@ -228,7 +228,7 @@ $app-bar-x: $space-16;
 $content-max-width: rem(296px); // 360 - 좌우 여백 32×2
 
 // 탭으로 오가는 세 화면의 제목 묶음 높이. 셋 중 가장 높은 참여 선물(세 줄, 실측 157px)을 8배수로 올렸다.
-$step-header-height: rem(160px);
+$step-header-height: rem(128px);
 
 $app-header-height: rem(48px); // 상단 헤더
 $app-header-chip-height: rem(32px); // 헤더 안 「소개」 칩. 헤더에 들어가야 해 $control-sm 보다 낮다

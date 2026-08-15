@@ -40,14 +40,14 @@ export const REWARD_TIERS: readonly RewardTier[] = [3, 6] as const;
  * 색 값은 `utils/_colors.scss` 의 `$stamp-mark-*` 담당 → 여기에는 이름만.
  * 색 자체를 두면 화면 코드가 색을 아는 자리가 됨.
  */
-export type StampMark = 'pink' | 'skyblue' | 'orange' | 'lemon' | 'lime' | 'green';
+export type StampMark = 'pink' | 'skyblue' | 'orange' | 'yellow' | 'lime' | 'purple';
 export const STAMP_MARKS: readonly StampMark[] = [
   'pink',
+  'yellow',
   'skyblue',
-  'orange',
-  'lemon',
   'lime',
-  'green',
+  'purple',
+  'orange',
 ] as const;
 
 // ① 고정 콘텐츠 — 프론트 소유

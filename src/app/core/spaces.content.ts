@@ -50,7 +50,6 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
     sections: [
       { type: 'map' },
       {
-        // 문구는 시안 `space-detail` 에서 옮겼다
         type: 'story',
         paragraphs: [
           '민주화운동기념관은 과거 국가폭력의 상징이었던 남영동 대공분실 자리에 조성된 공간으로, 독재정권의 어두운 역사와 이를 극복한 민주주의의 이야기를 담고 있습니다.',
@@ -63,7 +62,6 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
           url: 'https://www.minjuroad.or.kr/',
         },
       },
-      // 관람 시간·휴관일(visitInfo)은 공식 안내를 받아 채운다 — 지금은 두지 않는다
       {
         type: 'viewPoints',
         points: [
@@ -91,7 +89,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '지금은 여행객들이 머무는 공간이지만, 이곳은 과거 중앙정보부와 국가안전기획부가 있던 자리입니다. 군사정권 시절 민주주의를 억압했던 국가권력의 흔적을 되짚어보며, 남산 곳곳에 남아 있는 민주주의와 인권의 흔적을 따라 걸어보세요.',
     photoGuide: '건물 외관이나 안내 표지가 보이게 찍어 주세요.',
     courseOrder: 2,
-    markColor: 'lemon', // 확정 — 겹치지 않는 브랜드 색으로 배정
+    markColor: 'yellow',
     sections: [
       { type: 'map' },
       {
@@ -121,7 +119,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '명동성당은 종교시설을 넘어 한국 민주주의 역사에서 가장 상징적인 공간 가운데 하나입니다. 1987년 6월 민주항쟁 당시, 경찰의 강경 진압을 피해 모여든 시민과 학생들이 이곳에서 농성일 이어갔고, 명동성당은 이들을 품어 안으며 민주주의를 향한 연대의 든든한 울타리가 되어주었습니다.',
     photoGuide: '성당 전경이나 정문이 보이게 담아 주세요. 미사 중에는 조용히 부탁드려요.',
     courseOrder: 3,
-    markColor: 'lime', // 확정 — 겹치지 않는 브랜드 색으로 배정
+    markColor: 'skyblue',
     sections: [
       { type: 'map' },
       {
@@ -151,7 +149,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '지금의 마로니에공원은 공연과 문화예술의 공간이지만, 1960년 4·19혁명 당시에는 서울대학교 문리과대학이 있던 곳이었습니다. 이곳에서는 학생들이 독재에 맞서 거리로 나섰고, 며칠 뒤에는 전국 대학교수들이 "학생의 피에 보답하라"는 시국선언을 발표하며 민주주의 회복을 촉구했습니다. 학생과 시민, 교수들이 함께 역사를 바꾼 곳이자, 민주주의를 향한 용기가 시작된 공간입니다.',
     photoGuide: '마로니에 나무나 상징 조형물이 보이게 한 장 담아 주세요. 구도는 자유롭게요.',
     courseOrder: 4,
-    markColor: 'skyblue', // 확정 — 시안 `02 내 방문기록`
+    markColor: 'lime',
     sections: [
       { type: 'map' },
       {
@@ -181,7 +179,7 @@ export const SPACES_CONTENT: readonly SpaceContent[] = [
       '청계천 평화시장 인근의 전태일다리는 노동과 인권을 이야기할 때 가장 먼저 떠오르는 장소입니다. 1970년 평화시장 재단사였던 전태일은 "근로기준법을 준수하라"는 외침과 함께 자신의 몸을 불살랐습니다. 그의 희생은 열악한 노동 현실을 세상에 알렸고, 이후 노동운동과 민주화운동의 중요한 출발점이 되었습니다. 오늘날 청계천을 걸으며 전태일 동상과 그의 정신을 기억하는 공간들을 만나보세요.',
     photoGuide: '전태일 동상이나 다리 이름 표지가 보이게 찍어 주세요.',
     courseOrder: 5,
-    markColor: 'green', // 확정 — 겹치지 않는 브랜드 색으로 배정
+    markColor: 'purple',
     sections: [
       { type: 'map' },
       {
